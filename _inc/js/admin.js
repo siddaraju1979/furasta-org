@@ -1,0 +1,144 @@
+/**
+ * Admin JS, Furasta.Org
+ *
+ * Contains admin js functions and some
+ * javascript to be executed on admin
+ * pages.
+ *
+ * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
+ * @license    http://furasta.org/licence.txt The BSD License
+ * @version    1.0
+ */
+
+if( typeof jQuery == 'undefined' )
+	window.location = "%SITEURL%_inc/noscript.php";
+
+function loadPageType(type,id){
+        var hash=Math.floor(Math.random()*1001);
+        $.ajax({
+                url:'%SITEURL%_inc/ajax.php?file=admin/pages/type.php&type='+type+'&id='+id+'&hash='+hash,
+                success: function(html){
+                        $("#pages-type-content").html(html);
+
+	                if( $( "#ajax-errors" ).length != 0 )
+        	                $( "#main" ).prepend( $( "#ajax-errors" ).html( ) );
+                }
+        });
+        return;
+}
+
+function displayOptions(){
+        var options=$("#options");
+        if(options.is(":hidden")){
+                $("#options-link").html("Hide Options");
+                $(options).slideDown('slow');
+        }
+        else{
+                $("#options-link").html("Show Options");
+                $(options).slideUp('slow');
+        }
+
+        return;
+}
+
+/*
+function passwordReminder(){
+        var html='<script type="text/javascript">$(document).ready(function(){ $("#jqi_state0_buttonSend").click(function(){ $("#loading-icon").html("<img src=\'/_inc/img/loading.gif\'/>");var email=$("#reminder-email").val();$.ajax({url:"/_inc/ajax.php?file=admin/settings/users/verify_email.php&email="+email,success: function(html){ if(html==1) $("#loading-icon").html("error"); else{ $("#loading-icon").html("success"); setTimeout(function(){ $("#jqibox").fadeOut("slow"); },300); } }}); return false; }); });</script><p style="margin-left:0;font-style:italic">Enter your email address below and a new password will be sent to you.</p><table><td class="small">Email:</td><td><input type="text" id="reminder-email" name="Email"/></td><td class="small" id="loading-icon"></td></tr></table><br/>';
+        $('#dialog').html(html);
+        $('#dialog').attr('title','Password Reminder');
+        $('#dialog').dialog({ modal: true,buttons:{ Cancel: function(){ $(this).dialog('close'); }, Send:function(){ $(this).dialog('close'); }},hide:'fade',show:'fade',resizeable:false });
+        $('#dialog').dialog("open");
+}*/
+function slugCheck(url){
+        if(!/^[A-Za-z0-9 ]{2,40}$/.test(url)){
+                return false;
+	}
+        if(url==1){
+                return false;
+	}
+        url=url.replace(/\s/g,'-');
+        return url;
+}
+
+/**
+ * getParents
+ *
+ * returns the parents of a particular page,
+ * or of the selected page in the admin pages area. 
+ * 
+ * @param int page  
+ * @access public
+ * @return string
+ */
+function getParents( page ){
+
+	if( page == null )
+		page = $( "#select-parent :selected" ).attr( 'class' );
+
+	if( page == 0 )
+		return '';
+
+	var parent = $( '#select-parent option[ value = ' + page + ' ]' );
+
+	var url = '';
+
+	if( parent.attr( 'class' ) != 0 )
+		url += getUrl( parent.attr( 'class' ) ) + '/';
+
+	url += parent.text( ) + '/';
+
+	return url;
+
+}
+
+/**
+ * getUrl 
+ *
+ * used in admin pages section, uses the getParents
+ * function
+ * 
+ * @param string new_pagename, bit to add to end of url. '' can be used
+ * @access public
+ * @return void
+ */
+function getUrl( new_pagename ){
+	
+	var parent = $( "#select-parent :selected" ).text( );
+
+	var host = "http://" + window.location.hostname + "/";
+
+	$( "#page-name" ).removeClass( "error" );
+
+	var fullUrl = ( parent == "---" ) ? host + new_pagename.replace(/\s/g,"-") : host + getParents( ) + ( parent + "/" + new_pagename ).replace(/\s/g,"-");
+
+	$( "#slug-url" ).html( fullUrl );
+
+	$( "#slug-url" ).attr( "href", fullUrl );
+
+	$( "#slug-put" ).attr( "value", new_pagename );
+}
+
+/**
+ * toggleDisabled
+ *
+ * toggles checkboxes disabled attr using the selector 
+ * 
+ * @param string selector 
+ * @access public
+ * @return void
+ */
+function toggleDisabled( selector ){
+
+	$( selector ).each( function( ){
+
+		if( $( this ).attr( 'disabled' ) == '' )
+
+			$( this ).attr( 'disabled', 'disabled' );
+
+		else
+
+			$( this ).removeAttr( 'disabled' );
+
+	});
+
+}

@@ -31,7 +31,7 @@
  * Below are all the supported variables and functions
  * which should be contained in the plugin file. Note that
  * many of the functions are mentioned twice, that is because
- * functions can be used or methods.
+ * functions or methods can be used.
  * 
  * # array keys
  * $plugin = array(
@@ -140,7 +140,7 @@
  * If a plugin contains hooks, it is important
  * to consider the $importance var. The plugin
  * should have a high importance so that it is
- * loaded before plugins which extends it.
+ * loaded before plugins which extend it.
  *
  * @todo add support for $importance var, add the importance as array key in $this->plugins, and order foreaches by key 
  */
