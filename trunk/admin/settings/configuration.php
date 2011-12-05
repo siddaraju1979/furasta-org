@@ -50,7 +50,7 @@ if( isset( $_POST[ 'settings_general' ] ) && $valid == true ){
 		$Template->diagnosticMode = 1;
 	}
 	else{
-		$constants[ 'DIAGNOSTOC_MODE' ] = 0;
+		$constants[ 'DIAGNOSTIC_MODE' ] = 0;
 		$Template->diagnosticMode = 0;
 	}
 

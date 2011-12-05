@@ -142,13 +142,8 @@ $(document).ready(function(){
         }
 
 	$( "#errors-close" ).live( "click", function( ){
-
-		if( $( "#error-update" ).length != 0 )
-
-			fetch( "' . SITEURL . '_inc/ajax.php?file=admin/settings/update/system-alert.php" );
-
+		fetch( "' . SITEURL . '_inc/ajax.php?file=admin/settings/update/system-alert.php" );
 		$( "#system-error" ).fadeOut( "fast", function( ){ $( this ).remove( ); } );
-
 	});
 });
 ';

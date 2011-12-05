@@ -37,7 +37,7 @@ body{ text-align:center;background:#eee }
 #top #title{ margin:24px 0 0 3px;float:left;font-family:'Times New Roman' }
 #top #title a{ font-size:22px;color:#eee }
 #title #subtitle{ font-size:12px;float:left;color:#eee;font-style:italic }
-#system-error{ margin:0 auto 15px;text-align:left;padding:5px;width:50%;border:1px solid #900;color:#900 }
+#system-error{ margin:0 auto 15px;text-align:left;padding:5px;width:50%;border:1px solid #900;color:#900;background:#ffc }
 #system-error img{ width:30px;height 30px }
 #system-error .runtime-errors{ font-weight:bold;font-size:14px;color:#a33 }
 #top #right{ width:100%;height:80px;margin:0 auto;background:url(../img/top-right.png) no-repeat right }

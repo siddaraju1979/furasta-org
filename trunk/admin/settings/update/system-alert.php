@@ -18,7 +18,8 @@
 if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
         die( '1' );
 
-settings_rewrite( $SETTINGS, $DB, $PLUGINS, array( 'SYSTEM_ALERT' => '' ) );
+$SETTINGS[ 'system_alert'] = '';
+settings_rewrite( $SETTINGS, $DB, $PLUGINS );
 
 die( '0' );
 ?>

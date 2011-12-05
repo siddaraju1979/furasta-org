@@ -7,6 +7,7 @@
 27. frontend css caching, javascript caching
 28. template select box in edit pages not showing correct values
 29. possibly combine all common ajax requests in admin area to one file with a switch statement, similar to wordpress
+30. create a page perms function for the frontend of the cms
 
 # TODO list for Furasta.Org v1.0 - General Release #
 

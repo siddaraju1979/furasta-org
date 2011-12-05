@@ -18,22 +18,28 @@ header('Content-Type: text/html; charset=UTF-8');
 /**
  * @todo move to _user dir 
  */
-$smarty_dir=HOME.'_inc/smarty/';
+$smarty_dir = HOME . '_inc/Smarty/';
 
-require $smarty_dir.'libs/smarty.class.php';
-require $function_dir.'frontend.php';
+require $smarty_dir . 'libs/Smarty.class.php';
+require $function_dir . 'frontend.php';
 
-$Smarty=new Smarty();
+$Smarty = new Smarty( );
 
-$Smarty->template_dir=$smarty_dir.'templates';
-$Smarty->compile_dir=$smarty_dir.'templates_c';
+$Smarty->template_dir = $smarty_dir . 'templates';
+$Smarty->compile_dir = $smarty_dir . 'templates_c';
+
+/**
+ * set smarty delimiters to "[" and "]"
+ */
+$Smarty->left_delimiter = '[';
+$Smarty->right_delimiter = ']';
 
 /**
  * register plugin functions 
  */
-$plugin_functions=$Plugins->frontendTemplateFunctions();
-foreach($plugin_functions as $function)
-	$Smarty->register_function($function->frontendTemplateFunction,array($function,'frontendTemplateFunction'));
+$plugin_functions = $Plugins->frontendTemplateFunctions( );
+foreach( $plugin_functions as $function )
+	$Smarty->register_function( $function->frontendTemplateFunction, array( $function, 'frontendTemplateFunction' ) );
 
 /**
  * assign values to Smarty variables 
@@ -101,7 +107,6 @@ $Smarty->register_function( 'menu', 'frontend_menu' );
 $Smarty->register_function( 'page_tree', 'frontend_page_tree' );
 $Smarty->register_function( 'css_load', 'frontend_css_load' );
 $Smarty->register_function( 'javascript_load', 'frontend_javascript_load' );
-$Smarty->register_function( 'page_tree', 'frontend_page_tree' );
 
 $file = ( $Page[ 'template' ] == 'Default' ) ? TEMPLATE_DIR . 'index.html' : TEMPLATE_DIR . $Page[ 'template' ] . '.html';
 

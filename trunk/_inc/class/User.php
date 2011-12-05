@@ -402,7 +402,7 @@ class User{
 	 * 
 	 * @param string $perm 
 	 * @access public
-	 * @return bool
+	 * @return bool 
 	 */
 	public function pagePerm( $perm ){
 

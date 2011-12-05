@@ -38,7 +38,7 @@ query( 'update ' . USERS . ' set reminder="' . $hash . '" where id="' . $rows[ 0
 
 $message = 'Hi ' . $rows[ 0 ][ 'name' ] . '<br/>
 You have requested a new password. Please follow the link below to reset your password:<br/>
-' . SITEURL . '/admin/settings/users/reset_password.php?reminder=' . $hash . '<br/>
+' . SITEURL . 'admin/users/reset_password.php?reminder=' . $hash . '<br/>
 If you have not requested a new password please ignore this email.<br/>
 ';
 
