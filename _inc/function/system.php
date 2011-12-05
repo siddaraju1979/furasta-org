@@ -225,7 +225,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'GROUPS' => GROUPS,
 		'SITEURL' => SITEURL,
 		'USERFILES' => USERFILES,
-		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,
+		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE
 	);
 
 	$constants = array_merge( $default_constants, $constants );

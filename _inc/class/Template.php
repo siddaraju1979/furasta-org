@@ -402,8 +402,10 @@ class Template {
 		$scripts = array( );
 		$urls = array( );
 
-		foreach($files as $file)
+		foreach($files as $file){
+			
 			$scripts[ $file ] = file_get_contents( HOME . $file );
+		}
 
                 foreach( $sources as $source => $contents )
 			$scripts[ $source ] = $contents;

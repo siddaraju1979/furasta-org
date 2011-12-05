@@ -42,10 +42,10 @@ switch( $overview_item ){
 
 		echo '
 		<table class="row-color">
-		        <tr><td>Pages:</td><td>' . count( rows( 'select id from ' . PAGES ) ) . '</td></tr>
-		        <tr><td>Trash:</td><td>' . count( rows( 'select id from ' . TRASH ) ) . '</td></tr>
-		        <tr><td>Users:</td><td>' . count( rows( 'select id from ' . USERS ) ) . '</td></tr>
-			<tr><td>Groups:</td><td>' . count( rows( 'select id from ' . GROUPS ) ) . '</td></tr>
+		        <tr><td>Pages:</td><td>' . single( 'select count(id) from ' . PAGES, 'count(id)' ) . '</td></tr>
+		        <tr><td>Trash:</td><td>' . single( 'select count(id) from ' . TRASH, 'count(id)' ) . '</td></tr>
+		        <tr><td>Users:</td><td>' . single( 'select count(id) from ' . USERS, 'count(id)' ) . '</td></tr>
+			<tr><td>Groups:</td><td>' . single( 'select count(id) from ' . GROUPS, 'count(id)' ) . '</td></tr>
 		        <tr><td>Theme:</td><td>' . $template[ 'Name' ] . '</td></tr>
 		        <tr><td>Furasta.Org Version:</td><td>' . VERSION . '</td></tr>
 		</table>';
@@ -53,7 +53,7 @@ switch( $overview_item ){
 	case 'recently-edited':
 		echo '<table class="row-color">';
 
-		$pages = rows( 'select id,name,content,edited,perm from ' . TRASH . ' order by edited desc limit 5' );
+		$pages = rows( 'select id,name,content,edited,perm from ' . PAGES . ' order by edited desc limit 5' );
 		foreach( $pages as $page ){
 
 			/**
@@ -75,7 +75,7 @@ switch( $overview_item ){
 	break;
 	case 'recently-trashed':
 		echo '<table class="row-color">';
-		$pages = rows( 'select id,name,content,edited from ' . PAGES . ' order by edited desc limit 5' );
+		$pages = rows( 'select id,name,content,edited from ' . TRASH . ' order by edited desc limit 5' );
 		foreach( $pages as $page ){
         		echo '<tr><td><span>' . date( "F j,Y", strtotime( $page[ 'edited' ] ) ) . '</span><a
 		        href="pages.php?page=edit&id=' . $page[ 'id' ] . '"><h3>' . $page[ 'name' ] . '</h3></a>
