@@ -42,26 +42,6 @@ foreach( $plugin_functions as $function )
 	$Smarty->register_function( $function->frontendTemplateFunction, array( $function, 'frontendTemplateFunction' ) );
 
 /**
- * assign values to Smarty variables 
- */
-$keywords = meta_keywords( $Page[ 'content' ] );
-$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
-
-$meta='
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
-<script type="text/javascript" src="' . SITEURL . '_inc/js/jquery/multi-ddm.min.js"></script>
-<script type="text/javascript" src="' . SITEURL . '_inc/js/frontend.js"></script>
-<link rel="stylesheet" type="text/css" href="' . SITEURL . '_inc/css/frontend.css"/>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Furasta.Org ' . VERSION . '" />
-<meta name="description" content="' . $description . '" />
-<meta name="keywords" content="' . $keywords . '" />
-<link rel="shortcut icon" href="' . SITEURL . '_inc/img/favicon.ico" />
-';
-$Smarty->assign( 'metadata', $meta );
-
-/**
  * plugins - filter page content 
  */
 $content = $Plugins->filter( 'frontend', 'filter_page_content', $Page[ 'content' ] );
@@ -92,21 +72,22 @@ $Smarty->assign( 'page_edited', $Page[ 'edited' ] );
 $Smarty->assign( 'page_user', $Page[ 'user' ] );
 $Smarty->assign( 'page_parent_id', $Page[ 'parent' ] );
 
+/**
+ * assign site vars
+ */
 $Smarty->assign( 'site_url', SITEURL );
-
-$time=microtime(true)-START_TIME;
-$Smarty->assign('page_load_time',$time);
-
-$Smarty->assign('site_title',$SETTINGS['site_title']);
-$Smarty->assign('site_subtitle',$SETTINGS['site_subtitle']);
+$Smarty->assign( 'site_title', $SETTINGS[ 'site_title' ] );
+$Smarty->assign( 'site_subtitle', $SETTINGS[ 'site_subtitle' ] );
 
 /**
  * register default template functions 
  */
 $Smarty->register_function( 'menu', 'frontend_menu' );
-$Smarty->register_function( 'page_tree', 'frontend_page_tree' );
+$Smarty->register_function( 'breadcrumbs', 'frontend_breadcrumbs' );
+$Smarty->register_function( 'metadata', 'frontend_metadata' );
 $Smarty->register_function( 'css_load', 'frontend_css_load' );
 $Smarty->register_function( 'javascript_load', 'frontend_javascript_load' );
+$Smarty->register_function( 'page_load_time', 'frontend_page_load_time' );
 
 $file = ( $Page[ 'template' ] == 'Default' ) ? TEMPLATE_DIR . 'index.html' : TEMPLATE_DIR . $Page[ 'template' ] . '.html';
 

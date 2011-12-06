@@ -30,8 +30,8 @@
  * 
  * Below are all the supported variables and functions
  * which should be contained in the plugin file. Note that
- * many of the functions are mentioned twice, that is because
- * functions or methods can be used.
+ * where ever functions are used methods can also be used. To use
+ * methods use the format: array( 'classname', 'methodname' )
  * 
  * # array keys
  * $plugin = array(
@@ -46,34 +46,31 @@
  *       'admin'=> array(
  *               # $menu_array, $url
  *               'filter_menu' => 'function_name'
- *               'filter_menu' => array( 'classname', 'methodname' ),
  *
  *               'page_type' => array(
  *                       'name' => '',
  *
  *                       # $page_array
  *                       'function' => 'function_name',
- *                       'function' => array( 'classname', 'methodname' )
  *               ),
  *
  *               'page' => 'function_name',
- *               'page' => array( 'classname', 'methodname' ),
  *
+ * 		 # exectues just as the page starts loading
  *               'on_load' => 'function_name',
- *               'on_load' => array( 'classname', 'methodname' ),
+ *
+ *		 # executes when the page is finished loading
+ *		 'on_finish' => 'function_name',
  *
  *               'filter_page_content' => 'function_name',
- *               'filter_page_content' => array( 'classname', 'methodname' ),
  *
  *		 'filter_group_permissions' => 'function_name',
- *               'filter_group_permissions' => array( 'classname', 'methodname' ),
  *
  *               'overview_item' => array(
  *                       'name' => '',
  *
  *                       # $page_array
  *                       'function' => 'function_name',
- *                       'function' => array( 'classname', 'methodname' )
  *               ),
  *
  *       ),
@@ -82,14 +79,13 @@
  *       'frontend' => array(
  *               # $page_array
  *               'page_type' => 'function_name',
- *               'page_type' => array( 'classname', 'methodname' ),
  *
- *               'filter_page_content' => 'function_name',
- *               'filter_page_content' => array( 'classname', 'methodname' ),
- * 
+ * 		 # exectues just as the page starts loading
  *               'on_load' => 'function_name',
- *               'on_load' => array( 'classname', 'methodname' ),
  *
+ *		 # executes when the page is finished loading
+ *		 'on_finish' => 'function_name',
+ * 
  *               'template_function' => array(
  *                       'name' => '',
  *
@@ -98,6 +94,10 @@
  *                       'function' => 'function_name',
  *               ),
  *
+ *               'filter_page_content' => 'function_name',
+ *
+ *               'filter_metadata' => 'function_name',
+ *
  *       ),
  *
  *       # sitewide functions
@@ -105,15 +105,15 @@
  *
  *               # $htaccess
  *               'filter_htaccess' => 'function_name',
- *               'filter_htaccess' => array( 'classname', 'methodname' ),
  *
  *               # $robots
  *               'filter_robots' => 'function_name',
- *               'filter_robots' => array( 'classname', 'methodname' ),
  *
  *               # $settings
  *               'filter_settings_rewrite' => 'function_name',
- *               'filter_settings_rewrite' => array( 'classname', 'methodname' ),
+ *
+ *               # $sitemap
+ *               'filter_sitemap' => 'function_name',
  *       ),
  *
  * );
