@@ -47,14 +47,14 @@ function frontend_list_pages($id,$pages,$level,$url){
 }
 
 /**
- * frontend_page_tree
+ * frontend_breadcrumbs
  *
  * returns a page tree with default css formatting 
  * 
  * @access public
  * @return void
  */
-function frontend_page_tree( $params ){
+function frontend_breadcrumbs( $params ){
 
 	global $SETTINGS;
 
@@ -90,6 +90,56 @@ function frontend_page_tree( $params ){
 
 	return $content;
 
+}
+
+/**
+ * frontend_metadata
+ *
+ * generates page metadata such as meta tags,
+ * and javascript/css links that should be contained
+ * in the header. This function also has a plugin
+ * filter.
+ *
+ * @todo manually cache css/js files added here
+ * @return string of metadata
+ */
+function frontend_metadata( ){
+	$keywords = meta_keywords( $Page[ 'content' ] );
+	$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
+
+	$metadata='
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="' . SITEURL . '_inc/js/jquery/multi-ddm.min.js"></script>
+	<script type="text/javascript" src="' . SITEURL . '_inc/js/frontend.js"></script>
+	<link rel="stylesheet" type="text/css" href="' . SITEURL . '_inc/css/frontend.css"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="Furasta.Org ' . VERSION . '" />
+	<meta name="description" content="' . $description . '" />
+	<meta name="keywords" content="' . $keywords . '" />
+	<link rel="shortcut icon" href="' . SITEURL . '_inc/img/favicon.ico" />
+	';
+
+	$Plugins = Plugins::getInstance( );
+	$metadata = $Plugins->filter( 'frontend', 'filter_metadata', $metadata );	
+
+	return $metadata;
+}
+
+/**
+ * frontend_page_load_time
+ *
+ * simple function which returns the amount of time
+ * it has taken for the page to load until
+ * this point. This can be assumed to be a reasonably
+ * accurate page load time.
+ *
+ * @return int
+ */
+function frontend_page_load_time( ){
+	$time = microtime( true );
+	$runtime = $time - START_TIME;
+	return round( $runtime, 2 );
 }
 
 /**

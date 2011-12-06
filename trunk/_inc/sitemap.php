@@ -16,7 +16,7 @@ header('Content-type: text/xml');
 
 $pages=rows('select id,slug,edited,parent from '.PAGES);
 
-$_url='http://'.$_SERVER["SERVER_NAME"].'/';
+$_url=SITEURL;
 $sitemap="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset>\n";
 foreach($pages as $page){                
 	$url=($page['parent']==0)?$_url.$page['slug']:$_url.implode('/',array_reverse(explode(',',get_page_url($pages,$page['parent'])))).'/'.$page['slug'];
@@ -27,7 +27,7 @@ foreach($pages as $page){
 }
 $sitemap.="</urlset>";
 
-$sitemap=$Plugins->about('sitemap',$sitemap);
+$sitemap = $Plugins->filter( 'general', 'filter_sitemap', $sitemap );
 
 echo $sitemap;
 ?>
