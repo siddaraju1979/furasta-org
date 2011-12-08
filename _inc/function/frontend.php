@@ -107,6 +107,8 @@ function frontend_metadata( ){
 	$keywords = meta_keywords( $Page[ 'content' ] );
 	$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
 
+	$Template = Template::getInstance( );
+
 	$metadata='
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
@@ -149,10 +151,9 @@ function frontend_page_load_time( ){
  * passed in the file parameter 
  * 
  * smarty parameters:
- * bool refresh
  * string file
  *
- * example: {css_load file="path/to/file"}
+ * example: {cache_css file="path/to/file"}
  * 
  * @param array $params
  * @access public
@@ -160,32 +161,13 @@ function frontend_page_load_time( ){
  */
 function frontend_css_load( $params ){
 
-	$cache_file = 'FURASTA_FRONTEND_CSS_' . $params[ 'file' ];
+	if( !$params[ 'file' ] )
+		return;
 
-	/**
-	 * if cache doesn't exist or refresh is enabled,
-	 * create cache
-	 */
-	if( !cache_exists( md5( $cache_file ), 'CSS' ) || @$params[ 'refresh' ] == true ){
+	$name = 'FURASTA_FRONTEND_CSS_' . $params[ 'file' ];
 
-	        $file = HOME . $params[ 'file' ];
+	return cache_css( $name, $params[ 'file' ] );
 
-	        if( strpos( $file, '..' ) !== false )
-        	        return false;
-
-	        if( !file_exists( $file ) )
-        	        return false;
-
-        	$content = file_get_contents( $file );
-		$Template = Template::getInstance( true );
-		$Template->loadCSS( $cache_file, $content );
-		$Template->cssUrls( );
-
-	}
-
-	$link = '<link rel="stylesheet" type="text/css" href="' . SITEURL . '_inc/css/css.php?' . md5( $cache_file ) . '" />';
-
-	return $link;
 }
 
 /**
@@ -195,10 +177,9 @@ function frontend_css_load( $params ){
  * passed in the file parmeter 
  * 
  * smarty parameters:
- * bool refresh
  * string file
  *
- * example: {css_load file="path/to/file"}
+ * example: {cache_js file="path/to/file"}
  *
  * @param array $params 
  * @access public
@@ -206,32 +187,13 @@ function frontend_css_load( $params ){
  */
 function frontend_javascript_load( $params ){
         
+	if( !$params[ 'file' ] )
+		return;
+
         $cache_file = 'FURASTA_FRONTEND_JS_' . $params[ 'file' ];
 
-        /**
-         * if cache doesn't exist or refresh is enabled,
-         * create cache
-         */
-        if( !cache_exists( md5( $cache_file ), 'JS' ) || @$params[ 'refresh' ] == true ){
+	return cache_js( $name, $params[ 'file' ] );
 
-                $file = HOME . $params[ 'file' ];
-
-                if( strpos( $file, '..' ) !== false )
-                        return false;
-        
-                if( !file_exists( $file ) )
-                        return false;
-
-                $content = file_get_contents( $file );
-                $Template = Template::getInstance( true );
-                $Template->loadJavascript( $cache_file, $content );
-		$Template->javascriptUrls( );
-
-        }
-
-        $link = '<script type="text/javascript" src="' . SITEURL . '_inc/js/js.php?' . md5( $cache_file ) . '"></script>';
-
-        return $link;
 }
 
 ?>

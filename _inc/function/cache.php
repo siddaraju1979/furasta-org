@@ -135,4 +135,114 @@ function cache_exists($file,$dir=''){
 	return (file_exists(USERFILES.'cache/'.$dir.$file));
 }
 
-?>
+
+/**
+ * cache_css
+ *
+ * caches input css file name or string of css
+ *
+ * @param string $name of cache file
+ * @param string $file location of file to cache/string to cache
+ * @return string $url
+ */
+function cache_css( $name, $file ){
+
+	$cache_file = md5( $name );
+
+	if( is_file( HOME . $file ) && strpos( $file, '..' ) === false )
+		$content = file_get_contents( HOME . $file );
+	else
+		$content = $file;
+
+	/**
+	 * check if diagnostic mode is enabled
+	 * and if so do not compress data
+	 */
+	if( DIAGNOSTIC_MODE == 1 ){
+
+		/**
+		 * makes the SITEURL constant available
+		 * in CSS so that files etc can
+		 * be loaded properly
+		 */
+		$content = str_replace( '%SITEURL%', SITEURL, $content );
+
+		cache( $cache_file, $content, 'CSS' );
+	}
+	elseif( !cache_exists( $cache_file, 'CSS' ) ){
+
+		/**
+		 * makes the SITEURL constant available
+		 * in CSS so that files etc can
+		 * be loaded properly
+		 */
+		$content = str_replace( '%SITEURL%', SITEURL, $content );
+
+		/**
+		 * remove comments
+		 */
+		$content = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $content );
+
+		/**
+		 * remove spaces, tabs etc
+		 */
+		$content = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $content );
+
+		cache( $cache_file, $content, 'CSS');
+	}
+
+	return SITEURL . '_inc/css/css.php?' . $cache_file;
+
+}
+
+/**
+ * cache_js
+ *
+ * caches the given javascript file/string and returns
+ * a url to access the cached file/string
+ *
+ * @param string $name of the cache file
+ * @param string $file to be cached/string to be cached
+ */
+function cache_js( $name, $file ){
+
+	$cache_file = md5( $name );
+
+	if( is_file( HOME . $file ) && strpos( $file, '..' ) !== false )
+		$content = file_get_contents( HOME . $file );
+	else
+		$content = $file;
+
+	/**
+	 * check if diagnostic javascript is enabled
+	 * and if so do not compress data
+	 */
+	if( DIAGNOSTIC_MODE == 1 ){
+
+		/**
+		 * makes the SITEURL constant available
+		 * in JavaScript so that files etc can
+		 * be loaded properly
+		 */
+		$content = str_replace( '%SITEURL%', SITEURL, $content );
+
+		cache( $cache_file, $content, 'JS' );
+
+	}
+	elseif( !cache_exists( $cache_file, 'JS' ) ){
+		/**
+		 * makes the SITEURL constant available
+		 * in JavaScript so that files etc can
+		 * be loaded properly
+		 */
+		$content = str_replace( '%SITEURL%', SITEURL, $content );
+
+		$packer = new JavaScriptPacker( $content, 'Normal', true, false );
+		$content = $packer->pack( );
+		cache( $cache_file, $content, 'JS');
+
+	}
+
+	return SITEURL . '_inc/js/js.php?' . $cache_file;
+
+}

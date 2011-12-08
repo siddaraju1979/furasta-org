@@ -414,9 +414,8 @@ class Plugins{
 		$functions = array();
 
                 for( $i = 0; $i < count( $this->plugins ); $i++ ){
-
-                        if( isset( $this->plugin{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ) && function_exists( @$this->plugin{ $i }{ 'frontend' }{ 'template_function' }{ 'function' } ) )
-					$functions[ $this->plugin{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ] = $this->plugin{ $i }{ 'frontend' }{ 'template_function' }{ 'function' };					
+                        if( isset( $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ) && function_exists( @$this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'function' } ) )
+					$functions[ $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ] = $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'function' };					
 
                 }
 
