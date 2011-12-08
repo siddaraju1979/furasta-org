@@ -399,8 +399,13 @@ class Template {
 
 		$files = $this->javascriptFiles;
                 $sources = $this->javascriptSources;
-		$scripts = array( );
+		$scripts = $files + $sources;
 		$urls = array( );
+
+		foreach( $scripts as $name => $file )
+			array_push( $urls, cache_js( $name, $file ) );
+
+		return $urls;
 
 		foreach($files as $file){
 			
@@ -490,7 +495,6 @@ class Template {
 	 * will contain all of the CSS added
 	 * during runtime.
          * 
-	 * @todo change to cssUrlss, returning an array of css file urls
          * @access public
          * @return string
          */
@@ -498,64 +502,14 @@ class Template {
 
                 $files = $this->cssFiles;
                 $sources = $this->cssSources;
-                $scripts = array( );
+                $scripts = $files + $sources;
                 $urls = array( );
 
-                foreach($files as $file)
-                        $scripts[ $file ] = file_get_contents( HOME . $file );
-
-                foreach( $sources as $source => $contents )
-                        $scripts[ $source ] = $contents;
-
-                foreach( $scripts as $cache_file => $content ){
-
-                        $cache_file = md5( $cache_file );
-
-                        /**
-                         * check if diagnostic mode is enabled
-                         * and if so do not compress data
-                         */
-                        if( $this->diagnosticMode == 1 ){
-
-	                        /**
-        	                 * makes the SITEURL constant available
-                	         * in CSS so that files etc can
-                        	 * be loaded properly
-	                         */
-        	                $content = str_replace( '%SITEURL%', SITEURL, $content );
-
-                                cache( $cache_file, $content, 'CSS' );
-			}
-                        elseif( !cache_exists( $cache_file, 'CSS' ) ){
-
-        	                /**
-	                         * makes the SITEURL constant available
-                        	 * in CSS so that files etc can
-                	         * be loaded properly
-        	                 */
-	                        $content = str_replace( '%SITEURL%', SITEURL, $content );
-
-                        	/**
-                	         * remove comments
-        	                 */
-	                        $content = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $content );
-
-                        	/**
-                	         * remove spaces, tabs etc
-        	                 */
-	                        $content = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $content );
-
-                                cache( $cache_file, $content, 'CSS');
-                        }
-
-                        $url = SITEURL . '_inc/css/css.php?' . $cache_file;
-
-                        array_push( $urls, $url );
-
-                }
+		foreach( $scripts as $name => $file )
+			array_push( $urls, cache_css( $name, $file ) );		
 
 		return $urls;
-
+	
         }
 
 }

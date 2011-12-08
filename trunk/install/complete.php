@@ -62,6 +62,7 @@ define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
 define(\'SITEURL\',\''.$site_url.'\');
 define(\'USERFILES\',\''.$user_files.'\');
+define(\'DIAGNOSTIC_MODE\',\'0\');
 
 $PLUGINS=array();
 
@@ -70,8 +71,6 @@ $SETTINGS=array(
         \'site_subtitle\'=>\''.addslashes( $_SESSION['settings']['sub_title'] ).'\',
         \'index\'=>\''.$_SESSION['settings']['index'].'\',
 	\'maintenance\'=>\''.$_SESSION['settings']['maintenance'].'\',
-	\'diagnostic_mode\'=>false,
-	\'recache\'=>false,
 	\'system_alert\'=>\'\'
 );
 

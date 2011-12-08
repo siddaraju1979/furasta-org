@@ -35,11 +35,13 @@ $content = $Plugins->filter( 'admin', 'filter_page_content', $Template->display(
  */
 echo'
 <html>
-<head>';
-//	<noscript><meta http-equiv="refresh" content="0;url=' . SITEURL . '_inc/noscript.php"></noscript>';
+<head>
+<noscript><meta http-equiv="refresh" content="0;url=' . SITEURL . '_inc/noscript.php"></noscript>';
 
 foreach( $Template->cssUrls( ) as $url )
 	echo '<link rel="stylesheet" href="' . $url . '"/>';
+
+
 
 echo '
 	<title>' . $Template->display( 'title' ) . ' - Furasta.Org</title>

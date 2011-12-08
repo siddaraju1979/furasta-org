@@ -38,8 +38,8 @@ $Smarty->right_delimiter = ']';
  * register plugin functions 
  */
 $plugin_functions = $Plugins->frontendTemplateFunctions( );
-foreach( $plugin_functions as $function )
-	$Smarty->register_function( $function->frontendTemplateFunction, array( $function, 'frontendTemplateFunction' ) );
+foreach( $plugin_functions as $name => $function )
+	$Smarty->register_function( $name, $function );
 
 /**
  * plugins - filter page content 
@@ -85,8 +85,8 @@ $Smarty->assign( 'site_subtitle', $SETTINGS[ 'site_subtitle' ] );
 $Smarty->register_function( 'menu', 'frontend_menu' );
 $Smarty->register_function( 'breadcrumbs', 'frontend_breadcrumbs' );
 $Smarty->register_function( 'metadata', 'frontend_metadata' );
-$Smarty->register_function( 'css_load', 'frontend_css_load' );
-$Smarty->register_function( 'javascript_load', 'frontend_javascript_load' );
+$Smarty->register_function( 'cache_css', 'frontend_css_load' );
+$Smarty->register_function( 'cache_js', 'frontend_javascript_load' );
 $Smarty->register_function( 'page_load_time', 'frontend_page_load_time' );
 
 $file = ( $Page[ 'template' ] == 'Default' ) ? TEMPLATE_DIR . 'index.html' : TEMPLATE_DIR . $Page[ 'template' ] . '.html';
