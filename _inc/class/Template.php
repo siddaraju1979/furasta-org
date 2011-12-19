@@ -402,10 +402,10 @@ class Template {
 		$scripts = $files + $sources;
 		$urls = array( );
 
-		foreach( $scripts as $name => $file )
-			array_push( $urls, cache_js( $name, $file ) );
+//		foreach( $scripts as $name => $file )
+//			array_push( $urls, cache_js( $name, $file ) );
 
-		return $urls;
+//		return $urls;
 
 		foreach($files as $file){
 			
