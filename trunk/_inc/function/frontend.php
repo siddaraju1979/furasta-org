@@ -103,12 +103,11 @@ function frontend_breadcrumbs( $params ){
  * @todo manually cache css/js files added here
  * @return string of metadata
  */
-function frontend_metadata( ){
+function frontend_metadata( $params, &$smarty ){
 	$keywords = meta_keywords( $Page[ 'content' ] );
 	$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
 
 	$Template = Template::getInstance( );
-
 	$metadata='
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
@@ -120,7 +119,32 @@ function frontend_metadata( ){
 	<meta name="description" content="' . $description . '" />
 	<meta name="keywords" content="' . $keywords . '" />
 	<link rel="shortcut icon" href="' . SITEURL . '_inc/img/favicon.ico" />
-	';
+	<script type="text/javascript">
+		window.$furasta = {
+			site : { 
+				url : "' . SITEURL . '",
+				title : "' . $smarty->_tpl_vars{ 'site_title' } . '",
+				subtitle : "' . $smarty->_tpl_vars{ 'site_subtitle' } . '"
+			},
+			page : {
+				id : "' . $smarty->_tpl_vars{ 'page_id' } . '" ,
+				name : "' . $smarty->_tpl_vars{ 'page_name' } . '" ,
+				slug : "' . $smarty->_tpl_vars{ 'page_slug' } . '" ,
+				parent_id : "' . $smarty->_tpl_vars{ 'parent_id' } . '"
+			}';
+	$User = User::getInstance( );
+	if( $User->verify( ) ){
+		$metadata .= ',
+		user:{
+			id: ' . $User->about( 'id' ) . ',
+			name: "' . $User->about( 'name' ) . '",
+			group: "' . $User->about( 'group' ) . '",
+			group_name: "' . $User->about( 'group_name' ) . '"	
+		}';
+	}
+
+	$metadata .= '
+	};</script>';
 
 	$Plugins = Plugins::getInstance( );
 	$metadata = $Plugins->filter( 'frontend', 'filter_metadata', $metadata );	
@@ -190,7 +214,7 @@ function frontend_javascript_load( $params ){
 	if( !$params[ 'file' ] )
 		return;
 
-        $cache_file = 'FURASTA_FRONTEND_JS_' . $params[ 'file' ];
+        $name = 'FURASTA_FRONTEND_JS_' . $params[ 'file' ];
 
 	return cache_js( $name, $params[ 'file' ] );
 

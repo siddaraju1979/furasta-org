@@ -68,6 +68,7 @@
  * @package user_management
  * @author Conor Mac Aoidh <conormacaoidh@gmail.com> 
  * @license http://furasta.org/licence.txt The BSD License
+ * @todo change public vars to private
  */
 class User{
 
@@ -465,5 +466,18 @@ class User{
 		return false;
 	}
 
+	/**
+	 * about
+	 * 
+	 * accessor method for class vars
+	 *
+	 * @todo change class vars to private
+	 * @param string $var
+	 * @return void/string
+	 */
+	public function about( $var ){
+		if( isset( $this->$var ) )
+			return $this->$var; 
+	}
 }
 ?>

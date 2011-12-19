@@ -56,7 +56,7 @@ a:hover {
     width: 960px;
     height: 200px;
     margin: 0 auto;
-    background: #26639C url('images/header.jpg') no-repeat;
+    background: #26639C url('%SITEURL%_www/undiscovered/images/header.jpg') no-repeat;
 }
 
 #logo {
@@ -108,7 +108,7 @@ a:hover {
     width: 198px;
     font: 14px Arial, Helvetica, sans-serif;
     color: #B5D0E1;
-    background: #4D8EB4 url('images/searchtxt.jpg') no-repeat;
+    background: #4D8EB4 url('%SITEURL%_www/undiscovered/images/searchtxt.jpg') no-repeat;
     border: 1px solid #5B94B6;
 }
 
@@ -119,7 +119,7 @@ a:hover {
     height: 30px;
     font: 12px Arial, Helvetica, sans-serif;
     color: #7B9FB6;
-    background: #114C76 url('images/submit.jpg') no-repeat;
+    background: #114C76 url('%SITEURL%_www/undiscovered/images/submit.jpg') no-repeat;
     border: 1px solid #2A759F;
     cursor: pointer;
 }
@@ -155,12 +155,12 @@ a:hover {
     font-weight: normal;
     line-height: 38px;
     color: #FFFFFF;
-    background: #3476A7 url('images/h2.jpg') no-repeat;
+    background: #3476A7 url('%SITEURL%_www/undiscovered/images/h2.jpg') no-repeat;
 }
 
 #sidebar .box {
     padding: 15px 20px 20px 20px;
-    background: url('images/box.jpg') no-repeat top;
+    background: url('%SITEURL%_www/undiscovered/images/box.jpg') no-repeat top;
 }
 
 #sidebar p {
@@ -170,7 +170,7 @@ a:hover {
 #sidebar ul {
     list-style: none;
     padding: 15px 0 24px 0;
-    background: url('images/box.jpg') no-repeat top;
+    background: url('%SITEURL%_www/undiscovered/images/box.jpg') no-repeat top;
 }
 
 #sidebar ul li {
@@ -232,7 +232,7 @@ p.postmeta {
     height: 70px;
     margin: 0 auto;
     padding-top: 10px;
-    background: url('images/footer.jpg') no-repeat top;
+    background: url('%SITEURL%_www/undiscovered/images/footer.jpg') no-repeat top;
 }
 
 #footer p {

@@ -131,18 +131,18 @@ function rows( $query, $alert = false ){
         	array_push( $array, $row );
 
 	/**
-	 * free all memory allocated to result
-	 */
-	mysql_free_result( $result );
-
-	/**
 	 * if the query fails check if alert is true or that
 	 * diagnostic mode is enabled for debugging
 	 */
-	if( !$array && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
-		error_log( 'Furasta.Org Notice: MySQL Rows Error: ' . mysql_error( ), 0 );
-		error( 'There has been a problem executing this MySQL rows query:<br/><br/>' . htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' . mysql_error( ) , 'MySQL Error' );
-	}
+//	if( !$row && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
+//		error_log( 'Furasta.Org Notice: MySQL Rows Error: ' . mysql_error( ), 0 );
+//		error( 'There has been a problem executing this MySQL rows query:<br/><br/>' . htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' . mysql_error( ) , 'MySQL Error' );
+//	}
+
+	/**
+	 * free all memory allocated to result
+	 */
+	mysql_free_result( $result );
 
 	return $array;
 }

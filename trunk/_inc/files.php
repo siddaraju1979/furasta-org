@@ -10,21 +10,22 @@
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
+ * @todo update this file
  */
 
-require '../_inc/header.php';
+require '../_inc/define.php';
 
 $name=@$_GET['name'];
 
 if($name=='')
-	error('You must select an item to view.','No File Selected');
+	error( 'You must select an item to view.','No File Selected', false );
 
-if(file_exists($name)){
-	$content=file_get_contents($name);
+if(file_exists(USERFILES . 'files/' . $name) && strpos( $name, '..' ) === false){
+	$content=file_get_contents(USERFILES . 'files/' . $name);
 	echo $content;
 }
 else
-	error('File does not exist.','404 - Not Found');
+	error( 'File does not exist.','404 - Not Found', false);
 
 exit;
 

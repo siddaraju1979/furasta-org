@@ -39,10 +39,25 @@ function __autoload( $class_name ){
  * 
  * @param mixed $error to be displayed
  * @param mixed $title of the error, optional
+ * @param bool $report to generate a report or not
+ * @todo error language
  * @access public
  * @return void
  */
-function error( $error, $title = 'Error' ){
+function error( $error, $title = 'Error', $report = true ){
+
+	/**
+	 * enable language file errors, this should be phased in
+	 * and eventually implemented in all possible situations
+	 */
+	if( is_int( $error ) ){
+		$Template = Template::getInstance( );
+		$error_id = $error;
+		$error = $Template->errorToString( $error ); 
+	}
+
+	if( $report )
+		$User = User::getInstance( );
 
 	/**
 	 * if ajax loaded then error output
@@ -50,6 +65,11 @@ function error( $error, $title = 'Error' ){
 	 */
 	if( defined( 'AJAX_LOADED' ) ){
 		echo '<span style="font-weight:bold">' . $title . '</span><br />' . $error;
+		if( $report ){
+			generate_error_report( @$error_id, $error, $title );
+			if( $User->verify( ) )
+				echo '<br /><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a>';
+		}
 		exit;	
 	}
 
@@ -57,6 +77,11 @@ function error( $error, $title = 'Error' ){
 	$Template->add( 'content', '<h1>' . $title . '</h1>' );
 	$Template->add( 'content', '<p>' . $error . '</p>' );
 	$Template->add( 'title', 'Fatal Error' );
+	if( $report ){
+		generate_error_report( @$error_id, $error, $title );
+		if( $User->verify( ) )
+			$Template->add( 'content', '<br/><p><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a></p>' );
+	}
 	require HOME . 'admin/layout/error.php';
 	exit;
 
@@ -162,6 +187,7 @@ function htaccess_rewrite(){
 		"RewriteCond %{SCRIPT_NAME} !\.php\n".
 		"RewriteRule ^admin[/]*$ /admin/index.php [L]\n".
 	        "RewriteRule ^sitemap.xml /_inc/sitemap.php [L]\n".
+		"RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [L]\n".
 		"RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]\n\n".
 
 		"AddCharset utf-8 .js\n".
@@ -480,6 +506,35 @@ function meta_keywords( $string ){
 	$word_count = implode( ',', array_keys( $word_count ) );
 
 	return $word_count;
+}
+
+function generate_error_report( $error_id, $error, $name ){
+	$mysql = ( mysql_ping( ) == true ) ? 'active' : 'not active';	
+	global $PLUGINS;
+	$User = User::getInstance( );
+	$User->verify( );
+
+	$report = '
+	# Furasta.Org Version ' . VERSION . ' Error Report
+	error_id : ' . $error_id . '
+	error : ' . strip_tags( $error ) . '
+	error_title : ' . $name . '
+
+	# system info
+	plugins installed : ' . implode( ',', $PLUGINS ) . '
+
+	# mysql status
+	mysql : ' . $mysql . '
+
+	# user details
+	name : ' . $User->about( 'name' ) . '
+	id : ' . $User->about( 'id' ) . '
+	group : ' . $User->about( 'group' ) . '
+	group_name : ' . $User->about( 'group_name' ) . '
+	perm : ' . implode( ',', $User->about( 'perm' ) ) . '
+	';
+
+	file_put_contents( USERFILES . 'files/error-report.txt', $report );	
 }
 
 ?>

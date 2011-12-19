@@ -149,7 +149,7 @@ function cache_css( $name, $file ){
 
 	$cache_file = md5( $name );
 
-	if( is_file( HOME . $file ) && strpos( $file, '..' ) === false )
+	if( file_exists( HOME . $file ) && strpos( $file, '..' ) === false )
 		$content = file_get_contents( HOME . $file );
 	else
 		$content = $file;
@@ -208,7 +208,7 @@ function cache_js( $name, $file ){
 
 	$cache_file = md5( $name );
 
-	if( is_file( HOME . $file ) && strpos( $file, '..' ) !== false )
+	if( file_exists( HOME . $file ) && !strpos( $file, '..' ) !== false )
 		$content = file_get_contents( HOME . $file );
 	else
 		$content = $file;
