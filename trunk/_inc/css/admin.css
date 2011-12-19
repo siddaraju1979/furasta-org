@@ -33,7 +33,7 @@ body{ text-align:center;background:#eee }
 #dialog{ display:none }
 #wrapper{ width:100% }
 #top{ height:80px;background: url("../img/top-bg.png") repeat-x #20B220 }
-#top-wrapper{ width:80%;margin:0 auto }
+#top-wrapper{ width:95%;margin:0 auto }
 #top #title{ margin:24px 0 0 3px;float:left;font-family:'Times New Roman' }
 #top #title a{ font-size:22px;color:#eee }
 #title #subtitle{ font-size:12px;float:left;color:#eee;font-style:italic }
@@ -44,12 +44,12 @@ body{ text-align:center;background:#eee }
 #top #right-error{ width:80%;height:80px;margin:0 auto;background:url(../img/top-right.png) no-repeat right }
 #header{ background:#2a2a2a url(../img/header.png) no-repeat right;border:1px solid transparent;height:40px }
 #header #logout{ float:right;background:url(../img/logout.png) no-repeat;width:29px;height:29px;margin-top:4px }
-#header #menu{ color:#fff;font-size:16px;margin:0 auto;text-align:left;width:78%;border:1px solid transparent }
-#container{ width:82%;background:#fff url(../img/bg-left.png) repeat-y left;margin:0 auto }
+#header #menu{ color:#fff;font-size:16px;margin:0 auto;text-align:left;width:95%;border:1px solid transparent }
+#container{ width:99%;background:#fff url(../img/bg-left.png) repeat-y left;margin:0 auto }
 #container #container-right{ background:url(../img/bg-right.png) repeat-y right;border-top:1px solid transparent;border-bottom:1px solid transparent }
-#main{ text-align:left;margin:25px auto;width:88%;border-top:1px solid transparent }
+#main{ text-align:left;margin:25px auto;width:94%;border-top:1px solid transparent }
 #footer{ text-align:left;height:27px;width:100%;background:#fff url(../img/footer-mid.png) repeat-x bottom }
-#bottom{ width:80%;margin:-11px auto 0 auto;text-align:left;color:#050;font-size:13px }
+#bottom{ width:95%;margin:-11px auto 0 auto;text-align:left;color:#050;font-size:13px }
 #bottom a{ color:#050;font-size:13px }
 #bottom p{ color:#050;font-size:13px }
 
