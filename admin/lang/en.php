@@ -12,7 +12,7 @@
  * @package    admin_lang
  */
 
-$lang_en = array( 
+$lang_errors = array( 
 	'1' => 'Page Updated',
 	'2' => 'Page Deleted',
 	'3' => 'Page Created',
@@ -30,7 +30,37 @@ $lang_en = array(
 	'15'=> 'Pages Trashed',
 	'16'=> 'Pages Restored',
 	'17'=> 'Pages Deleted',
-	'18'=> 'The %1 field must be at most %2 characters long',
+	'18'=> 'The %1 field must be at most %2 characters long'
+);
+
+$lang = array( 
+
+	// menu items
+	'Overview' => 'Overview',
+	'Pages' => 'Pages',
+	'Edit Pages' => 'Edit Pages',
+	'New Page' => 'New Page',
+	'Trash' => 'Trash',
+	'Users & Groups' => 'Users & Groups',
+	'Edit Users' => 'Edit Users',
+	'Edit Groups' => 'Edit Groups',
+	'Settings' => 'Settings',
+	'Configuration' => 'Configuration',
+	'Template' => 'Template',
+	'Plugins' => 'Plugins',
+	'Update' => 'Update',
+	
+	// Overview Page
+	'Recently Trashed' => 'Recently Trashed',
+	'Recently Edited' => 'Recently Edited',
+	'Development Blog' => 'Development Blog',
+	'Website Overview' => 'Website Overview',
+	'Users' => 'Users',
+	'Groups' => 'Groups',
+	'Template' => 'Template',
+	'Version' => 'Version',
+
+	// Pages
 );
 
 ?>

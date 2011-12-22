@@ -169,6 +169,43 @@ class Template {
 	public $cssSources=array();
 
 	/**
+	 * lang_errors
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $lang_errors = array( );
+
+	/**
+	 * lang
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $lang = array( );
+
+	/**
+	 * __construct
+	 * 
+	 * loads up the language files, filters them through
+	 * plugin language files
+	 * 
+	 * @access public
+	 */
+	public function __construct( ){
+		// include language file
+		require_once HOME . 'admin/lang/' . LANG . '.php';
+
+		// filter through plugins
+		$Plugins = PLUGINS::getInstance( );
+		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', $lang_errors );
+		$lang = $Plugins->filter( 'admin', 'filter_lang', $lang );
+
+		$this->lang = $lang;
+		$this->lang_errors = $lang_errors; 
+	}
+
+	/**
 	 * getInstance 
 	 * 
 	 * @static
@@ -236,13 +273,33 @@ class Template {
 	}
 
 	/**
+	 * e
+	 *
+	 * translates a word from english to the currently
+	 * selected language. words must be pre-defined in the
+	 * language file or the language file must be added to
+	 * via a plugin filter
+	 *
+	 * if no match is found returns original string
+	 *
+	 * @access public
+	 * @params string $word
+	 * @return string
+	 */
+	public function e( $word ){
+		if( isset( $this->lang{ $word } ) )
+			return $this->lang{ $word };
+		return $word;
+	}
+
+	/**
 	 * runtimeError 
 	 * 
 	 * register a runtime error by passing an id of the error
 	 * in the language file
 	 *
 	 * @param int $id of error in language file or string if error is not in language file
-	 * @param params $params optional, can be string or array with multiple params
+	 * @param array $params optional, can be string or array with multiple params
 	 * @access public
 	 * @return bool
 	 * @todo add multiple language support, major re-jigging required
@@ -250,26 +307,27 @@ class Template {
 	 */
 	public function runtimeError( $id, $params = false ){
 
-		require_once HOME . 'admin/lang/en.php';
-
 		/**
-		 * if not numeric that means that an error is being
-		 * thrown without the use of the lang file 
+		 * if not numeric its most likely a plugin error
+		 * else its an error being thrown without use of lang files
 		 */
 		if( !is_numeric( $id ) ){
-			$this->runtimeError{ -1 } = $id;
+			if( isset( $this->lang_errors{ $id } ) )
+				$this->runtimeError{ $id } = $this->lang_errors{ $id };
+			else
+				$this->runtimeError{ -1 } = $id;
 			return true;
 		}
 
 		/**
 		 * if error not in lang file print unknown error
 		 */
-		if( !isset( $lang_en[ $id ] ) ){
+		if( !isset( $this->lang_errors[ $id ] ) ){
 			$this->runtimeError{ $id } = 'An unknown error occured.';
 			return false;
 		}
 
-		$error = $lang_en[ $id ];
+		$error = $this->lang_errors[ $id ];
 
 
 		/**

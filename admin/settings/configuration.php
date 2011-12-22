@@ -61,6 +61,11 @@ if( isset( $_POST[ 'settings_general' ] ) && $valid == true ){
 	if( $url != SITEURL )
 		$constants[ 'SITEURL' ] = $url;
 
+	$lang = @$_POST[ 'lang' ];
+	if( $lang != LANG && file_exists( HOME . 'admin/lang/' . $lang . '.php' ) ){
+		$constants[ 'LANG' ] = $lang;
+	}
+
         /**
          * rewrite the settings file 
          */
@@ -111,6 +116,7 @@ $maintenance = ( $SETTINGS[ 'maintenance' ] == 1 ) ? 'checked="checked"' : '';
 $index = ( $SETTINGS[ 'index' ] == 1 ) ? 'checked="checked"' : '';
 $diagnostic = ( $Template->diagnosticMode == 1 ) ? 'checked="checked"' : '';
 $url = ( isset( $url ) ) ? $url : SITEURL;
+$lang = ( isset( $lang ) ) ? $lang : LANG;
 
 $content='
 <span class="header-img" id="header-Configuration">&nbsp;</span><h1 class="image-left">Configuration</h1></span>
@@ -146,6 +152,24 @@ $content='
         <tr>
                 <td>Diagnostic Mode: <a class="help link" id="help-diagnostic">&nbsp;</a></td>
                 <td><input type="checkbox" name="DiagnosticMode" value="1" class="checkbox" '. $diagnostic .'/></td>
+        </tr>
+        <tr>
+                <td>Language: </td>
+                <td><select name="lang">';
+
+		$files = new DirectoryIterator( HOME . 'admin/lang' );
+		foreach( $files as $file ){
+			if( $file->isFile( ) && $file->getExtension( ) == 'php' ){
+				$l = reset( explode( '.', $file->getFilename( ) ) );
+				$content .= '<option';
+				if( $l == $lang )
+					$content .= ' selected="selected"';
+				$content .= '>' . $l . '</option>';
+			}
+		}
+
+$content .= '
+		</select></td>
         </tr>
 </table>
 <input type="submit" id="config-save" name="settings_general" class="submit right" style="margin-right:10%" value="Save"/>

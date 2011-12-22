@@ -116,6 +116,19 @@ else{
 
 	$menu_items=$Plugins->adminMenu($menu_items);
 
+	// filter language
+	$menu = array( );
+	foreach( $menu_items as $item => $val ){
+		$name = $Template->e( $item );
+		$new_val = $val;
+		foreach( $val[ 'submenu' ] as $n => $arr ){
+			$new_n = $Template->e( $n );
+			$new_val[ 'submenu' ][ $new_n ] = $arr;
+		}
+		$menu[ $name ] = $new_val;
+	}
+	$menu_items = $menu;
+
 	$menu=display_menu($menu_items);
 
         $menu_items_cache=json_encode($menu);
