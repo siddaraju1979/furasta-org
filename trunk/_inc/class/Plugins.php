@@ -62,6 +62,10 @@
  *		 # executes when the page is finished loading
  *		 'on_finish' => 'function_name',
  *
+ * 		 'filter_lang' => 'function_name',
+ *
+ * 		 'filter_lang_errors' => 'function_name',
+ *
  *               'filter_page_content' => 'function_name',
  *
  *		 'filter_group_permissions' => 'function_name',
@@ -643,6 +647,18 @@ class Plugins{
 		return $content;
 
         }
+
+	/**
+	 * plugins
+	 *
+	 * returns the plugins array
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function plugins( ){
+		return $this->plugins;
+	}
 
 }
 ?>

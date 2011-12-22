@@ -161,5 +161,17 @@ class ContentAreas{
 		}
 	}
 
+	/**
+	 * areas
+	 *
+	 * returns the array of registered content areas
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function areas( ){
+		return $this->registered;
+	}
+
 }
 ?>

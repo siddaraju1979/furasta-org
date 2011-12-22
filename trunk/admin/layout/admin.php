@@ -41,8 +41,6 @@ echo'
 foreach( $Template->cssUrls( ) as $url )
 	echo '<link rel="stylesheet" href="' . $url . '"/>';
 
-
-
 echo '
 	<title>' . $Template->display( 'title' ) . ' - Furasta.Org</title>
 

@@ -16,7 +16,7 @@ require 'header.php';
 /**
  * check if user has permission to view page 
  */
-if( $_SESSION[ 'user' ][ 'perm' ][ 2 ] == '0' )
+if( !$User->hasPerm( 'p' ) )
         error( 'You have insufficient privelages to view this page. Please contact one of the administrators.', 'Permissions Error' );
 
 $p_name=str_replace('-',' ',@$_GET['p_name']);
