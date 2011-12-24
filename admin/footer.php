@@ -11,6 +11,8 @@
  * @version    1.0
  */
 
-require $admin_dir.'layout/admin.php';
+
+
+require $admin_dir . 'layout/admin.php';
 exit;
 ?>

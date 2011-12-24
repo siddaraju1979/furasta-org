@@ -21,10 +21,9 @@ date_default_timezone_set( 'UTC' );
 
 /**
  * redirect to install dir if no config found
- * @todo figure out how to redirect to install dir even when in subdirs 
  */
 if( !file_exists( HOME . '.settings.php' ) )
-        header( 'location: /install/index.php' );
+        header( 'location: install/index.php' );
 
 /**
  * require config - personal settings, db settings etc 

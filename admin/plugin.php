@@ -26,5 +26,19 @@ if($p_name=='')
 
 $Plugins->adminPage( $p_name );
 
-require 'footer.php';
+/**
+ * allows plugins to have their own templates for plugin
+ * pages
+ */
+$plugin = $Plugins->plugins( $p_name );
+if( isset( $plugin[ 'admin' ][ 'template_override' ] ) ){
+	$template = $plugin[ 'admin' ][ 'template_override' ];
+	if( validate_file( $template ) ){
+		require HOME . $template;
+		exit;
+	}
+}
+
+require HOME . 'admin/layout/admin.php';
+ 
 ?>
