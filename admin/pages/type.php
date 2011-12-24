@@ -31,7 +31,7 @@ if( $type == 'Normal' ){
 		$content = stripslashes( single( 'select content from ' . PAGES . ' where id= ' . $id, 'content' ) );
 
 		echo '
-			<script type="text/javascript" src="/_inc/js/tiny_mce.js"></script>
+			<script type="text/javascript">$(function( ){ tinymce_changeConfig( "page-content", "Normal" ); });</script>
 			<textarea id="page-content" name="PageContent" class="tinymce" style="width:100%">' . @$content . '</textarea>';
 }
 else{

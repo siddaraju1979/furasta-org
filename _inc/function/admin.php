@@ -109,14 +109,14 @@ function list_pages( $id, $pages, $level=0 ){
 	                $num++;
         	        $href = '<a href="pages.php?page=edit&id='.$page['id'].'" class="list-link">';
                 	$class = ( $level == 0 ) ? ' ':' class="child-of-node-'.$page['parent'].'"';
-			$delete = ( $page[ 'home' ] == 1 ) ? '' : '<a id="' . $page[ 'id' ] . '" class="delete link"><span class="admin-menu-img" id="Trash-img" title="Delete Page" alt="Delete Page">&nbsp;</span></a>';
+			$delete = ( $page[ 'home' ] == 1 ) ? '' : '<a id="' . $page[ 'id' ] . '" class="delete link"><span class="admin-menu-img" id="menu_trash-img" title="Delete Page" alt="Delete Page">&nbsp;</span></a>';
 	                $list .= '<tr id="node-'.$page['id'].'"'.$class.'>
         	                	<td class="pages-table-left"><input type="checkbox" value="' . $page[ 'id' ] . '" name="trash-box"/></td>
                 	                <td class="first">'.$href.$page['name'].'</a></td>
                         	        <td>'.$href.$page['user'].'</a></td>
 	                                <td>'.$href.$page['type'].'</a></td>
         	                        <td>' . $href. date( "d/m/y", strtotime( $page[ 'edited' ] ) ) . '</a></td>
-                	                <td><a href="pages.php?page=new&parent='.$page['id'].'"><span class="admin-menu-img" id="New-Page-img" title="New Sub Page" alt="New Sub Page">&nbsp;</span></a></td>
+                	                <td><a href="pages.php?page=new&parent='.$page['id'].'"><span class="admin-menu-img" id="menu_new_page-img" title="New Sub Page" alt="New Sub Page">&nbsp;</span></a></td>
 	                	        <td>' . $delete . '</td>
 	                        </tr>';
 		}
@@ -127,6 +127,15 @@ function list_pages( $id, $pages, $level=0 ){
         return $list;
 }
 
+/**
+ * display_menu
+ *
+ * changes the $menu_items array into a html formatted
+ * menu
+ *
+ * @params array $menu_items
+ * @return string
+ */
 function display_menu($menu_items){
 
 	/**
@@ -135,33 +144,31 @@ function display_menu($menu_items){
 	$User = User::getInstance( );
 
 	if( !$User->hasPerm( 't' ) )
-		unset( $menu_items[ 'Pages' ][ 'submenu' ][ 'Trash' ] );
+		unset( $menu_items[ 'menu_pages' ][ 'submenu' ][ 'menu_trash' ] );
 
 	if( !$User->hasPerm( 'c' ) )
-		unset( $menu_items[ 'Pages' ][ 'submenu' ][ 'New Page' ] );
+		unset( $menu_items[ 'menu_pages' ][ 'submenu' ][ 'menu_new_page' ] );
 
 	if( !$User->hasPerm( 'u' ) )
-		unset( $menu_items[ 'Users & Groups' ] );
+		unset( $menu_items[ 'menu_users_groups' ] );
 
 	if( !$User->hasPerm( 's' ) )
-		unset( $menu_items[ 'Settings' ] );
+		unset( $menu_items[ 'menu_settings' ] );
+
+//	die( print_r( $menu_items ) );
 
 	$list='';
-	foreach($menu_items as $item){
-		$name=reset(array_keys($menu_items,$item));
-		$r_item=str_replace(' ','-',$name);
-		$list.='<li><a href="'.$item['url'].'" id="'.$r_item.'">'.$name.'</a>';
-		if(isset($item['submenu'])){
-			$list.='<ul>';
-			foreach($item['submenu'] as $ite){
-				$name=reset(array_keys($item['submenu'],$ite));
-		                $r_item=str_replace(' ','-',$name);
-                		$list.='<li><a href="'.$ite['url'].'" id="'.$r_item.'"><span id="'.$r_item.'-img" class="admin-menu-img">&nbsp;</span><span class="admin-menu-link">'.$name.'</span></a></li>';
+	foreach( $menu_items as $name => $item ){
+		$list .= '<li><a href="' . $item[ 'url' ] . '" id="' . $name . '">' . $item[ 'name' ] . '</a>';
+		if( isset( $item[ 'submenu' ] ) ){
+			$list .= '<ul>';
+			foreach( $item[ 'submenu' ] as $n => $ite ){
+                		$list .= '<li><a href="' . $ite[ 'url' ] . '" id="' . $n . '"><span id="' . $n . '-img" class="admin-menu-img">&nbsp;</span><span class="admin-menu-link">' . $ite[ 'name' ] . '</span></a></li>';
 
 			}
-			$list.='</ul>';
+			$list .= '</ul>';
 		}
-		$list.='</li>';
+		$list .= '</li>';
 
 	}
 	return $list;

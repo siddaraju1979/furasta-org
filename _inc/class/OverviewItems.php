@@ -65,27 +65,29 @@ class OverviewItems{
 	 */
 	function __construct( ){
 
+		$Template = Template::getInstance( );
+
                 /**
                  * enable default overview items 
                  */
                 $items = array(
                         array(
-                                'name'  =>      'Website Overview',
+                                'name'  =>      $Template->e( 'overview_website_overview' ),
                                 'id'    =>      'website-overview',
                                 'status'=>      'open'
                         ),
                         array(
-                                'name'  =>      'Recently Edited',
+                                'name'  =>      $Template->e( 'overview_recently_edited' ),
                                 'id'    =>      'recently-edited',
                                 'status'=>      'open'
                         ),
                         array(
-                                'name'  =>      'Recently Trashed',
+                                'name'  =>      $Template->e( 'overview_recently_trashed' ),
                                 'id'    =>      'recently-trashed',
                                 'status'=>      'open'
                         ),
                         array(
-                                'name'  =>      'Furasta Development Blog',
+                                'name'  =>      $Template->e( 'overview_furasta_development_blog' ),
                                 'id'    =>      'furasta-devblog',
                                 'status'=>      'open'
                         )

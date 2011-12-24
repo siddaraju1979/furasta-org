@@ -115,20 +115,19 @@ strong{ font-weight:bold }
 #header #menu ul > li ul a{ display:block;width:152px;color:#000;padding:6px 8px }
 #header #menu ul > li ul li ul{ margin:-35px 0 0 170px;position: absolute;border-top:1px solid #000 }
 #header #menu ul p{ padding:0;margin-left:5px }
-.admin-menu-img{ width:18px;height:18px;float:left }
-.admin-menu-link{ margin:0 0 0 10px }
+.admin-menu-img{ width:18px;height:18px;float:left;margin-right:10px }
 
 #right-item{ float:right!important }
 
-#Edit-Pages-img{ background:url(../img/icons.png) no-repeat -140px -156px  }
-#New-Page-img{ background:url(../img/icons.png) no-repeat -119px -156px }
-#Trash-img{ background:url(../img/icons.png) no-repeat -1px -178px }
-#Edit-Users-img{ background:url(../img/icons.png) no-repeat -44px -178px }
-#Edit-Groups-img{ background:url(../img/icons.png) no-repeat -68px -178px }
-#Configuration-img{ background:url(../img/icons.png) no-repeat -2px -156px }
-#Template-img{ background:url(../img/icons.png) no-repeat -181px -156px }
-#Plugins-img{ background:url(../img/icons.png) no-repeat -161px -156px }
-#Update-img{ background:url(../img/icons.png) no-repeat -22px -178px }
+#menu_edit_pages-img{ background:url(../img/icons.png) no-repeat -140px -156px  }
+#menu_new_page-img{ background:url(../img/icons.png) no-repeat -119px -156px }
+#menu_trash-img{ background:url(../img/icons.png) no-repeat -1px -178px }
+#menu_edit_users-img{ background:url(../img/icons.png) no-repeat -44px -178px }
+#menu_edit_groups-img{ background:url(../img/icons.png) no-repeat -68px -178px }
+#menu_configuration-img{ background:url(../img/icons.png) no-repeat -2px -156px }
+#menu_template-img{ background:url(../img/icons.png) no-repeat -181px -156px }
+#menu_plugins-img{ background:url(../img/icons.png) no-repeat -161px -156px }
+#menu_update-img{ background:url(../img/icons.png) no-repeat -22px -178px }
 
 /* login form */
 
@@ -165,6 +164,7 @@ table tr td#slug-url a{ color:#050;font-style:italic }
 table#add-user{ width:60%;text-align:left;margin:0 auto }
 table#perm{ width:50%;text-align:left;margin:0 auto }
 #pages{ margin-top:0 }
+#options-bar-left{ height: 26px; border-top: 1px solid transparent;margin-bottom:8px }
 #options-bar-left a:focus{ outline:none }
 #list-pages-dropbox{ display:none;position:absolute }
 
@@ -182,7 +182,7 @@ input{ border:1px solid #666;padding:3px;width:100% }
 input.checkbox{ width:auto }
 .green{ color:green }
 .trash-select{ width:160px }
-.submit{ width:15% }
+.submit{ width:auto }
 #edit-delete{ float:right;margin-top:10px }
 #edit-save{ margin-top:10px }
 
