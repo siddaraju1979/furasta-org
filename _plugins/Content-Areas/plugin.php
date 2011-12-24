@@ -17,7 +17,14 @@ $plugin = array(
 
 	'admin' => array(
 		'filter_menu' => 'content_areas_filter_menu',
-		'page' => 'content_areas_admin'
+		'page' => 'content_areas_admin',
+		'template_override' => '_plugins/Content-Areas/admin/template.php',
+		'content_area_widgets' => array(
+			array(
+				'name' => 'Content',
+				'function' => 'content_areas_admin_widget_content'
+			)
+		)
 	),
 
 	'frontend' => array(
@@ -25,7 +32,13 @@ $plugin = array(
 			'name' => 'content_area',
 			'function' => 'content_areas_frontend_template_function'
 		),
-		'filter_metadata' => 'content_areas_frontend_filter_metadata'
+		'filter_metadata' => 'content_areas_frontend_filter_metadata',
+		'content_area_widgets' => array(
+			array(
+				'name' => 'Content',
+				'function' => 'content_areas_frontend_widget_content'
+			)
+		)
 	)
 );
 
@@ -75,11 +88,7 @@ function content_areas_frontend_template_function( $params, &$smarty ){
  */
 function content_areas_filter_menu( $menu, $url ){
 
-	foreach( $menu as $item => $value ){
-		if( $item == 'Settings' )
-			$menu[ $item ][ 'submenu' ][ 'Content Areas' ] = array( 'url' => $url );
-
-	}
+	$menu[ 'menu_content_areas' ] = array( 'name' => 'Content Areas', 'url' => $url );
 
 	return $menu;
 }
@@ -88,46 +97,17 @@ function content_areas_filter_menu( $menu, $url ){
  * content_areas_admin
  *
  * echos the admin area content areas page
- *
- * 
  */
 function content_areas_admin( ){
+	require HOME . '_plugins/Content-Areas/admin/index.php';
+}
+
+function content_areas_admin_widget_content( ){
 	$Template = Template::getInstance( );
-	$Template->loadCSS( '_plugins/Content-Areas/style.css' );
-	$ContentAreas = ContentAreas::getInstance( );
+	$Template->add( 'content', 'test' );
+}
 
-	$content = '
-	<h1>Content Areas</h1>
-	<div id="content-areas">
-		<div id="content-right">
-			<h2>Your Website</h2>
-			<div id="content-site">';
-
-	foreach( $ContentAreas->areas( ) as $area ){
-		$content .= '<div class="content-area" id="content-area-' . $area[ 'name' ] . '" style="position:relative;';
-		$content .= 'top:' . $area[ 'data' ][ 'top' ] . 'px;';
-		$content .= 'left:' . $area[ 'data' ][ 'left' ] . 'px;';
-		$content .= 'width:' . $area[ 'data' ][ 'width' ] . 'px;">';
-		$content .= '<h3>' . $area[ 'name' ] . '</h3></div>';
-	}
-
-	$content .= '
-			</div>
-		</div>
-		<div id="content-left">
-			<h2>Widgets</h2>';
-
-	$Plugins = Plugins::getInstance( );
-	foreach( $Plugins::plugins( ) as $plugin ){
-	}
-
-	$content .= '
-		</div>
-		<br style="clear:both"/>
-	</div>
-	';
-
-	$Template->add( 'title', 'Content Areas' );
-	$Template->add( 'content', $content );
+function content_areas_frontend_widget_content( ){
+	echo 'test';
 }
 ?>

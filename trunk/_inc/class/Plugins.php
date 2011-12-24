@@ -77,6 +77,10 @@
  *                       'function' => 'function_name',
  *               ),
  *
+ *		 # allows plugins to have custom templates in the
+ *		 # admin area for their specific plugin page only
+ *		 'template_override' => 'file_name',
+ *
  *       ),
  *
  *       # frontend functions
@@ -240,6 +244,7 @@ class Plugins{
 	 * @todo finish this
 	 */
 	public function refactor( ){
+
 		$plugins = array( );
 
 		foreach( $this->plugins as $plugin ){
@@ -651,12 +656,21 @@ class Plugins{
 	/**
 	 * plugins
 	 *
-	 * returns the plugins array
+	 * returns the plugins array, or if $name is
+	 * provided returns details on a particular
+	 * plugin
 	 *
+	 * @params string $name optional
 	 * @access public
 	 * @return array
 	 */
-	public function plugins( ){
+	public function plugins( $name = false ){
+		if( $name ){
+			foreach( $this->plugins as $plugin ){
+				if( $plugin[ 'name' ] == $name )
+					return $plugin;
+			}
+		}
 		return $this->plugins;
 	}
 

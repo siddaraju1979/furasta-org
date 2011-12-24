@@ -14,6 +14,41 @@
  * the content areas class manages everything to
  * do with content areas 
  *
+ * ==== WIDGETS ====
+ *
+ * Widgets are methods of adding content to a content area.
+ * The content areas plugin only provides one default widget -
+ * the content widget - which allows content to be added to a
+ * content area with tinymce.
+ *
+ * This class has built in support for adding your own widget
+ * using a plugin. Some example types of widgets would be
+ * image gallery, facebook anything like that.
+ *
+ * Widgets are created by adding to the $plugin array. For
+ * an example look at the ContentAreas plugin file. Widgets
+ * must be added to the plugin array in the following format:
+ *
+ * 	'admin' => array(
+ * 		'content_area_widgets' => array(
+ * 			array(
+ *				'name' => 'Example Widget',
+ *				'function' => 'function to be executed to display the widget'
+ * 			)
+ * 		)
+ *	),
+ * 	'frontend' => array(
+ * 		'content_area_widgets' => array(
+ * 			array(
+ *				'name' => 'Example Widget',
+ *				'function' => 'function to be executed to display the widget'
+ * 			)
+ * 		)
+ *	)
+ * 
+ * As you can see from the example above, each plugin can have
+ * multiple widgets
+ *
  * @todo add permissions support
  */
 class ContentAreas{
@@ -32,6 +67,13 @@ class ContentAreas{
 	 * content areas
 	 */
 	private $registered = array( );
+
+	/**
+	 * widgets
+	 * 
+	 * holds an array of content area widgets
+	 */
+	private $widgets;
 
 	/**
 	 * __construct
@@ -59,6 +101,27 @@ class ContentAreas{
 		}
 
 		$this->registered = $reg;
+
+		/**
+		 * get all widgets from plugins
+		 */
+		$widgets = array( );
+		$Plugins = Plugins::getInstance( );
+		foreach( $Plugins->plugins( ) as $plugin ){
+			if( isset( $plugin[ 'admin' ][ 'content_area_widgets' ] )
+				&& isset( $plugin[ 'frontend' ][ 'content_area_widgets' ] ) ){
+				$admin = $plugin[ 'admin' ][ 'content_area_widgets' ];
+				$frontend = $plugin[ 'frontend' ][ 'content_area_widgets' ];
+
+				foreach( $admin as $widget )
+					$widgets[ $widget[ 'name' ] ][ 'admin' ] = $widget[ 'function' ];
+
+				foreach( $frontend as $widget )
+					$widgets[ $widget[ 'name' ] ][ 'frontend' ] = $widget[ 'function' ];
+			}
+		}
+
+		$this->widgets = $widgets;
 	}
 
 	/**
@@ -171,6 +234,28 @@ class ContentAreas{
 	 */
 	public function areas( ){
 		return $this->registered;
+	}
+
+	/**
+	 * widgets
+	 *
+	 * returns an array of widgets or if name is supplied
+	 * returns info on one widget
+	 * 
+	 * @param string $name, optional
+	 * @access public
+	 * @return array
+	 */
+	public function widgets( $name = false ){
+		// return a specific widget
+		if( $name ){
+			if( isset( $this->widgets{ $name } ) )
+				return $this->widgets{ $name };
+			return false;
+		}
+
+		// return all widget info
+		return $this->widgets;
 	}
 
 }

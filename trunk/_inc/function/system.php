@@ -538,4 +538,25 @@ function generate_error_report( $error_id, $error, $name ){
 	file_put_contents( USERFILES . 'files/error-report.txt', $report );	
 }
 
+/**
+ * validate_file
+ *
+ * checks if file exists and also if file
+ * name is safe
+ *
+ * @params string $file
+ * @return bool
+ */
+function validate_file( $file ){
+	if( strpos( $file, '..' ) !== false )
+		return false;
+
+	$file = HOME . $file;
+
+	if( !file_exists( $file ) )
+		return false;
+
+	return true;
+}
+
 ?>
