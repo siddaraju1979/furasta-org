@@ -1,6 +1,4 @@
-$(document).ready(function() {
-	$('#page-content').tinymce({
-		// Location of TinyMCE script
+window.tinymceConfigs = {
 		script_url : '/_inc/tiny_mce/tiny_mce.js',
 
 		// General options
@@ -20,7 +18,10 @@ $(document).ready(function() {
 		template_external_list_url : "lists/template_list.js",
 		external_link_list_url : "lists/link_list.js",
 		external_image_list_url : "lists/image_list.js",
-		media_external_list_url : "lists/media_list.js",
+		media_external_list_url : "lists/media_list.js"
+};
 
-	});
-});
+function tinymce_changeConfig( element_id, key ){
+	tinyMCE.settings = window.tinymceConfigs;
+	tinyMCE.execCommand( 'mceAddControl', true, "page-content" );
+}

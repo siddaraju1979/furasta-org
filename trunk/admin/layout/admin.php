@@ -79,8 +79,11 @@ echo '
 			</div>
 		</div>
 		<div id="bottom">
-                        <p class="right"><a href="settings.php?page=edit-users&id=' . $User->id . '">'. $User->name .'</a> - Group: <a href="settings.php?page=edit-groups&id=' . $User->group .'">'. $User->group_name . '</a></p>
-			<p class="left">&copy; <a href="http://furasta.org">Furasta.Org</a> | <a href="http://forum.furasta.org">Forum</a> | <a href="http://bugs.furasta.org">Bug Tracker</a></p>
+                        <p class="right"><a href="settings.php?page=edit-users&id=' . $User->id . '">'. $User->name .'</a> - ' 
+			. $Template->e( 'group' ) . ': <a href="settings.php?page=edit-groups&id=' . $User->group .'">'. $User->group_name . '</a></p>
+			<p class="left">&copy; <a href="http://furasta.org">Furasta.Org</a> | <a href="http://forum.furasta.org">' .
+			$Template->e( 'forum' ) . '</a> | <a href="http://bugs.furasta.org">
+			' . $Template->e( 'bug_tracker' ) . '</a></p>
 			<br style="clear:both"/>
 		</div>
 	</div>

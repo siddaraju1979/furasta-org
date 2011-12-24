@@ -66,73 +66,73 @@ if( cache_exists( $cache_file, 'USERS' ) && DIAGNOSTIC_MODE == 0 )
 else{
 	$url = SITEURL . 'admin/';
 
-	$menu_items=array(
-		'Overview'=>array(
-			'url'=>$url . 'index.php',
+	$menu_items = array(
+		'menu_overview' => array(
+			'url' => $url . 'index.php',
+			'name' => $Template->e( 'menu_overview' )
 		),
-		'Pages'=>array(
-			'url'=>$url . 'pages.php',
-			'submenu'=>array(
-				'Edit Pages'=>array(
-						'url'=>$url . 'pages.php?page=list',
+		'menu_pages' => array(
+			'url' => $url . 'pages.php',
+			'name' => $Template->e( 'menu_pages' ),
+			'submenu' => array(
+				'menu_edit_pages' => array(
+					'name' => $Template->e( 'menu_edit_pages' ),
+					'url' => $url . 'pages.php?page=list'
 				),
-				'New Page'=>array(
-						'url'=>$url . 'pages.php?page=new',
+				'menu_new_page' => array(
+					'name' => $Template->e( 'menu_new_page' ),
+					'url' => $url . 'pages.php?page=new'
 				),
-				'Trash'=>array(
-						'url'=>$url . 'pages.php?page=trash',
+				'menu_trash' => array(
+					'name' => $Template->e( 'menu_trash' ),
+					'url' => $url . 'pages.php?page=trash'
 				),
 			),
 		),
-		'Users & Groups'=>array(
-			'url'=>$url . 'users.php',
-			'submenu'=>array(
-				'Edit Users'=>array(
-					'url'=>$url . 'users.php?page=users',
+		'menu_users_groups' => array(
+			'name' => $Template->e( 'menu_users_groups' ),
+			'url' => $url . 'users.php',
+			'submenu' => array(
+				'menu_edit_users' => array(
+					'name' => $Template->e( 'menu_edit_users' ),
+					'url' => $url . 'users.php?page=users'
 				),
-				'Edit Groups'=>array(
-					'url'=>$url . 'users.php?page=groups',
+				'menu_edit_groups' => array(
+					'name' => $Template->e( 'menu_edit_groups' ),
+					'url' => $url . 'users.php?page=groups'
 				),
 			),
 		),
-		'Settings'=>array(
-			'url'=>$url . 'settings.php',
-			'submenu'=>array(
-				'Configuration'=>array(
-					'url'=>$url . 'settings.php?page=configuration',
+		'menu_settings' => array(
+			'name' => $Template->e( 'menu_settings' ),
+			'url' => $url . 'settings.php',
+			'submenu' => array(
+				'menu_configuration' => array(
+					'name' => $Template->e( 'menu_configuration' ),
+					'url' => $url . 'settings.php?page=configuration',
 				),
-				'Template'=>array(
-						'url'=>$url . 'settings.php?page=template',
+				'menu_template' => array(
+					'name' => $Template->e( 'menu_template' ),
+					'url' => $url . 'settings.php?page=template',
 				),
-				'Plugins'=>array(
-						'url'=>$url . 'settings.php?page=plugins',
+				'menu_plugins' => array(
+					'name' => $Template->e( 'menu_plugins' ),
+					'url' => $url . 'settings.php?page=plugins'
 				),
-				'Update'=>array(
-						'url'=>$url . 'settings.php?page=update',
+				'menu_update'=>array(
+					'name' => $Template->e( 'menu_update' ),
+					'url' => $url . 'settings.php?page=update'
 				),
 			),
 		),
 	);
 
-	$menu_items=$Plugins->adminMenu($menu_items);
+	$menu_items = $Plugins->adminMenu( $menu_items );
 
-	// filter language
-	$menu = array( );
-	foreach( $menu_items as $item => $val ){
-		$name = $Template->e( $item );
-		$new_val = $val;
-		foreach( $val[ 'submenu' ] as $n => $arr ){
-			$new_n = $Template->e( $n );
-			$new_val[ 'submenu' ][ $new_n ] = $arr;
-		}
-		$menu[ $name ] = $new_val;
-	}
-	$menu_items = $menu;
+	$menu = display_menu( $menu_items );
 
-	$menu=display_menu($menu_items);
-
-        $menu_items_cache=json_encode($menu);
-        cache($cache_file,$menu_items_cache,'USERS');
+        $menu_items_cache = json_encode( $menu );
+        cache( $cache_file, $menu_items_cache, 'USERS' );
 }
 
 $Template->add('menu',$menu);

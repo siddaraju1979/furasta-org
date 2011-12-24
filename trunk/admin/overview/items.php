@@ -38,16 +38,17 @@ switch( $overview_item ){
 	case 'website-overview':
 		require_once HOME . '_inc/function/admin.php';
 
+		$Template = Template::getInstance( );
 		$template = parse_template_file(TEMPLATE_DIR.'style.css');
 
 		echo '
 		<table class="row-color">
-		        <tr><td>Pages:</td><td>' . single( 'select count(id) from ' . PAGES, 'count(id)' ) . '</td></tr>
-		        <tr><td>Trash:</td><td>' . single( 'select count(id) from ' . TRASH, 'count(id)' ) . '</td></tr>
-		        <tr><td>Users:</td><td>' . single( 'select count(id) from ' . USERS, 'count(id)' ) . '</td></tr>
-			<tr><td>Groups:</td><td>' . single( 'select count(id) from ' . GROUPS, 'count(id)' ) . '</td></tr>
-		        <tr><td>Theme:</td><td>' . $template[ 'Name' ] . '</td></tr>
-		        <tr><td>Furasta.Org Version:</td><td>' . VERSION . '</td></tr>
+		        <tr><td>' . $Template->e( 'pages' ) . ':</td><td>' . single( 'select count(id) from ' . PAGES, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'trash' ) . ':</td><td>' . single( 'select count(id) from ' . TRASH, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'users' ) . ':</td><td>' . single( 'select count(id) from ' . USERS, 'count(id)' ) . '</td></tr>
+			<tr><td>' . $Template->e( 'groups' ) . ':</td><td>' . single( 'select count(id) from ' . GROUPS, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'template' ) . ':</td><td>' . $template[ 'Name' ] . '</td></tr>
+		        <tr><td>Furasta.Org ' . $Template->e( 'version' ) . ':</td><td>' . VERSION . '</td></tr>
 		</table>';
 	break;
 	case 'recently-edited':

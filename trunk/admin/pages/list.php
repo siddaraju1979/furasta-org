@@ -456,7 +456,7 @@ $content = '
 	<a href="pages.php?page=new">
 		<span class="header-img" id="header-New-Page">&nbsp;</span>
 		<h1 class="image-left">
-			New Page
+			' . $Template->e( 'menu_new_page' ) . '
 		</h1>
 	</a>
 </span>
@@ -464,7 +464,7 @@ $content = '
 <span>
 	<span class="header-img" id="header-Edit-Pages">&nbsp;</span>
 	<h1 class="image-left">
-		Pages
+		' . $Template->e( 'pages' ) . '
 	</h1>
 </span>
 
@@ -474,14 +474,14 @@ $content = '
         <div id="options-bar-right" style="float:right">
 		<select name="action" class="trash-select select-p_1">
 			<option default="default">---</option>
-			<option>Trash</option>
+			<option>' . $Template->e( 'trash' ) . '</option>
 		</select> 
-		<input id="p_1" class="p-submit submit" type="submit" value="Go"/>
+		<input id="p_1" class="p-submit submit" type="submit" value="' . $Template->e( 'pages_list_go_button' ) . '"/>
         </div>
 	<div id="options-bar-left">
-		<a class="link" id="treeTable-toggle">
-			<img src="/_inc/img/expand-collapse-all.jpg"/>
-		</a>
+		<h2><a class="link" id="treeTable-toggle">
+			' . $Template->e( 'pages_list_expand_collapse_all' ) . '
+		</a></h2>
 	</div>
 </div>
 
@@ -491,12 +491,12 @@ $content = '
 		<th class="pages-table-left">
 			<input type="checkbox" class="checkbox-all" all=""/>
 		</th>
-		<th>Name</th>
-		<th>Author</th>
-		<th>Type</th>
-		<th>Edited</th>
-		<th>New</th>
-		<th>Trash</th>
+		<th>' . $Template->e( 'name' ) . '</th>
+		<th>' . $Template->e( 'author' ) . '</th>
+		<th>' . $Template->e( 'type' ) . '</th>
+		<th>' . $Template->e( 'edited' ) . '</th>
+		<th>' . $Template->e( 'new' ) . '</th>
+		<th>' . $Template->e( 'trash' ) . '</th>
 	</tr>
 ';
 
@@ -525,9 +525,9 @@ $content .= '
 <div style="float:right;margin-top:10px">
 	<select name="action" class="trash-select select-p_2">
 		<option default="default">---</option>
-		<option>Trash</option>
+		<option>' . $Template->e( 'trash' ) . '</option>
 	</select> 
-	<input id="p_2" class="p-submit submit" type="submit" value="Go"/>
+	<input id="p_2" class="p-submit submit" type="submit" value="' . $Template->e( 'pages_list_go_button' ) . '"/>
 </div>
 
 <br style="clear:both"/>

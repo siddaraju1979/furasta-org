@@ -320,7 +320,7 @@ $content='
 <div id="page-permissions-dialog" title="Page Permissions" style="display:none">
         <div id="complete-message" style="display:none"></div>
         <form id="page-permissions-content">
-		<p>Loading.. <img src="' . SITEURL . '_inc/img/loading.gif"/></p>
+		<p>' . $Template->e( 'loading' ) . '<img src="' . SITEURL . '_inc/img/loading.gif"/></p>
         </form>
 </div>
 
@@ -332,7 +332,7 @@ $content='
 		<tr>
                         <td class="small">Name:</td>
 			<td><input type="text" name="Name" id="page-name" value="'.$Page['name'].'" autocomplete="off"/></td>
-			<td class="options"><a id="options-link">Show Options</a></td>
+			<td class="options"><a id="options-link">' . $Template->e( 'pages_edit_show_options' ) . '</a></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

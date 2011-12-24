@@ -35,32 +35,70 @@ $lang_errors = array(
 
 $lang = array( 
 
+	// general terms
+	'name' => 'Name',
+	'author' => 'Author',
+	'type' => 'Type',
+	'edited' => 'Edited',
+	'new' => 'New',
+	'pages' => 'Pages',
+	'trash' => 'Trash',
+	'groups' => 'Groups',
+	'users' => 'Users',
+	'template' => 'Template',
+	'version' => 'Version',
+	'forum' => 'Forum',
+	'bug_tracker' => 'Bug Tracker',
+	'group' => 'Group',
+	'parent' => 'Parent',
+	'permissions' => 'Permissions',
+	'loading' => 'Loading',
+
 	// menu items
-	'Overview' => 'Overview',
-	'Pages' => 'Pages',
-	'Edit Pages' => 'Edit Pages',
-	'New Page' => 'New Page',
-	'Trash' => 'Trash',
-	'Users & Groups' => 'Users & Groups',
-	'Edit Users' => 'Edit Users',
-	'Edit Groups' => 'Edit Groups',
-	'Settings' => 'Settings',
-	'Configuration' => 'Configuration',
-	'Template' => 'Template',
-	'Plugins' => 'Plugins',
-	'Update' => 'Update',
+	'menu_overview' => 'Overview',
+	'menu_pages' => 'Pages',
+	'menu_edit_pages' => 'Edit Pages',
+	'menu_new_page' => 'New Page',
+	'menu_trash' => 'Trash',
+	'menu_users_groups' => 'Users & Groups',
+	'menu_edit_users' => 'Edit Users',
+	'menu_edit_groups' => 'Edit Groups',
+	'menu_settings' => 'Settings',
+	'menu_configuration' => 'Configuration',
+	'menu_template' => 'Template',
+	'menu_plugins' => 'Plugins',
+	'menu_update' => 'Update',
 	
 	// Overview Page
-	'Recently Trashed' => 'Recently Trashed',
-	'Recently Edited' => 'Recently Edited',
-	'Development Blog' => 'Development Blog',
-	'Website Overview' => 'Website Overview',
-	'Users' => 'Users',
-	'Groups' => 'Groups',
-	'Template' => 'Template',
-	'Version' => 'Version',
+	'overview_recently_trashed' => 'Recently Trashed',
+	'overview_recently_edited' => 'Recently Edited',
+	'overview_furasta_development_blog' => 'Furasta.Org Development Blog',
+	'overview_website_overview' => 'Website Overview',
 
 	// Pages
+	'pages_list_go_button' => 'Go',
+	'pages_list_expand_collapse_all' => 'Expand / Collapse all',
+	'pages_edit_show_options' => 'Show Options',
+	'pages_edit_hide_options' => 'Hide Options',
+	'pages_edit_save_button' => 'Save',
+	'pages_edit_delete_button' => 'Delete',
+	'pages_edit_is_home' => 'Is Home Page',
+	'pages_edit_hide_navigation' => 'Hide in Navigation',
+
+	// Users & Groups
+	'Email' => 'Email',
+	'Delete' => 'Delete',
+	'New User' => 'New Users',
+	'Homepage' => 'Homepage',
+	'Change Password' => 'Change Password',
+	'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.' =>
+		'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.',
+	
+
+	// Prompts
+	'Yes' => 'Yes',
+	'Cancel' => 'Cancel',
+	'Are you sure?' => 'Are you sure?',
 );
 
 ?>
