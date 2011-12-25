@@ -376,7 +376,11 @@ function scan_dir($dir){
 function rss_fetch( $url, $tagname = 'item' ){
 
 	$dom = new DOMdocument( );
-	$dom->load( $url );
+
+	$success = $dom->load( $url );
+	if( !$success )
+		return false;
+
 	$elements = $dom->getElementsByTagName( $tagname );
 	$items = array( );
 

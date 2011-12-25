@@ -55,6 +55,12 @@ switch( $overview_item ){
 		echo '<table class="row-color">';
 
 		$pages = rows( 'select id,name,content,edited,perm from ' . PAGES . ' order by edited desc limit 5' );
+
+		if( count( $pages ) == 0 ){
+			echo '<p><i>No items recently edited!</i></p>';
+			exit;
+		}
+
 		foreach( $pages as $page ){
 
 			/**
@@ -77,6 +83,12 @@ switch( $overview_item ){
 	case 'recently-trashed':
 		echo '<table class="row-color">';
 		$pages = rows( 'select id,name,content,edited from ' . TRASH . ' order by edited desc limit 5' );
+		
+		if( count( $pages ) == 0 ){
+			echo '<p><i>No items in trash!</i></p>';
+			exit;
+		}
+
 		foreach( $pages as $page ){
         		echo '<tr><td><span>' . date( "F j,Y", strtotime( $page[ 'edited' ] ) ) . '</span><a
 		        href="pages.php?page=edit&id=' . $page[ 'id' ] . '"><h3>' . $page[ 'name' ] . '</h3></a>
@@ -92,6 +104,12 @@ switch( $overview_item ){
         		$items = json_decode( cache_get( $cache_file, 'RSS' ), true );
 		else{
 			$elements = rss_fetch( 'http://blog.macaoidh.name/tag/furasta-org/feed/' );
+
+			if( $elements == false ){
+				echo '<p><i>Could not fetch feed.</i></p>';
+				exit;
+			}
+
 			$items = array( );
 
 			for( $i=0; $i<=2; $i++ ){
