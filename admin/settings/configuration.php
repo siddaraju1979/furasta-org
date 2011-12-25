@@ -85,25 +85,25 @@ $(document).ready(function(){
 
         $("#help-index").click(function(){
 
-                fHelp("Ticking this box will force search engines such as Google, Yahoo etc not to index this website. This option should be enabled to make the website more private, though people will still be able to access it through direct URLs.");
+                fHelp( "' . $Template->e( 'help_configuration_index' ) . '" );
 
         });
 
         $("#help-maintenance").click(function(){
 
-                fHelp("Ticking this box will enable Maintenance Mode; a feature which should be enabled while making sitewide changes. For example, if you are performing a re-structure of your website and you enable Maintenance Mode people who view the website will see a maintenance notice and will not be able to access any content. More information is available <a href=\"http://furasta.org/Help/Maintenance-Mode\">here</a>.");
+                fHelp( "' . $Template->e( 'help_configuration_maintenance' ) . '" );
 
         });
 
 	$( "#help-diagnostic" ).click( function( ){
 
-		fHelp( "<b>Note: For developers only</b><br/>The CMS carrys out all kinds of caching to make page loads quicker, including that of CSS and JavaScript. If you want to temporarily disable this feature for development reasons then you can enable Diagnostic Mode. During this time there will be no caching of CSS or JavaScript, so it is recommended to enable it again when finished testing." );
+		fHelp( "' . $Template->e( 'help_configuration_diagnostic' ) . '" );
 
 	});
 
 	$( "#help-url" ).click( function( ){
 
-		fHelp( "The default URL for the website. All links will use this URL. Some may want to add remove the \"www.\"" );
+		fHelp( "' . $Template->e( 'help_configuration_url' ) . '" );
 
 	});
 
