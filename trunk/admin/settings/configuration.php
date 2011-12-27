@@ -73,10 +73,10 @@ if( isset( $_POST[ 'settings_general' ] ) && $valid == true ){
 	cache_clear( );
 
 	/**
-	 * stripslashes from the settings array
+	 * reload the page to make sure all changes have
+	 * taken effect
 	 */
-	$SETTINGS = stripslashes_array( $SETTINGS );
-	$Template->runtimeError( '13' );
+	header( 'location: settings.php?page=configuration&error=13' );
 }
 
 
@@ -127,34 +127,34 @@ $content='
 	<col width="50%"/>
         <col width="50%"/>
 	<tr>
-		<th colspan="2">Website Options</th>
+		<th colspan="2">' . $Template->e( 'configuration_website_options' ) . '</th>
 	</tr>
 	<tr>
-		<td>Title:</td>
+		<td>' . $Template->e( 'configuration_website_title' ) . ':</td>
 		<td><input type="text" name="Title" value="' . $SETTINGS[ 'site_title' ] . '" class="input" /></td>
 	</tr>
 	<tr>
-		<td>Sub Title:</td>
+		<td>' . $Template->e( 'configuration_website_subtitle' ) . ':</td>
 		<td><input type="text" name="SubTitle" value="' . $SETTINGS[ 'site_subtitle' ] . '" class="input" /></td>
 	</tr>
 	<tr>
-		<td>Website URL: <a class="help link" id="help-url">&nbsp;</a></td>
+		<td>' . $Template->e( 'configuration_website_url' ) . ': <a class="help link" id="help-url">&nbsp;</a></td>
 		<td><input type="text" name="URL" value="' . SITEURL . '" class="input" /></td>
 	</tr>
 	<tr>
-		<td>Maintenance Mode: <a class="help link" id="help-maintenance">&nbsp;</a></td>
+		<td>' . $Template->e( 'configuration_maintenance_mode' ) . ': <a class="help link" id="help-maintenance">&nbsp;</a></td>
 		<td><input type="checkbox" name="Maintenance" class="checkbox" value="1" '.$maintenance.'/></td>
 	</tr>
 	<tr>
-		<td>Don\'t Index Website: <a class="help link" id="help-index">&nbsp;</a></td>
+		<td>' . $Template->e( 'configuration_dont_index' ) . ': <a class="help link" id="help-index">&nbsp;</a></td>
 		<td><input type="checkbox" name="Index" value="1" class="checkbox" '.$index.'/></td>
 	</tr>
         <tr>
-                <td>Diagnostic Mode: <a class="help link" id="help-diagnostic">&nbsp;</a></td>
+                <td>' . $Template->e( 'configuration_diagnostic_mode' ) . ': <a class="help link" id="help-diagnostic">&nbsp;</a></td>
                 <td><input type="checkbox" name="DiagnosticMode" value="1" class="checkbox" '. $diagnostic .'/></td>
         </tr>
         <tr>
-                <td>Language: </td>
+                <td>' . $Template->e( 'configuration_language' ) . ': </td>
                 <td><select name="lang">';
 
 		$files = new DirectoryIterator( HOME . 'admin/lang' );
@@ -172,7 +172,7 @@ $content .= '
 		</select></td>
         </tr>
 </table>
-<input type="submit" id="config-save" name="settings_general" class="submit right" style="margin-right:10%" value="Save"/>
+<input type="submit" id="config-save" name="settings_general" class="submit right" style="margin-right:10%" value="' . $Template->e( 'save' ) . '"/>
 </form></br style="clear:both"/>
 ';
 
