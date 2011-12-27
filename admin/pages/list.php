@@ -12,14 +12,6 @@
  */
 
 /**
- * get the error if isset 
- */
-$error = @$_GET[ 'error' ];
-
-if( $error != '' )
-        $Template->runtimeError( $error );
-
-/**
  * @todo finish the sortable below 
  */
 $javascript = '

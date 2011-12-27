@@ -30,6 +30,12 @@ if( $SETTINGS[ 'system_alert' ] != '' && $User->hasPerm( 's' ) )
 	$Template->runtimeError{ 'system_alert' } = $SETTINGS[ 'system_alert' ];
 
 /**
+ * see if any errors should be triggered
+ */
+if( isset( $_GET[ 'error' ] ) )
+	$Template->runtimeError( $_GET[ 'error' ] );
+
+/**
  * execute the onload plugin functions 
  */
 $Plugins->hook( 'admin', 'on_load' );
