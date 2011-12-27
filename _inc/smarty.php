@@ -89,10 +89,28 @@ $Smarty->register_function( 'cache_css', 'frontend_css_load' );
 $Smarty->register_function( 'cache_js', 'frontend_javascript_load' );
 $Smarty->register_function( 'page_load_time', 'frontend_page_load_time' );
 
-$file = ( $Page[ 'template' ] == 'Default' ) ? TEMPLATE_DIR . 'index.html' : TEMPLATE_DIR . $Page[ 'template' ] . '.html';
+/**
+ * find correct template to use
+ * and make sure it exists
+ */
+$file = ( $Page[ 'template' ] == 'Default' ) ? 
+		TEMPLATE_DIR . 'index.html' :
+		TEMPLATE_DIR . $Page[ 'template' ] . '.html';
 
 if( !file_exists( $file ) )
         error( 'Template files could not be found.<br/><i>' . $file . '</i>', 'Template Error' );
+
+/**
+ * check if preview is being done, allows for
+ * templates to be previewed. only works for
+ * logged in users
+ */
+if( isset( $_GET[ 'preview' ] ) && $User->verify( ) ){
+	$preview = $_GET[ 'preview' ];
+
+	if( strpos( '..', $preview ) === false && is_dir( HOME . '_www/' . $preview ) )
+		$file = HOME . '_www/' . $preview . '/index.html';
+}
 
 $Smarty->display( $file );
 ?>
