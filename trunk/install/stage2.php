@@ -17,53 +17,49 @@ require 'header.php';
 if(@$_SESSION['begin']!=2)
         header('location: stage1.php');
 
-/**
- * Conditions for validation
- */
+if(isset($_POST['submit'])){
 
-$conds=array(
-        'Name'=>array(
-                'required'=>true
-        ),
-        'Email'=>array(
-                'required'=>true,
-		'email'=>true,
-        ),
-        'Password'=>array(
-                'required'=>true,
-		'minlength'=>6,
-		'match'=>'Repeat-Password'
-        ),
-	'Repeat-Password'=>array(
-		'required'=>true
-	)
-);
+	$_SESSION[ 'user' ][ 'name' ] = addslashes( @$_POST[ 'Name' ] );
+	$_SESSION[ 'user' ][ 'email' ] = addslashes( @$_POST[ 'Email' ] );
+	$pass = addslashes( @$_POST[ 'Password' ] );
+	$repeat = addslashes( @$_POST[ 'Repeat-Password' ] );
 
-/**
- * Validate the conditions
- */
-
-$valid=validate($conds,'#install','form-submit');
-
-if(isset($_POST['submit'])&&$valid==true){
-	$_SESSION['user']['name']=addslashes($_POST['Name']);
-	$_SESSION['user']['email']=addslashes($_POST['Email']);
-	$pass=$_POST['Password'];
-	$repeat=$_POST['Repeat-Password'];
-	if($_SESSION['user']['name']==''||$_SESSION['user']['email']==''||$pass==''||$repeat=='')
-		$error='Please do not leave blank fields.';
-	elseif($pass!=$repeat)
-		$error='Passwords do not match';
-	if(!isset($error)){
-		$_SESSION['user']['pass']=md5($pass);
-		$_SESSION['begin']=3;
-		header('location: stage3.php');
+	if( empty( $_SESSION[ 'user' ][ 'name' ] ) || empty( $_SESSION[ 'user' ][ 'email' ] ) || empty( $pass ) || empty( $repeat ) )
+		$error = 'The Name, Email, Password and Repeat Password fields are required';
+	elseif( $pass != $repeat )
+		$error = 'The Password and Repeat Password fields must match';
+	else{
+		$_SESSION[ 'user' ][ 'pass' ] = md5( $pass );
+		$_SESSION[ 'begin' ] = 3;
+		header( 'location: stage3.php' );
 	}
 }
 
-$content='
+echo '
+<script type="text/javascript">
+$(function(){
+	$("#install").validate({
+		"Name" : {
+			"required" : true
+		},
+		"Email" : {
+			"required" : true,
+			"email" : true
+		},
+		"Password" : {
+			"required" : true,
+			"minlength" : 6,
+			"match" : "Repeat-Password"
+		},	
+		"Repeat-Password" : {
+			"required" : true
+		},	
+	});	
+});
+</script>
+<h2>' . @$error . '</h2>
 <div id="install-center">
-	<h1 style="text-align:left">Stage 2 / 4</h1>
+	<h1 style="text-align:left">Stage 2 / 3</h1>
 	<form id="install" method="post">
 		<table class="row-color">
 			<tr><th colspan="2">Personal Details</th></tr>

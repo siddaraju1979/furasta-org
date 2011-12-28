@@ -14,41 +14,35 @@
 
 require 'header.php';
 
+if(isset($_POST['submit'])){
+	$_SESSION[ 'db' ][ 'name' ] = addslashes( $_POST[ 'DatabaseName' ] );
+	$_SESSION[ 'db' ][ 'host' ] = addslashes( $_POST[ 'Hostname' ] );
+	$_SESSION[ 'db' ][ 'user' ] = addslashes( $_POST[ 'Username' ] );
 
-/**
- * Conditions for validation
- */
-
-$conds=array(
-	'DatabaseName'=>array(
-		'required'=>true
-	),
-	'Hostname'=>array(
-		'required'=>true
-	),
-	'Username'=>array(
-		'required'=>true
-	)
-);
-
-/**
- * Validate the conditions
- */
-
-$valid = validate( $conds, '#install', 'form-submit');
-
-if(isset($_POST['submit'])&&$valid==true){
-	$_SESSION['db']['name']=$_POST['DatabaseName'];
-	$_SESSION['db']['host']=$_POST['Hostname'];
-	$_SESSION['db']['user']=$_POST['Username'];
-	$_SESSION['db']['prefix']=$_POST['Prefix'];
-	$_SESSION['db']['pass']=$_POST['Password'];
-	$_SESSION['begin']=2;
-	header('location: stage2.php');
+	if( empty( $_SESSION[ 'db' ][ 'name' ] ) || empty( $_SESSION[ 'db' ][ 'host' ] ) || empty( $_SESSION[ 'db' ][ 'user' ] ) )
+		$error = 'The Database Name, Host Name and User Name fields are required.';
+	else{
+		$_SESSION[ 'db' ][ 'prefix' ] = addslashes( $_POST[ 'Prefix' ] );
+		$_SESSION[ 'db' ][ 'pass' ]= addslashes( $_POST[ 'Password' ] );
+		$_SESSION[ 'begin' ] = 2;
+		header( 'location: stage2.php' );
+	}
 }
 
-$javascript = '
+echo '
+<script type="text/javascript">
 $( document ).ready( function( ){
+	$( "#install" ).validate({
+		"DatabaseName" : {
+			"required" : true
+		},
+		"Hostname" : {
+			"required" : true
+		},
+		"Username" : {
+			"required" : true
+		}
+	});
 	$( "#install" ).submit( function( ){
 		$("#check_connection").html("<img src=\"/_inc/img/loading.gif\"/> Checking Details...");
 		var connection=checkConnection(["Hostname","Username","DatabaseName","Password"]);
@@ -73,16 +67,16 @@ $( document ).ready( function( ){
 		return false;
 	} );
 } );
+</script>
 ';
-
-$Template->add( 'javascript', $javascript );
 
 $prefix=(isset($_SESSION['db']['prefix']))?$_SESSION['db']['prefix']:'fr_';
 
-$content='
+echo '
+<h2>' . @$error . '</h2>
 <div id="install-center">
 	<p id="check_connection" class="right">&nbsp;</p>
-	<h1 style="text-align:left">Stage 1 / 4</h1>
+	<h1 style="text-align:left">Stage 1 / 3</h1>
 	<form id="install" method="post" >
 		<table class="row-color">
 			<tr><th colspan="2">Database Details</th></tr>

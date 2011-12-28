@@ -14,6 +14,7 @@
  */
 
 require 'header.php';
+require HOME . '_inc/function/system.php';
 
 if(@$_SESSION['complete']!=1)
 	header('location: stage3.php');
@@ -36,21 +37,21 @@ $pagecontent='
 <p>To log in to your CP <a href=\'/admin\'>Click Here</a></p>
 ';
 
-query('drop table if exists '.$pages);
-query('create table '.$pages.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text, home int,display int)');
-query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
+mysql_query('drop table if exists '.$pages);
+mysql_query('create table '.$pages.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text, home int,display int)');
+mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
 
-query('drop table if exists '.$users);
-query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,homepage text,user_group text,hash text,reminder text)');
-query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","","_superuser","'.$hash.'","")');
+mysql_query('drop table if exists '.$users);
+mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,homepage text,user_group text,hash text,reminder text)');
+mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","","_superuser","'.$hash.'","")');
 
-query( 'drop table if exists ' . $groups );
-query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text )' );
-query( 'insert into ' . $groups . ' values ( "", "Users", "e,c,d,t,o,s,u" )' );
+mysql_query( 'drop table if exists ' . $groups );
+mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text )' );
+mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "e,c,d,t,o,s,u" )' );
 
-query('drop table if exists '.$trash);
-query('create table '.$trash.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text,home int,display int)');
-query('insert into '.$trash.' values(0,"Example Page","Sample page content.","Example-Page","Default","Normal","'.date('Y-m-d').'","Installer",1,"","|",1,1)');
+mysql_query('drop table if exists '.$trash);
+mysql_query('create table '.$trash.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text,home int,display int)');
+mysql_query('insert into '.$trash.' values(0,"Example Page","Sample page content.","Example-Page","Default","Normal","'.date('Y-m-d').'","Installer",1,"","|",1,1)');
 
 $filecontents='<?php
 define(\'PAGES\',\''.$pages.'\');
@@ -152,7 +153,7 @@ $message='Hi ' . $_SESSION['user']['name'].',<br/>
 ';
 email( $_SESSION['user']['email'], $subject, $message );
 
-$content='
+echo '
 <h1>Complete! Verification Email Sent to ' . $_SESSION[ 'user' ][ 'email' ] . '</h1>
 <p>Your Furasta CMS installation has been performed successfully. A user verification email has been sent to your email address. You must verify this address before you can log in. Please now finish and configure your website.</p>
 <br/>
