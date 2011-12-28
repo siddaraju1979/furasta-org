@@ -460,61 +460,12 @@ class Template {
 		$scripts = $files + $sources;
 		$urls = array( );
 
-//		foreach( $scripts as $name => $file )
-//			array_push( $urls, cache_js( $name, $file ) );
+		foreach( $scripts as $name => $file )
+			array_push( $urls, cache_js( $name, $file ) );
 
-//		return $urls;
+		return $urls;
 
-		foreach($files as $file){
-			
-			$scripts[ $file ] = file_get_contents( HOME . $file );
-		}
-
-                foreach( $sources as $source => $contents )
-			$scripts[ $source ] = $contents;
-
-		foreach( $scripts as $cache_file => $content ){
-
-			$cache_file = md5( $cache_file );
-
-			/**
-			 * check if diagnostic javascript is enabled
-			 * and if so do not compress data
-			 */
-			if( $this->diagnosticMode == 1 ){
-
-	                        /**
-        	                 * makes the SITEURL constant available
-                	         * in JavaScript so that files etc can
-                        	 * be loaded properly
-	                         */
-        	                $content = str_replace( '%SITEURL%', SITEURL, $content );
-
-				cache( $cache_file, $content, 'JS' );
-
-			}
-			elseif( !cache_exists( $cache_file, 'JS' ) ){
-	                        /**
-        	                 * makes the SITEURL constant available
-                	         * in JavaScript so that files etc can
-                        	 * be loaded properly
-	                         */
-        	                $content = str_replace( '%SITEURL%', SITEURL, $content );
-
-				$packer = new JavaScriptPacker( $content, 'Normal', true, false );
-				$content = $packer->pack( );
-				cache( $cache_file, $content, 'JS');
-
-	                }
-
-			$url = SITEURL . '_inc/js/js.php?' . $cache_file;
-
-			array_push( $urls, $url );
-
-		}
-
-                return $urls;
-        }
+	}
 
 	/*
          * loadCSS
