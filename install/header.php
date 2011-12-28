@@ -18,49 +18,54 @@ define( 'HOME', substr( dirname( __FILE__ ), 0, -7) );
 define( 'SITEURL', calculate_url( ) );
 
 /**
- * load required libraries 
- */
-$function_dir = HOME . '_inc/function/';
-require $function_dir . 'system.php';
-require $function_dir . 'db.php';
-
-/**
  * cannot install if .settings.php exists
  */
-if( file_exists( HOME . '.settings.php' ) )
+if( file_exists( HOME . '.settings.php' ) ){
+	require HOME . '_inc/define.php';
 	error( 'You can\'t install Furasta CMS because it is already installed. If you would like to re-install then simply remove the <i>../.settings.php</i> file and reload this page.', 'Already Installed!' );
+}
 
 /**
- * get instance of template 
+ * start session 
  */
-$Template = Template::getInstance( );
+session_start( );
 
 /**
  * load javascript 
  */
-$head = '
+echo '
+<html>
+<head>
+<noscript><meta http-equiv="refresh" content="0;url=../_inc/noscript.php"></noscript>
+<title>Furasta.Org Installation</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/_inc/js/system.js"></script>
 <script type="text/javascript" src="/_inc/js/jquery/validate.js"></script>
-';
-
-$Template->add( 'head', $head );
-
-$javascript = '
-$(document).ready(function(){
-        if($(".row-color")){
-                $(".row-color tr:even").addClass("even");
-                $(".row-color tr:odd").addClass("odd");
-        }
+<script type="text/javascript">
+$(function(){
+	rowColor( );
 });
-';
-
-$Template->add( 'javascript', $javascript );
-
-/**
- * add title and start session 
- */
-$Template->add( 'title', 'Furasta.Org Installation' );
-session_start( );
+</script>
+<link rel="stylesheet" href="../_inc/css/admin.css" type="text/css"/>
+</head>
+<body>
+<div id="dialog">&nbsp;</div>
+<div id="wrapper">
+        <div id="top">
+                <div id="right-error">&nbsp;</div>
+        </div>
+        <div id="header">
+                <div id="menu">
+                        <ul>
+                                <li><a href="../" id="title">&nbsp;</a></li>
+                        </ul>
+                </div>
+        </div>
+        <div id="container">
+                <div id="container-right">
+                        <div id="main">
+                                        <div id="right">';
 
 /**
  * calculate_url

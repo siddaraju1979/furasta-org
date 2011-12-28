@@ -29,22 +29,21 @@ if(function_exists('apache_get_modules')){
 else
 	$mods='Unknown';
 
-$javascript = '
-$(document).ready(function(){
+echo '
+<script type="text/javascript">
+$(function(){
         $("#help-access").click(function(){
-		fHelp("Write Access must be enabled for Furasta.Org to perform properly. It is recommended not to install the CMS without granting write access. Read more <a href=\"http://furasta.Org\">here</a>.");
+		fHelp("Write Access must be enabled for Furasta.Org to perform properly. It is recommended not to install the CMS without granting write access.");
         });
 	$("#help-rewrite").click(function(){
-		fHelp("The Apache module Mod_rewrite is essential for the CMS to run properly. It must be installed. However there are also dependencies of the Mod_rewrite module itself, such as Mod_proxy. For more information on all of these modules, and on how to install them, <a href=\"http://Furasta.Org/\">click here.</a>");
+		fHelp("The Apache module Mod_rewrite is essential for the CMS to run properly. It must be installed. However there are also dependencies of the Mod_rewrite module itself, such as Mod_proxy.");
 	});
 });
-';
+</script>
 
-$Template->add( 'javascript', $javascript );
-
-$content='
 <h1>Welcome to the Furasta.Org Installation</h1>
-
+<br/>
+The installation is comprised of 3 short steps. Please have your webserver\'s database details ready, then you will enter some user details and some information on the website your creating and that\'s it!
 <table class="row-color">
 	<tr><th>Installation Requirements</th><th>Required</th><th>Current</th></tr>
 	<tr><td>PHP Version:</td><td>5</td><td>'.$php.'</td></tr>

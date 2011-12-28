@@ -11,7 +11,15 @@
  * @package	   installer
  */
 
-$Template->add( 'content', $content );
+echo '</div>
+                        </div>
+                </div>
+                <div id="footer">
+                        <img src="../_inc/img/footer-right.png" style="float:right"/>
+                        <img src="../_inc/img/footer-left.png"/>
+                </div>
+        </div>
+</div>
+</body>';
 
-require( HOME . 'install/layout.php' );
 ?>
