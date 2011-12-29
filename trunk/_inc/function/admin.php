@@ -163,7 +163,15 @@ function display_menu($menu_items){
 		if( isset( $item[ 'submenu' ] ) ){
 			$list .= '<ul>';
 			foreach( $item[ 'submenu' ] as $n => $ite ){
-                		$list .= '<li><a href="' . $ite[ 'url' ] . '" id="' . $n . '"><span id="' . $n . '-img" class="admin-menu-img">&nbsp;</span><span class="admin-menu-link">' . $ite[ 'name' ] . '</span></a></li>';
+				$img = ( isset( $ite[ 'image' ] ) ) ?
+					'<img src="' . $ite[ 'image' ] . '"/>':
+					'';
+                		$list .= '<li>
+					<a href="' . $ite[ 'url' ] . '" id="' . $n . '">
+						<span id="' . $n . '-img" class="admin-menu-img">' . $img . '</span>
+						<span class="admin-menu-link">' . $ite[ 'name' ] . '</span>
+					</a>
+				</li>';
 
 			}
 			$list .= '</ul>';

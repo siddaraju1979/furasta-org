@@ -249,6 +249,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'USERS' => USERS,
 		'TRASH' => TRASH,
 		'GROUPS' => GROUPS,
+		'OPTIONS' => OPTIONS,
 		'SITEURL' => SITEURL,
 		'USERFILES' => USERFILES,
 		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,

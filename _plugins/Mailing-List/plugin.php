@@ -17,6 +17,7 @@ $plugin = array(
 
 	'admin' => array(
 		'filter_menu' => 'mailing_list_filter_menu',
+		'filter_lang' => 'mailing_list_lang',
 		'page' => 'mailing_list_admin',
 		'content_area_widgets' => array(
 			array(
@@ -47,7 +48,29 @@ $plugin = array(
  */
 function mailing_list_filter_menu( $menu, $url ){
 
-	$menu[ 'menu_mailing_list' ] = array( 'name' => 'Mailing List', 'url' => $url );
+	$Template = Template::getInstance( );
+
+	$menu[ 'menu_mailing_list' ] = array(
+		'name' => $Template->e( 'menu_mailing_list' ),
+		'url' => $url,
+		'submenu' => array(
+			'menu_mailing_list_subscribers' => array(
+				'name' => $Template->e( 'menu_mailing_list_subscribers' ),
+				'url' => $url . 'page=list',
+				'image' => SITEURL . '_plugins/Mailing-List/img/list.png'
+			),
+			'menu_mailing_send_mail' => array(
+				'name' => $Template->e( 'menu_mailing_send_mail' ),
+				'url' => $url . 'page=mail',
+				'image' => SITEURL . '_plugins/Mailing-List/img/send.png'
+			),
+			'menu_mailing_options' => array(
+				'name' => $Template->e( 'menu_mailing_options' ),
+				'url' => $url . 'page=options',	
+				'image' => SITEURL . '_plugins/Mailing-List/img/options.png'
+			)
+		)
+	);
 
 	return $menu;
 }
@@ -58,7 +81,40 @@ function mailing_list_filter_menu( $menu, $url ){
  * echos the admin area content areas page
  */
 function mailing_list_admin( ){
-	echo 'test';
+	require HOME . '_plugins/Mailing-List/admin/index.php';
+}
+
+/**
+ * mailing_list_lang
+ *
+ * handles languages for the mailing list
+ * plugin
+ * 
+ * @params array $lang
+ * @return array
+ */
+function mailing_list_lang( $lang ){
+	switch( LANG ){
+		case 'Gaeilge' :
+			$new_lang = array(
+			);
+		break;
+		default:
+			$new_lang = array(
+				// menu
+				'menu_mailing_list' => 'Mailing List',
+				'menu_mailing_list_subscribers' => 'List Subscribers',
+				'menu_mailing_send_mail' => 'Send Mail',
+				'menu_mailing_options' => 'Options',
+
+				// list page
+				'mailing_list_no_subscribers' => 'No subscribers yet!',
+				'mailing_list_add_subscriber' => 'Add Subscriber',
+				'mailing_list_subject' => 'Subject',
+			);
+	}
+
+	return array_merge( $lang, $new_lang );
 }
 
 function mailing_list_admin_widget_mailing_list( ){

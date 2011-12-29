@@ -184,4 +184,27 @@ function single( $query, $r, $alert = false ){
 
 	return $array[ $r ];
 }
+
+/**
+ * options
+ * 
+ * fetches options associated with a given
+ * category from the options table and sorts
+ * them into an array of name => value
+ *
+ * @param string $category
+ * @return array
+ */
+function options( $category ){
+
+	$opts = array( );
+
+	$options = rows( 'select name, value from ' . OPTIONS . ' where category="' . $category . '"' );
+
+	foreach( $options as $option ){
+		$opts[ $option[ 'name' ] ] = $option[ 'value' ];
+	}
+
+	return $opts;
+}
 ?>

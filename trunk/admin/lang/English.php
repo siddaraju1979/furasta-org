@@ -58,6 +58,7 @@ $lang = array(
 	'delete' => 'Delete',
 	'restore' => 'Restore',
 	'edit' => 'Edit',
+	'email' => 'Email',
 
 	// menu items
 	'menu_overview' => 'Overview',
@@ -117,6 +118,7 @@ $lang = array(
 	'prompt_no' => 'No',
 	'prompt_cancel' => 'Cancel',
 	'prompt_confirm' => 'Are you sure?',
+	'prompt_confirm_delete' => 'Are you sure you wish to delete this item?',
 
 	// Help prompts
 	'help_configuration_index' => 'Ticking this box will force search engines such as Google, Yahoo etc not to index this website. This option should be enabled to make the website more private, though people will still be able to access it through direct URLs.',

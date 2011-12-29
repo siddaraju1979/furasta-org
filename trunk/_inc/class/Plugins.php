@@ -607,13 +607,17 @@ class Plugins{
          * 
 	 * Allows access to plugin filters.
 	 *
+	 * set is_array to true if you want to pass an array of params rather
+	 * than one parameter which is an array
+	 *
          * @param string $area 
          * @param string $name 
          * @param string $to_be_filtered
+	 * @param string $is_array optional
          * @access public
          * @return void
          */
-        public function filter( $area, $name, $to_be_filtered ){
+        public function filter( $area, $name, $to_be_filtered, $is_array = false ){
 
 		/**
 		 * var to hold filtered content
@@ -635,7 +639,7 @@ class Plugins{
                          * using functions
                          */
                         if( function_exists( $plugin[ $area ][ $name ] ) )
-                                $content = ( is_array( $content ) ) ?
+                                $content = ( $is_array ) ?
 						call_user_func_array( $plugin[ $area ][ $name ], $content ) :
 						call_user_func( $plugin[ $area ][ $name ], $content );
 
@@ -643,7 +647,7 @@ class Plugins{
                          * using methods 
                          */
                         elseif( method_exists( @$plugin[ $area ][ $name ][ 0 ], @$plugin[ $area ][ $name ][ 1 ] ) )
-                                $content = ( is_array( $content ) ) ?
+                                $content = ( $is_array ) ?
                                                 call_user_func_array( $plugin[ $area ][ $name ], $content ) :
                                                 call_user_func( $plugin[ $area ][ $name ], $content );
 

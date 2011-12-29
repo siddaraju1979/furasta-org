@@ -11,6 +11,13 @@
 /**
  * add mailing list table to database
  */
-query( 'create table ' . PREFIX . 'mailing_list ( id int auto_increment primary key, name text, email text )' );
+query( 'create table if not exists ' . PREFIX . 'mailing_list ( id int auto_increment primary key, name text, email text )' );
+
+/**
+ * add default options to database
+ */
+query( 'insert into ' . OPTIONS . ' values '
+	. '( "use_names", "Yes", "mailing_list_options" )'
+);
 
 ?>
