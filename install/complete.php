@@ -27,6 +27,7 @@ $pages=$prefix.'pages';
 $users=$prefix.'users';
 $trash=$prefix.'trash';
 $groups=$prefix.'groups';
+$options= $prefix . 'options';
 $hash=md5(mt_rand());
 $site_url=$_SESSION['settings']['site_url'];
 $user_files=$_SESSION['settings']['user_files'];
@@ -53,12 +54,16 @@ mysql_query('drop table if exists '.$trash);
 mysql_query('create table '.$trash.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text,home int,display int)');
 mysql_query('insert into '.$trash.' values(0,"Example Page","Sample page content.","Example-Page","Default","Normal","'.date('Y-m-d').'","Installer",1,"","|",1,1)');
 
+mysql_query( 'drop table if exists ' . $options );
+mysql_query( 'create table ' . $options . ' (name text,value text)' );
+
 $filecontents='<?php
 define(\'PAGES\',\''.$pages.'\');
 define(\'USERS\',\''.$users.'\');
 define(\'TRASH\',\''.$trash.'\');
 define(\'GROUPS\',\''.$groups.'\');
-define(\'TEMPLATE_DIR\',\''.HOME.'_www/Corporate-Office/\');
+define(\'OPTIONS\',\''.$options.'\');
+define(\'TEMPLATE_DIR\',\''.HOME.'_www/\');
 define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
 define(\'SITEURL\',\''.$site_url.'\');

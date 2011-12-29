@@ -198,8 +198,8 @@ class Template {
 
 		// filter through plugins
 		$Plugins = PLUGINS::getInstance( );
-		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', array( $lang_errors ) );
-		$lang = $Plugins->filter( 'admin', 'filter_lang', array( $lang ) );
+		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', $lang_errors );
+		$lang = $Plugins->filter( 'admin', 'filter_lang', $lang );
 
 		$this->lang = $lang;
 		$this->lang_errors = $lang_errors;
