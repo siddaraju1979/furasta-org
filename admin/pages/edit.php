@@ -312,9 +312,10 @@ $(document).ready(function(){
 /**
  * load javascript files to Template class for output later 
  */
-$Template->loadJavascript( '_inc/js/jquery/tinymce.min.js' );
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
 $Template->loadJavascript( 'FURASTA_ADMIN_PAGES_EDIT', $javascript );
+// @todo find a way to cache this without breaking tinymce
+$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
 $content='
 <div id="page-permissions-dialog" title="Page Permissions" style="display:none">

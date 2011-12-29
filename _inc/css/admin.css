@@ -8,7 +8,7 @@
  * @version    1.0
  */
 
-*{ margin:0;padding:0;font:14px Myriad Pro,Arial,Sans Serif;color:#333 }
+*{ margin:0;padding:0;font:14px Myriad Pro,Arial,San Serif;color:#333 }
 ul,ol{ margin-left:40px }
 .left{ float:left }
 .right{ float:right }
@@ -120,7 +120,7 @@ strong{ font-weight:bold }
 #right-item{ float:right!important }
 
 #menu_edit_pages-img{ background:url(../img/icons.png) no-repeat -140px -156px  }
-#menu_new_page-img{ background:url(../img/icons.png) no-repeat -119px -156px }
+#menu_new_page-img{ background:url(../img/icons.png) no-repeat -119px -155px }
 #menu_trash-img{ background:url(../img/icons.png) no-repeat -1px -178px }
 #menu_edit_users-img{ background:url(../img/icons.png) no-repeat -44px -178px }
 #menu_edit_groups-img{ background:url(../img/icons.png) no-repeat -68px -178px }

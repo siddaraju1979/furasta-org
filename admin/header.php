@@ -144,30 +144,14 @@ else{
 $Template->add('menu',$menu);
 
 $javascript='
-$(document).ready(function(){
-        rowColor();
-        $("#menu ul").dropDownMenu({timer:1500,parentMO:"parent-hover"});
-        var link=window.location.href.split( "?" );
-	var path = link[ 0 ];
-        if(path=="' . SITEURL . 'admin"||path=="' . SITEURL . 'admin/"){
-                $("#Overview").addClass("current");
-        }
-	else if( path == "' . SITEURL . 'admin/plugin.php" ){
-		link = link[ 1 ].split(/[=&]+/);
-		$( "#" + link[ 1 ] ).addClass( "current" );
+window.furasta = {
+	site : {
+		url : "' . SITEURL . '"
 	}
-        else{
-                $("#menu li a[href=\'"+path+"\']").addClass("current");
-        }
-
-	$( "#errors-close" ).live( "click", function( ){
-		fetch( "' . SITEURL . '_inc/ajax.php?file=admin/settings/update/system-alert.php" );
-		$( "#system-error" ).fadeOut( "fast", function( ){ $( this ).remove( ); } );
-	});
-});
+};
 ';
 
 $Template->loadJavascript( '_inc/js/admin.js' );
-$Template->add( 'javascript', $javascript );
+$Template->loadJavascript( 'FURASTA_ADMIN_HEADER_SCRIPT', $javascript );
 
 ?>

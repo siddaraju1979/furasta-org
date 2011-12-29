@@ -11,12 +11,34 @@
  */
 
 if( typeof jQuery == 'undefined' )
-	window.location = "%SITEURL%_inc/noscript.php";
+	window.location = window.furasta.site.url + "_inc/noscript.php";
+
+$(document).ready(function(){
+        rowColor();
+        $("#menu ul").dropDownMenu({timer:1500,parentMO:"parent-hover"});
+        var link=window.location.href.split( "?" );
+	var path = link[ 0 ];
+        if(path==window.furasta.site.url + "admin"||path==window.furasta.site.url + "admin/"){
+                $("#Overview").addClass("current");
+        }
+	else if( path == window.furasta.site.url + "admin/plugin.php" ){
+		link = link[ 1 ].split(/[=&]+/);
+		$( "#" + link[ 1 ] ).addClass( "current" );
+	}
+        else{
+                $("#menu li a[href=\'"+path+"\']").addClass("current");
+        }
+
+	$( "#errors-close" ).live( "click", function( ){
+		fetch( window.furasta.site.url + "_inc/ajax.php?file=admin/settings/update/system-alert.php" );
+		$( "#system-error" ).fadeOut( "fast", function( ){ $( this ).remove( ); } );
+	});
+});
 
 function loadPageType(type,id){
         var hash=Math.floor(Math.random()*1001);
         $.ajax({
-                url:'%SITEURL%_inc/ajax.php?file=admin/pages/type.php&type='+type+'&id='+id+'&hash='+hash,
+                url: window.furasta.site.url + '_inc/ajax.php?file=admin/pages/type.php&type='+type+'&id='+id+'&hash='+hash,
                 success: function(html){
                         $("#pages-type-content").html(html);
 
