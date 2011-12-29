@@ -147,7 +147,9 @@ $javascript='
 window.furasta = {
 	site : {
 		url : "' . SITEURL . '"
-	}
+	},
+	lang : ' . json_encode( $Template->lang ) . ',
+	lang_errors : ' . json_encode( $Template->lang_errors ) . '
 };
 ';
 
