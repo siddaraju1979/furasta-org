@@ -18,11 +18,10 @@ $plugin = array(
 	'admin' => array(
 		'filter_menu' => 'content_areas_filter_menu',
 		'page' => 'content_areas_admin',
-		'template_override' => '_plugins/Content-Areas/admin/template.php',
 		'content_area_widgets' => array(
 			array(
-				'name' => 'Content',
-				'function' => 'content_areas_admin_widget_content'
+				'name' => 'Textarea',
+				'function' => 'content_areas_admin_widget_textarea'
 			)
 		)
 	),
@@ -35,8 +34,8 @@ $plugin = array(
 		'filter_metadata' => 'content_areas_frontend_filter_metadata',
 		'content_area_widgets' => array(
 			array(
-				'name' => 'Content',
-				'function' => 'content_areas_frontend_widget_content'
+				'name' => 'Textarea',
+				'function' => 'content_areas_frontend_widget_textarea'
 			)
 		)
 	)
@@ -102,12 +101,12 @@ function content_areas_admin( ){
 	require HOME . '_plugins/Content-Areas/admin/index.php';
 }
 
-function content_areas_admin_widget_content( ){
+function content_areas_admin_widget_textarea( ){
 	$Template = Template::getInstance( );
 	$Template->add( 'content', 'test' );
 }
 
-function content_areas_frontend_widget_content( ){
+function content_areas_frontend_widget_textarea( ){
 	echo 'test';
 }
 ?>

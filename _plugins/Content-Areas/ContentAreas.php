@@ -183,9 +183,21 @@ class ContentAreas{
 	 */
 	public function getContent( $name, $page_id ){
 		if( $this->isRegistered( $name ) ){
-			if( isset( $this->registered{ $name }{ 'content' }{ $page_id } ) )
-				return $this->registered{ $name }{ 'content' }{ $page_id };
-			return $this->registered{ $name }{ 'content' }{ 'all' };
+			if( isset( $this->registered{ $name }{ 'content' }{ $page_id } ) ){
+				$widgets = $this->registered{ $name }{ 'content' }{ $page_id };
+				$area = $page_id;
+			}
+			else{
+				$widgets = $this->registered{ $name }{ 'content' }{ 'all' };
+				$area = 'all';
+			}
+			$content = '';
+			if( count( $widgets ) == 0 )
+				return $content;
+			foreach( $widgets as $widget ){
+				$content .= $this->widgetContent( $widget, $name, $area ); 
+			}
+			return $content;
 		}
 		return false;
 	}
@@ -256,6 +268,24 @@ class ContentAreas{
 
 		// return all widget info
 		return $this->widgets;
+	}
+
+	/**
+	 * widgetContent
+	 *
+	 * returns the content of a widget
+	 *
+	 * @param string $widget_name
+	 * @param string $area_name
+	 * @param string $area
+	 * @access public
+	 * @return string
+	 */
+	public function widgetContent( $widget_name, $area_name, $area ){
+		if( isset( $this->widget{ $widget_name } ) ){
+			return call_user_func_array( $this->widget{ $widget_name }{ 'admin' }, array( $area_name, $area ) );
+		}
+		return false;
 	}
 
 }
