@@ -53,6 +53,10 @@ $lang = array(
 	'parent' => 'Parent',
 	'permissions' => 'Permissions',
 	'loading' => 'Loading',
+	'title' => 'Title',
+	'save' => 'Save',
+	'delete' => 'Delete',
+	'restore' => 'Restore',
 
 	// menu items
 	'menu_overview' => 'Overview',
@@ -80,10 +84,12 @@ $lang = array(
 	'pages_list_expand_collapse_all' => 'Expand / Collapse all',
 	'pages_edit_show_options' => 'Show Options',
 	'pages_edit_hide_options' => 'Hide Options',
-	'pages_edit_save_button' => 'Save',
-	'pages_edit_delete_button' => 'Delete',
 	'pages_edit_is_home' => 'Is Home Page',
 	'pages_edit_hide_navigation' => 'Hide in Navigation',
+
+	// Trash
+	'trash_empty' => 'No Trash!',
+	'trash_go_button' => 'Go',	
 
 	// Users & Groups
 	'Email' => 'Email',
@@ -93,6 +99,16 @@ $lang = array(
 	'Change Password' => 'Change Password',
 	'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.' =>
 		'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.',
+	
+	// Configuration
+	'configuration_website_options' => 'Website Options',
+	'configuration_website_title' => 'Title',
+	'configuration_website_subtitle' => 'Subtitle',
+	'configuration_website_url' => 'URL',
+	'configuration_maintenance_mode' => 'Maintenance Mode',
+	'configuration_dont_index' => 'Don\'t Index Website',
+	'configuration_diagnostic_mode' => 'Diagnostic Mode',
+	'configuration_language' => 'Language',
 	
 
 	// Prompts

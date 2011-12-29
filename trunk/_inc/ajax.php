@@ -50,14 +50,11 @@ else{
 
 	$User = new User( );
 
-	if( !$User->verify( ) )
-		die( 'Please login to access this content.' );
-
 	/**
-	 * use to test if ajax script is run and user
-	 * is verified as logged in
+	 * if user is verified, define ajax verified
 	 */
-	define( 'AJAX_VERIFIED', true );
+	if( $User->verify( ) )
+		define( 'AJAX_VERIFIED', true );
 }
 
 
