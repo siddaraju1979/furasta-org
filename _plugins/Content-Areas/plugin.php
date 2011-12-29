@@ -17,6 +17,7 @@ $plugin = array(
 
 	'admin' => array(
 		'filter_menu' => 'content_areas_filter_menu',
+		'filter_lang' => 'content_areas_lang',
 		'page' => 'content_areas_admin',
 		'content_area_widgets' => array(
 			array(
@@ -108,5 +109,29 @@ function content_areas_admin_widget_textarea( ){
 
 function content_areas_frontend_widget_textarea( ){
 	echo 'test';
+}
+
+/**
+ * content_areas_lang
+ *
+ * managaes language features for the content areas plugin
+ *
+ * @params array $lang
+ * @return $lang
+ */
+function content_areas_lang( $lang ){
+	switch( LANG ){
+		case 'Gaeilge':
+			$new_lang = array(
+
+			);
+		break;
+		default:
+			$new_lang = array(
+				'content_areas_drag_widgets' => 'Drag widgets here!',
+				'content_areas_confirm_delete' => 'Are you sure you wish to <b>permenantly delete</b> this widget and all data associated with it?',
+			);
+	}
+	return array_merge( $lang, $new_lang );
 }
 ?>

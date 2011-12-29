@@ -57,6 +57,7 @@ $lang = array(
 	'save' => 'Save',
 	'delete' => 'Delete',
 	'restore' => 'Restore',
+	'edit' => 'Edit',
 
 	// menu items
 	'menu_overview' => 'Overview',

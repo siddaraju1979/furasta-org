@@ -10,6 +10,9 @@ $(function(){
 	update_template_areas( );
 	$( '#content-template-select' ).change( update_template_areas );
 	$( '#content-area-select' ).change( update_content_area );
+	$( '.edit' ).live( 'click', edit_widget );
+	$( '.delete' ).live( 'click', delete_widget );
+
 
 	$( '.widget-left' ).draggable({
 		connectToSortable : ".content-area-widgets",
@@ -74,7 +77,8 @@ function save_area( ){
 	var area_content = { 'all' : [ ] };
 	$( '.content-area-widgets .widget' ).each(function(){
 		var type = $( this ).attr( 'type' );
-		area_content[ 'all' ].push( type );
+		var a_id = $( this ).attr( 'id' );
+		area_content[ 'all' ].push( { name : type, id : a_id } );
 	});
 	$.ajax({
 		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/save-area.php',
@@ -89,8 +93,58 @@ function save_area( ){
 function sortable_stop_function( event, ui ){
 	if( ui.item.hasClass( 'widget-left' ) ){
 		ui.item.removeClass( 'widget-left' );
+		var new_id = 1;
+		$( '.widget' ).each(function( ){
+			var id = parseInt( $( this ).attr( 'id' ) );
+			if( id >= new_id )
+				new_id = id + 1;
+		});
+		ui.item.attr( 'id', new_id );
+		ui.item.prepend( 
+			'<span class="right"><a class="link edit">'
+			+ trans( 'edit' ) + 
+			'</a><a class="link delete">'
+			+ trans( 'delete' ) +
+			'</a></span>'
+		);
 		ui.item.addClass( 'widget' );
 		// add to database
 		save_area( );
 	}
+}
+
+function edit_widget( ){
+	$this = $( this ).parent( ).parent( );
+	var widget_name = $this.attr( 'type' );
+	var widget_id = $this.attr( 'id' );
+	var a_name = $( '#content-area-select' ).val( );
+	$( '#dialog' )
+		.attr( 'title', widget_name + ' Widget' )
+		.html(
+			trans( 'loading' ) + '... <img src="' + 
+			window.furasta.site.url + '_inc/img/loading.gif"/>'
+		)
+		.dialog({
+			width : '80%',
+			height : 400,
+			modal : true
+		});
+	$.ajax({
+		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		type : 'POST',
+		data : {
+			name : widget_name,
+			area_name : a_name,
+			id : widget_id
+		},
+		success : function( ht ){
+			$( '#dialog' ).html( ht );
+		}
+	});
+}
+
+function delete_widget( ){
+	fConfirm( trans( "content_areas_confirm_delete" ), function( ){
+		alert( 'confirmed!' );
+	});
 }

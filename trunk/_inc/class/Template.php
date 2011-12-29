@@ -172,17 +172,17 @@ class Template {
 	 * lang_errors
 	 *
 	 * @var array
-	 * @access private
+	 * @access public
 	 */
-	private $lang_errors = array( );
+	public $lang_errors = array( );
 
 	/**
 	 * lang
 	 *
 	 * @var array
-	 * @access private
+	 * @access public
 	 */
-	private $lang = array( );
+	public $lang = array( );
 
 	/**
 	 * __construct
@@ -198,11 +198,12 @@ class Template {
 
 		// filter through plugins
 		$Plugins = PLUGINS::getInstance( );
-		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', $lang_errors );
-		$lang = $Plugins->filter( 'admin', 'filter_lang', $lang );
+		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', array( $lang_errors ) );
+		$lang = $Plugins->filter( 'admin', 'filter_lang', array( $lang ) );
 
 		$this->lang = $lang;
-		$this->lang_errors = $lang_errors; 
+		$this->lang_errors = $lang_errors;
+
 	}
 
 	/**

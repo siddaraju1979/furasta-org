@@ -195,7 +195,7 @@ class ContentAreas{
 			if( count( $widgets ) == 0 )
 				return $content;
 			foreach( $widgets as $widget ){
-				$content .= $this->widgetContent( $widget, $name, $area ); 
+				$content .= $this->widgetContent( $widget[ 'name' ], $name, $widget[ 'id' ], $area ); 
 			}
 			return $content;
 		}
@@ -277,13 +277,14 @@ class ContentAreas{
 	 *
 	 * @param string $widget_name
 	 * @param string $area_name
-	 * @param string $area
+	 * @param string $id
+	 * @param string $area optional
 	 * @access public
 	 * @return string
 	 */
-	public function widgetContent( $widget_name, $area_name, $area ){
-		if( isset( $this->widget{ $widget_name } ) ){
-			return call_user_func_array( $this->widget{ $widget_name }{ 'admin' }, array( $area_name, $area ) );
+	public function widgetContent( $widget_name, $area_name, $id, $area = 'all' ){
+		if( isset( $this->widgets{ $widget_name } ) ){
+			return call_user_func_array( $this->widgets{ $widget_name }{ 'frontend' }, array( $area_name, $id, $area ) );
 		}
 		return false;
 	}

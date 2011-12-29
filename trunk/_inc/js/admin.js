@@ -23,7 +23,8 @@ $(document).ready(function(){
         }
 	else if( path == window.furasta.site.url + "admin/plugin.php" ){
 		link = link[ 1 ].split(/[=&]+/);
-		$( "#" + link[ 1 ] ).addClass( "current" );
+		link = 'menu_' + link[ 1 ].replace( '-', '_' ).toLowerCase( );
+		$( "#" + link ).addClass( "current" );
 	}
         else{
                 $("#menu li a[href=\'"+path+"\']").addClass("current");
@@ -34,6 +35,20 @@ $(document).ready(function(){
 		$( "#system-error" ).fadeOut( "fast", function( ){ $( this ).remove( ); } );
 	});
 });
+
+/**
+ * trans
+ *
+ * translates the string using language files
+ *
+ * @param string string
+ * @return string or bool
+ */
+function trans( string ){
+	if( window.furasta.lang[ string ] )
+		return window.furasta.lang[ string ];
+	return false;
+}
 
 function loadPageType(type,id){
         var hash=Math.floor(Math.random()*1001);

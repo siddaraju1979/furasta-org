@@ -3,7 +3,8 @@
 #content-left{ text-align:left; width:18%; }
 .content-area{ border: 1px solid #000; min-height: 40px }
 .content-area-widgets{ border: 1px solid #aaa; padding: 10px }
-.widget, .widget-left{ border-top: 1px solid transparent; margin: 10px 0!important; background: #444;padding:8px }
-.widget span, .widget-left span{ color: #fff; font-size:16px; }
+.widget, .widget-left{ padding:8px;margin: 10px 0!important; background: #444 }
+.widget span, .widget-left span{ color: #fff; font-size:16px }
 .widget .collapse-button{ float:right; margin: 4px; color: #fff; font-weight:bold }
 #widgets{ padding:6px;background: #fff; }
+.widget span.right a{ background: #eee;color: #000;padding:6px;border:1px solid;border-radius:3px }

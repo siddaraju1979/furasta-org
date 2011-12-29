@@ -217,25 +217,9 @@ function cache_js( $name, $file ){
 	 * check if diagnostic javascript is enabled
 	 * and if so do not compress data
 	 */
-	if( DIAGNOSTIC_MODE == 1 ){
-
-		/**
-		 * makes the SITEURL constant available
-		 * in JavaScript so that files etc can
-		 * be loaded properly
-		 */
-		$content = str_replace( '%SITEURL%', SITEURL, $content );
-
+	if( DIAGNOSTIC_MODE == 1 )
 		cache( $cache_file, $content, 'JS' );
-
-	}
 	elseif( !cache_exists( $cache_file, 'JS' ) ){
-		/**
-		 * makes the SITEURL constant available
-		 * in JavaScript so that files etc can
-		 * be loaded properly
-		 */
-		$content = str_replace( '%SITEURL%', SITEURL, $content );
 
 		$packer = new JavaScriptPacker( $content, 'Normal', true, false );
 		$content = $packer->pack( );
