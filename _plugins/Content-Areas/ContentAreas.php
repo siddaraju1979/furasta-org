@@ -214,25 +214,46 @@ class ContentAreas{
 	 *
 	 * @param string $name
 	 * @param string or int $page_id
-	 * @param string $data
+	 * @param string $content
 	 * @access public
 	 * @return bool
 	 */
-	public function addArea( $name, $page_id, $data ){
-		if( $this->isRegistered( $name ) ){
+	public function addArea( $name, $page_id, $content = false ){
+		if( $this->isRegistered( $name ) && $content != false ){
 			// update existing area
-			$this->registered{ $name }{ 'content' }{ $page_id } = '';
-			$content = $this->registered{ $name }{ 'content' };
 			$id = $this->registered{ $name }{ 'id' };
-
+			$content = addslashes( json_encode( $content ) );
 			query( 'update ' . PREFIX . 'content_areas set content="' . $content . '" where id=' . $id );
+			$this->registered{ $name }{ 'content' } = $content;
 		}
 		else{
 			// create new area
-			$data = addslashes( json_encode( $data ) );
-			$content = addslashes( json_encode( array( 'all' => '' ) ) );
-			query( 'insert into ' . PREFIX . 'content_areas values ( "", "' . $name . '", "' . $content . '", "' . $data . '" )' );
-			$this::getInstance( true );
+			$this->registered{ $name }{ 'content' } = $content;
+			$content = addslashes( json_encode( array( 'all' => array() ) ) );
+			query( 'insert into ' . PREFIX . 'content_areas values ( "", "' . $name . '", "' . $content . '", "" )' );
+			$this->registered{ $name }{ 'id' } = mysql_insert_id( );
+		}
+	}
+
+	/**
+	 * deleteWidget
+	 * 
+	 * deletes a widget from a content area
+	 * 
+	 * @param string $area_name
+	 * @param int $widget_id
+	 * @access public
+	 * @return bool
+	 * @todo expand beyond 'all'
+	 */
+	public function deleteWidget( $area_name, $widget_id ){
+		$area = $this->areas( $area_name );
+
+		for( $i = 0; $i < count( $area[ 'content' ][ 'all' ] ); ++$i ){
+			if( $area[ 'content' ][ 'all' ][ $i ][ 'id' ] == $widget_id ){
+				unset( $area[ 'content' ][ 'all' ][ $i ] );
+				return $this->addArea( $area_name, 'all', $area[ 'content' ] );
+			}
 		}
 	}
 
@@ -241,10 +262,16 @@ class ContentAreas{
 	 *
 	 * returns the array of registered content areas
 	 *
+	 * @param string $name, optional
 	 * @access public
 	 * @return array
 	 */
-	public function areas( ){
+	public function areas( $name = false ){
+		if( $name ){
+			if( isset( $this->registered{ $name } ) )
+				return $this->registered{ $name };
+			return false;
+		}
 		return $this->registered;
 	}
 

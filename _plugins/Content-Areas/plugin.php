@@ -23,6 +23,14 @@ $plugin = array(
 			array(
 				'name' => 'Textarea',
 				'function' => 'content_areas_admin_widget_textarea'
+			),
+			array(
+				'name' => 'Breadcrumbs',
+				'function' => 'content_areas_admin_widget_breadcrumbs'
+			),
+			array(
+				'name' => 'Menu',
+				'function' => 'content_areas_admin_widget_menu'
 			)
 		)
 	),
@@ -32,11 +40,18 @@ $plugin = array(
 			'name' => 'content_area',
 			'function' => 'content_areas_frontend_template_function'
 		),
-		'filter_metadata' => 'content_areas_frontend_filter_metadata',
 		'content_area_widgets' => array(
 			array(
 				'name' => 'Textarea',
 				'function' => 'content_areas_frontend_widget_textarea'
+			),
+			array(
+				'name' => 'Breadcrumbs',
+				'function' => 'content_areas_frontend_widget_breadcrumbs'
+			),
+			array(
+				'name' => 'Menu',
+				'function' => 'content_areas_frontend_widget_menu'
 			)
 		)
 	)
@@ -44,19 +59,6 @@ $plugin = array(
 
 // add ContentAreas class
 require 'ContentAreas.php';
-
-/**
- * content_areas_frontent_filter_metadata
- *
- * adds the content areas javascript file to the frontend
- *
- * @params string $metadata
- * @return string
- */
-function content_areas_frontend_filter_metadata( $metadata ){
-	$url = cache_js( 'FURASTA_FRONTEND_CONTENT_AREAS', '_plugins/Content-Areas/frontend/areas.js' );
-	return $metadata .= '<script type="text/javascript" src="' . $url . '"></script>';
-}
 
 /**
  * content_areas_frontend_template_function
@@ -109,6 +111,46 @@ function content_areas_admin_widget_textarea( ){
 
 function content_areas_frontend_widget_textarea( ){
 	echo 'test';
+}
+
+/**
+ * content_areas_admin_widget_breadcrumbs
+ *
+ *
+ */
+function content_areas_admin_widget_breadcrumbs( ){
+	$Template = Template::getInstance( );
+
+	$content = '
+		test breadcrumb options
+	';
+
+	$Template->add( 'content', $content );
+}
+
+/**
+ * content_areas_frontend_widget_breadcrumbs
+ *
+ * calls the built in frontend_breadcrumbs function
+ *
+ */
+function content_areas_frontend_widget_breadcrumbs( ){
+	echo frontend_breadcrumbs( array( ) );
+}
+
+function content_areas_admin_widget_menu( ){
+	$Template = Template::getInstance( );
+	$Template->add( 'content', 'bread crumbs!' );
+}
+
+/**
+ * content_areas_frontend_widget_menu
+ *
+ * calls the built in frontend_menu function
+ *
+ */
+function content_areas_frontend_widget_menu( ){
+	echo frontend_menu( );
 }
 
 /**

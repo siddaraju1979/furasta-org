@@ -108,9 +108,8 @@ function sortable_stop_function( event, ui ){
 			'</a></span>'
 		);
 		ui.item.addClass( 'widget' );
-		// add to database
-		save_area( );
 	}
+	save_area( );
 }
 
 function edit_widget( ){
@@ -144,7 +143,20 @@ function edit_widget( ){
 }
 
 function delete_widget( ){
+	var par = $( this ).parent( ).parent( );
+	var widget_id = par.attr( 'id' );
+	var area_name = $( '#content-area-select' ).val( );
 	fConfirm( trans( "content_areas_confirm_delete" ), function( ){
-		alert( 'confirmed!' );
+		$.ajax({
+			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/delete-widget.php',
+			type : 'POST',
+			data : {
+				name : area_name,
+				id : widget_id
+			},
+			success : function( ){
+				par.fadeOut( "fast" );
+			}
+		});
 	});
 }

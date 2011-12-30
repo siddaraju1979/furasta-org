@@ -17,9 +17,15 @@ $name = addslashes( @$_POST[ 'name' ] );
 if( $name == '' )
 	exit;
 
-$widgets = row( 'select content from ' . PREFIX . 'content_areas where name="' . $name . '"' );
+$ContentAreas = ContentAreas::getInstance( );
+$widgets = $ContentAreas->areas( $name );
 
-$widgets = json_decode( $widgets[ 'content' ], true );
+if( $widgets == false ){
+	$ContentAreas->addArea( $name, 'all' );
+	$widgets = $ContentAreas->areas( $name );
+}
+
+$widgets = $widgets[ 'content' ];
 
 echo '<h2> ' . $name . '</h2>';
 echo '<div class="content-area-widgets';

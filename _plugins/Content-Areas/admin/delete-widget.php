@@ -11,14 +11,14 @@
 if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
 	exit;
 
-$name = addslashes( @$_POST[ 'name' ] );
-$content = @$_POST[ 'content' ];
+$area_name = addslashes( @$_POST[ 'name' ] );
+$widget_id = (int) @$_POST[ 'id' ];
 
-if( $name == '' || $content == '' )
+if( empty( $area_name ) || empty( $widget_id ) )
 	exit;
 
 $ContentAreas = ContentAreas::getInstance( );
-$ContentAreas->addArea( $name, 'all', $content ); 
+$ContentAreas->deleteWidget( $area_name, $widget_id );
 
 exit;
 ?>
