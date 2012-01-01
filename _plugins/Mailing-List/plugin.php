@@ -110,7 +110,25 @@ function mailing_list_lang( $lang ){
 				// list page
 				'mailing_list_no_subscribers' => 'No subscribers yet!',
 				'mailing_list_add_subscriber' => 'Add Subscriber',
+
+				// send page
 				'mailing_list_subject' => 'Subject',
+				'mailing_list_content' => 'Content',
+				'mailing_list_show_bcc' => 'Show BCC',
+				'mailing_list_hide_bcc' => 'Hide BCC',
+				'mailing_list_bcc' => 'BCC',
+				'mailing_list_sending_email' => 'Sending email to recepients..',
+				'mailing_list_sent_to' => 'Sent to',
+				'mailing_list_sending_complete' => 'Sending Complete',
+				'mailing_list_sending_failed' => 'Sending Failed',
+
+				// options
+				'mailing_list_options_general' => 'General',
+				'mailing_list_options_template' => 'Email Template',
+				'mailing_list_options_from' => 'From Address',
+				'mailing_list_options_reply_to' => 'Reply-to Address',
+				'mailing_list_options_template_description' => 'You can create a template here which will appear in the content section on the send mail page when you are sending an email.',
+				
 			);
 	}
 

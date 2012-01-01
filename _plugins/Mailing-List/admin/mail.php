@@ -8,29 +8,40 @@
  * @version	1
  */
 
-$Template = Template::getInstance( );
 $Template->add( 'title', $Template->e( 'menu_mailing_send_mail' ) . ' - ' . $Template->e( 'menu_mailing_list' ) );
+$Template->loadJavascript( '_plugins/Mailing-List/admin/admin.js' );
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
 $Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
+
+$emails = rows( 'select email from ' . PREFIX . 'mailing_list' );
+$bcc = array( );
+foreach( $emails as $email )
+	array_push( $bcc, $email[ 'email' ] );
+$bcc = implode( '; ', $bcc );
 
 $content = '
 <span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/send-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_send_mail' ) . '</h1>
 
-<form id="mail-form">
-<table>
+<form id="mail-form" action="plugin.php?p_name=Mailing-List&page=send" method="post">
+<table style="width:95%">
 	<tr>
-		<td>' . $Template->e( 'mailing_list_subject' ) . ':</td>
+		<td class="small">' . $Template->e( 'mailing_list_subject' ) . ':</td>
 		<td><input type="text" name="Subject"/></td>
+		<td style="width:15%"><a class="link" id="show-bcc">' . $Template->e( 'mailing_list_show_bcc' ) . '</a></td>
+	</tr>
+	<tr style="display:none" id="bcc" class="hidden">
+		<td class="small">' . $Template->e( 'mailing_list_bcc' ) . '</td>
+		<td><textarea name="BCC">' . $bcc . '</textarea></td>
+		<td></td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<textarea name="Content" id="message-body"></textarea>
+		<td colspan="3">
+			<textarea name="Content" id="message-body" style="width:100%">' . $mailing_list_options[ 'template' ] . '</textarea>
 		</td>
 	</tr>
 	<tr>
-		<td></td>
-		<td><input type="submit" value="' . $Template->e( 'menu_mailing_send_mail' ) . '"/></td>
+		<td colspan="3"><input name="mailing-list-submit" class="submit" type="submit" value="' . $Template->e( 'menu_mailing_send_mail' ) . '"/></td>
 	</tr>
 </table>
 </form>

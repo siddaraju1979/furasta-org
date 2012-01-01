@@ -8,7 +8,6 @@
  * @version	1
  */
 
-$Template = Template::getInstance( );
 $Template->add( 'title', $Template->e( 'menu_mailing_list_subscribers' ) . ' - ' . $Template->e( 'menu_mailing_list' ) );
 $Template->loadJavascript( '_plugins/Mailing-List/admin/admin.js' );
 

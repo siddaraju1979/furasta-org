@@ -17,7 +17,10 @@ query( 'create table if not exists ' . PREFIX . 'mailing_list ( id int auto_incr
  * add default options to database
  */
 query( 'insert into ' . OPTIONS . ' values '
-	. '( "use_names", "Yes", "mailing_list_options" )'
+	. '( "use_names", "Yes", "mailing_list_options" ),'
+	. '( "from", "", "mailing_list_options" ),'
+	. '( "reply_to", "", "mailing_list_options" ),'
+	. '( "template", "", "mailing_list_options" )'
 );
 
 ?>

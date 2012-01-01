@@ -10,7 +10,10 @@ $(function(){
 	rowColor();
 	$( '.add-subscriber' ).click(add_subscriber);
 	$( '.delete' ).live( 'click', delete_subscriber );
-	tinymce_changeConfig( '#message-body', 'Normal' ); 
+	$( '#show-bcc' ).click( toggle_bcc );
+
+	if( $( '#message-body' ).length )
+		tinymce_changeConfig( '#message-body', 'Normal' );
 });
 
 function add_subscriber( ){
@@ -91,4 +94,53 @@ function delete_subscriber( ){
 			}
 		});
 	});
+}
+
+function toggle_bcc( ){
+	var bcc = $( '#bcc' );
+	if( bcc.hasClass( 'hidden' ) ){
+		bcc.slideDown( 'slow' );
+		$( this ).html( trans( 'mailing_list_hide_bcc' ) );
+		bcc.removeClass( 'hidden' );
+	}
+	else{
+		bcc.slideUp( 'slow' );
+		$( this ).html( trans( 'mailing_list_show_bcc' ) );
+		bcc.addClass( 'hidden' );
+	}
+}
+
+function send_emails( emails, email_subject, email_content ){
+	var end = emails.length;
+	var count = 0;
+	for( var i = 0; i < end; ++i ){
+		var email_address = emails[ i ];
+		$.ajax({
+			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/admin/send-email.php',
+			type : 'POST',
+			data : {
+				email : email_address,
+				subject : email_subject,
+				content : email_content
+			},
+			success : function( e ){
+				if ( e == 'failed' ){
+					$( '#sending-content' ).append(
+						'<p class="error"><b>' + trans( 'mailing_list_sending_failed' ) + ' ' + e + '</b></p>'
+					);
+					count++;
+				}
+				else{
+					$( '#sending-content' ).append( 
+						'<p><i>' + trans( 'mailing_list_sent_to' ) + ' ' + e + '</i></p>'
+					);
+					count++;
+				}
+				if( count == end ){
+					$( '.loading' ).html( '' );
+					$( '#sending-content' ).append( '<p><b>' + trans( 'mailing_list_sending_complete' ) + '</b></p>' );
+				}
+			}
+		});
+	}
 }
