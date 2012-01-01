@@ -24,25 +24,66 @@ function rowColor( ){
 }
 
 function fAlert(message){
-        $('#dialog').html('<div id="dialog-content">'+message+'</div><div id="dialog-alert-logo">&nbsp;</div>');
-	$('#dialog').attr('title','Warning!');
-        $('#dialog').dialog({ modal: true,buttons:{ Close:function(){ $(this).dialog('close'); }},hide:'fade',show:'fade',resizeable:false });
-        $('#dialog').dialog("open");
+	var close = trans( 'prompt_close' );
+        $('#dialog')
+		.html('<div id="dialog-content">'+message+'</div><div id="dialog-alert-logo">&nbsp;</div>')
+		.attr('title',trans( 'prompt_alert' ))
+		.dialog({
+			modal: true,
+			buttons:{
+				close :function(){
+					$(this).dialog('close');
+				}
+			},
+			hide:'fade',
+			show:'fade',
+			resizeable:false
+		})
+		.dialog("open");
 }
 
 
 function fConfirm(message,callback,param){
-        $('#dialog').html('<div id="dialog-content">'+message+'</div><div id="dialog-confirm-logo">&nbsp;</div>');
-        $('#dialog').attr('title','Are You Sure?');
-        $('#dialog').dialog({ modal: true,buttons:{ Cancel:function(){ $(this).dialog('close'); },Yes:function(){ callback(param);$(this).dialog('close'); } },hide:'fade',show:'fade',resizeable:false });
-        $('#dialog').dialog("open");
+	var cancel = trans( 'prompt_cancel' );
+	var yes = trans( 'prompt_yes' );
+        $('#dialog')
+		.html('<div id="dialog-content">'+message+'</div><div id="dialog-confirm-logo">&nbsp;</div>')
+		.attr('title',trans( 'prompt_confirm' ) )
+		.dialog({
+			modal: true,
+			buttons:{
+				cancel:function(){
+					$(this).dialog('close');
+				},
+				yes:function(){
+					callback(param);
+					$(this).dialog('close');
+				}
+			},
+			hide:'fade',
+			show:'fade',
+			resizeable:false
+		})
+		.dialog("open");
 }
 
 function fHelp(message){
-        $('#dialog').html('<div id="dialog-content">'+message+'</div><div id="dialog-help-logo">&nbsp;</div>');
-        $('#dialog').attr('title','Information');
-        $('#dialog').dialog({ modal: true,buttons:{ Close:function(){ $(this).dialog('close'); }},hide:'fade',show:'fade',resizeable:false });
-        $('#dialog').dialog("open");
+	var close = trans( 'prompt_close' );
+        $('#dialog')
+		.html('<div id="dialog-content">'+message+'</div><div id="dialog-help-logo">&nbsp;</div>')
+		.attr('title',trans( 'prompt_help' ))
+		.dialog({
+			modal: true,
+			buttons:{
+				close:function(){
+					$(this).dialog('close');
+				}
+			},
+			hide:'fade',
+			show:'fade',
+			resizeable:false
+		})
+		.dialog("open");
 }
 
 function checkConnection(details){
@@ -80,14 +121,14 @@ function fetch( url, callback, param ){
 		timeout	:	10000,
 		success	:	function( html ){
 					if( html == '1' )
-						fAlert( 'There has been an unknown error. Please refresh the page and try again.' );
+						fAlert( trans( 'error_unknown' ) );
 
 					else if( callback != null )
 						callback( param, html );
 
 				},
 		error	:	function( ){
-					fAlert( 'There has been an error processing your request. Please <a href="javascript:window.location.reload()">refresh the page</a> and try again. ' );
+					fAlert( trans( 'error_unknown' ) );
 					if( callback != null )
 						callback( param, "content not loaded" );
 

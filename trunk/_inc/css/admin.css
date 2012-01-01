@@ -179,11 +179,12 @@ table#perm{ width:50%;text-align:left;margin:0 auto }
 .treeTable .ui-draggable-dragging{ color:#000;z-index:1 }
 
 select{ border:1px solid #666;padding:3px;width:100% }
+textarea{ border:1px solid #666; padding: 3px; width:100%; overflow-y: scroll }
 input{ border:1px solid #666;padding:3px;width:100% }
 input.checkbox{ width:auto }
 .green{ color:green }
 .trash-select{ width:160px }
-.submit{ width:auto }
+.submit{ width:auto; padding: 3px 14px }
 #edit-delete{ float:right;margin-top:10px }
 #edit-save{ margin-top:10px }
 
@@ -254,7 +255,7 @@ p.th span.status{ float:right;margin-right:5px }
 li.ui-tabs-selected a{ color:#000;background:#fff;border-top:4px solid #11AA11 }
 li.ui-tabs-selected a:hover{ background:#fff }
 #tabs .ui-widget-content{ border-top:none }
-#tabs #tabs-content{ margin:15px 10px }
+#tabs #tabs-content, #tabs .tabs-content{ margin:15px 10px }
 
 /* Progressbar */
 #progress{ margin:20px 30px 0 0 }

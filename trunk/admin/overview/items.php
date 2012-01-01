@@ -24,6 +24,9 @@ $overview_item = @$_GET['overview_item'];
 if( $overview_item == '' )
 	die( 'There has been an error loading the page.' );
 
+$Template = Template::getInstance( );
+$content = '';
+
 /**
  * switch
  *
@@ -38,10 +41,9 @@ switch( $overview_item ){
 	case 'website-overview':
 		require_once HOME . '_inc/function/admin.php';
 
-		$Template = Template::getInstance( );
 		$template = parse_template_file(TEMPLATE_DIR.'style.css');
 
-		echo '
+		$content .= '
 		<table class="row-color">
 		        <tr><td>' . $Template->e( 'pages' ) . ':</td><td>' . single( 'select count(id) from ' . PAGES, 'count(id)' ) . '</td></tr>
 		        <tr><td>' . $Template->e( 'trash' ) . ':</td><td>' . single( 'select count(id) from ' . TRASH, 'count(id)' ) . '</td></tr>
@@ -52,13 +54,13 @@ switch( $overview_item ){
 		</table>';
 	break;
 	case 'recently-edited':
-		echo '<table class="row-color">';
+		$content .= '<table class="row-color">';
 
 		$pages = rows( 'select id,name,content,edited,perm from ' . PAGES . ' order by edited desc limit 5' );
 
 		if( count( $pages ) == 0 ){
-			echo '<p><i>No items recently edited!</i></p>';
-			exit;
+			$content .= '<p><i>No items recently edited!</i></p>';
+			break;
 		}
 
 		foreach( $pages as $page ){
@@ -73,29 +75,29 @@ switch( $overview_item ){
 			 * check if user has permission to view page
 			 */
 			if( $User->pagePerm( $perm[ 1 ] ) )
-		        		echo '<tr><td><span>' . date( "F j, Y", strtotime( $page[ 'edited' ] ) ) . '
+		        		$content .= '<tr><td><span>' . date( "F j, Y", strtotime( $page[ 'edited' ] ) ) . '
 		        		</span><a href="pages.php?page=trash"><h3>' . $page[ 'name' ] . '</h3></a>
 		        		<p>' . strip_tags( substr( $page[ 'content' ], 0, 125 ) ) . ' [...]</p></td></tr>';
 		}
 
-		echo '</table>';
+		$content .= '</table>';
 	break;
 	case 'recently-trashed':
-		echo '<table class="row-color">';
+		$content .= '<table class="row-color">';
 		$pages = rows( 'select id,name,content,edited from ' . TRASH . ' order by edited desc limit 5' );
 		
 		if( count( $pages ) == 0 ){
-			echo '<p><i>No items in trash!</i></p>';
-			exit;
+			$content .= '<p><i>No items in trash!</i></p>';
+			break;
 		}
 
 		foreach( $pages as $page ){
-        		echo '<tr><td><span>' . date( "F j,Y", strtotime( $page[ 'edited' ] ) ) . '</span><a
+        		$content .= '<tr><td><span>' . date( "F j,Y", strtotime( $page[ 'edited' ] ) ) . '</span><a
 		        href="pages.php?page=edit&id=' . $page[ 'id' ] . '"><h3>' . $page[ 'name' ] . '</h3></a>
 		        <p>' . strip_tags( substr( $page[ 'content' ], 0, 125 ) ) . ' [...]</p></td></tr>';
 		}
 
-		echo '</table>';
+		$content .= '</table>';
 	break;
 	case 'furasta-devblog':
 		$cache_file = md5( 'FURASTA_RSS_DEVBLOG' );
@@ -106,8 +108,8 @@ switch( $overview_item ){
 			$elements = rss_fetch( 'http://blog.macaoidh.name/tag/furasta-org/feed/' );
 
 			if( $elements == false ){
-				echo '<p><i>Could not fetch feed.</i></p>';
-				exit;
+				$content .= '<p><i>Could not fetch feed.</i></p>';
+				break;
 			}
 
 			$items = array( );
@@ -134,13 +136,13 @@ switch( $overview_item ){
 			cache( $cache_file, json_encode( $items ), 'RSS' );
 		}
 
-		echo '<table class="row-color">';
+		$content .= '<table class="row-color">';
 
 		foreach( $items as $item )
-		        echo '<tr><td><span>' . $item[ 'pubDate' ] . '</span><a
+		        $content .= '<tr><td><span>' . $item[ 'pubDate' ] . '</span><a
 		        href="' .$item[ 'link' ] . '"><h3>' . $item[ 'title' ] . '</h3></a><p>' . $item[ 'description' ] . '</p></td></tr>';
 
-		echo '</table>';
+		$content .= '</table>';
 	break;
 	default:
 		/**
@@ -149,6 +151,7 @@ switch( $overview_item ){
 		 */
 		$Template = Template::getInstance( );
 		$Plugins->adminOverviewItemContent( $overview_item );
-		require HOME . 'admin/layout/ajax.php';
 }
+
+$Template->add( 'content', $content );
 ?>

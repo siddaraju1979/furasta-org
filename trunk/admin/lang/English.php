@@ -59,6 +59,9 @@ $lang = array(
 	'restore' => 'Restore',
 	'edit' => 'Edit',
 	'email' => 'Email',
+	'options' => 'Options',
+	'normal' => 'Normal',
+	'default' => 'Default',
 
 	// menu items
 	'menu_overview' => 'Overview',
@@ -82,12 +85,23 @@ $lang = array(
 	'overview_website_overview' => 'Website Overview',
 
 	// Pages
+	'pages_new_subpage' => 'New Subpage',
 	'pages_list_go_button' => 'Go',
 	'pages_list_expand_collapse_all' => 'Expand / Collapse all',
-	'pages_edit_show_options' => 'Show Options',
-	'pages_edit_hide_options' => 'Hide Options',
-	'pages_edit_is_home' => 'Is Home Page',
-	'pages_edit_hide_navigation' => 'Hide in Navigation',
+	'pages_show_options' => 'Show Options',
+	'pages_hide_options' => 'Hide Options',
+	'pages_is_home' => 'Is Home Page',
+	'pages_hide_in_navigation' => 'Hide in Navigation',
+	'pages_name_pattern' => 'The name field must be between 2 and 40 characters in length. It must only contain alphabetical characters, numbers and spaces.',
+	'pages_permissions_error' => 'You have insufficient privelages to edit this page. Please contact one of the administrators',
+	'pages_permissions_admin_area' => 'Admin Area',
+	'pages_permissions_frontend' => 'Frontend',
+	'pages_permissions_who_can_edit' => 'Who can edit this page',
+	'pages_permissions_who_can_see' => 'Who can see this page',
+	'pages_permissions_everyone' => 'Everyone',
+	'pages_permissions_selected' => 'Selected',
+	'pages_permissions_select_by_user_group' => 'Select by User or by Group',
+	
 
 	// Trash
 	'trash_empty' => 'No Trash!',
@@ -116,15 +130,28 @@ $lang = array(
 	// Prompts
 	'prompt_yes' => 'Yes',
 	'prompt_no' => 'No',
+	'prompt_close' => 'Close',
 	'prompt_cancel' => 'Cancel',
 	'prompt_confirm' => 'Are you sure?',
+	'prompt_alert' => 'Warning!',
+	'prompt_help' => 'Information',
 	'prompt_confirm_delete' => 'Are you sure you wish to delete this item?',
+	'prompt_confirm_multiple' => 'Are you sure you wish to perform a multiple action?',
+	'prompt_insufficient_privellages' => 'Sorry, you have insufficient privellages to perform this action',
+	
 
 	// Help prompts
 	'help_configuration_index' => 'Ticking this box will force search engines such as Google, Yahoo etc not to index this website. This option should be enabled to make the website more private, though people will still be able to access it through direct URLs.',
 	'help_configuration_maintenance' => 'Ticking this box will enable Maintenance Mode; a feature which should be enabled while making sitewide changes. For example, if you are performing a re-structure of your website and you enable Maintenance Mode people who view the website will see a maintenance notice and will not be able to access any content.',
 	'help_configuration_diagnostic' => '<b>Note: For developers only</b><br/>The CMS carrys out all kinds of caching to make page loads quicker, including that of CSS and JavaScript. If you want to temporarily disable this feature for development reasons then you can enable Diagnostic Mode. During this time there will be no caching of CSS or JavaScript, so it is recommended to enable it again when finished testing',
 	'help_configuration_url' => 'The default URL for the website. All links will use this URL. Some may want to add remove the \"www.\"',
+
+	// error
+	'error_unknown' => 'An unknown error has occured. Please refresh the page and try again',
+ 	'error_permissions_title' => 'Permissions Error',
+	'error_javascript_title' => 'Javascriot Error',
+	'error_javascript_body' => 'You must have a javascript enabled browser to contine. The jQuery library is also required. If you do not have internet access then you may not have access to jQuery.',
+
 );
 
 ?>

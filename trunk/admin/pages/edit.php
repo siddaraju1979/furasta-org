@@ -37,7 +37,7 @@ $conds = array(
 		'minlength'	=>	2,
 		'pattern'	=>	array(
 			'^[A-Za-z0-9 ]{2,40}$',
-			'The name field must be between 2 and 40 characters in length. It must only contain alphabetical characters, numbers and spaces.'
+			$Template->e( 'pages_name_pattern' )
 		)
 	)
 );
@@ -114,206 +114,13 @@ $Page = stripslashes_array( $Page );
  */
 $perm = explode( '|', $Page[ 'perm' ] );
 if( !$User->hasPerm( 'e' ) && !$User->pagePerm( $perm[ 1 ] ) )
-	error( 'You have insufficient privelages to edit this page. Please contact one of the administrators.', 'Permissions Error' );
-
-/**
- * @todo below: finish page delete! 
- */
-$javascript='
-$(document).ready(function(){
-
-	/**
-	 * load page type
-	 */
-	var type=$("#pages-type-content").attr("type");
-
-        var id=$("#pages-type-content").attr("page-id");
-
-        $("#pages-type-content").html("Loading... <img src=\"/_inc/img/loading.gif\"/>");
-
-	loadPageType(type,id);
-
-        /**
-         * initial url load, also loads url from querystring parent 
-         */
-	var pagename = $( "#page-name" ).attr( "value" );
-
-        getUrl( pagename );
-
-        /**
-         * display options when clicked 
-         */
-        $("#options-link").click(displayOptions);
-
-        /**
-         * reload page type when select box is changed 
-         */
-        $("#edit-type").change(function(){
-
-                $("#pages-type-content").html("Loading... <img src=\"/_inc/img/loading.gif\"/>");
-
-                var type=$(this).attr("value");
-
-		loadPageType(type,id);
-
-        });
-
-        /**
-         * set up page url 
-         */
-        $( "#select-parent" ).change( function(){
-
-                var pagename = $( "#page-name" ).attr( "value" );
-
-		getUrl( pagename );
-
-        });
-
-	/**
-	 * re-set up page url when typing occurs
-	 */
-	$("#page-name").keyup(function(){
-
-		var pagename = slugCheck( $("#page-name").val() );
-
-		if( pagename == false )
-
-			$("#page-name").addClass("error");
-
-		else
-
-			getUrl( pagename );
-		
-	});
-
-        /**
-         * function to run when page-permissions-dialog
-         * is saved 
-         */
-        var saveFunction = function( ){
-                var see = $( "input[name=\'who-can-see\']:checked" ).val( );
-                var edit = $( "input[name=\'who-can-edit\']:checked" ).val( );
-
-                var see_users = [];
-                var edit_users = [];
-                var see_groups = [];
-                var edit_groups = [];
-                var see_perm = "";
-                var edit_perm = "";
-
-                if( see == "selected" ){
-
-                        var n = 0;
-
-                        $( "input[name=\'see-users\']:checked" ).each( function( ){
-
-                                if( !$( this ).attr( "disabled" ) ){
-                                        see_users[ n ] = $( this ).val( );
-                                        n++;
-                                }
-
-
-                        });
-
-                        $( "input[name=\'see-groups\']:checked" ).each( function( i ){
-
-                                see_groups[ i ] = $( this ).val( );
-
-                        });
-
-                        if( see_groups.length == 0 )
-                                see_perm = see_users.join( "," );
-                        else
-                                see_perm = see_users.join( "," ) + "#" + see_groups.join( "," );
-
-
-                }
-
-                if( edit == "selected" ){
-
-                        var n = 0;
-
-                        $( "input[name=\'edit-users\']:checked" ).each( function( ){
-
-                                if( !$( this ).attr( "disabled" ) ){
-                                        edit_users[ n ] = $( this ).val( );
-                                        n++;
-                                }
-
-                        });
-
-                        $( "input[name=\'edit-groups\']:checked" ).each( function( i ){
-
-                                edit_groups[ i ] = $( this ).val( );
-
-                        });
-
-                        if( edit_groups.length == 0 )
-                                edit_perm = edit_users.join( "," );
-                        else
-                                edit_perm = edit_users.join( "," ) + "#" + edit_groups.join( "," );
-
-                }
-
-	
-
-		var users = see_perm + "|" + edit_perm;
-
-                $( "input[name=\'perm\']" ).attr( "value", users );
-
-                $( this ).dialog( "close" );
-
-        };
-
-	$( "#page-permissions" ).click( function( ){
-
-                /**
-                 * load content if not already loaded
-                 */
-                if( !$( "#page-permissions-content" ).hasClass( "loaded" ) ){
-
-                        $( "#page-permissions-content" ).load( "' . SITEURL . '_inc/ajax.php?file=admin/pages/permissions.php&id=" + id, function( ){
-
-                                $( this ).addClass( "loaded" );
-
-                        });
-
-                }
-
-                $( "#page-permissions-dialog" ).dialog({
-
-                        modal:  true,
-
-                        width:  "55%",
-
-                        buttons: {
-        
-                                "Close": function( ) { $( this ).dialog( "close" ); },
-
-                                "Save": saveFunction,
-
-                        },
-
-                        hide:   "fade",
-
-                        show:   "fade",
-
-                        resizeable:     false
-
-                });
-
-                $( "#page-permissions-dialog" ).dialog( "open" );
-
-	});
-
-});
-';
+	error( $Template->e( 'pages_permissions_error' ), $Template->e( 'error_permissions_title' ) );
 
 /**
  * load javascript files to Template class for output later 
  */
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
-$Template->loadJavascript( 'FURASTA_ADMIN_PAGES_EDIT', $javascript );
+$Template->loadJavascript( 'admin/pages/edit.js' );
 // @todo find a way to cache this without breaking tinymce
 $Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
@@ -325,15 +132,15 @@ $content='
         </form>
 </div>
 
-<span style="float:right"><a href="pages.php?page=new&parent='.$Page['id'].'" id="new-subpage"><span class="header-img" id="header-New-Page">&nbsp;</span><h1 class="image-left">New Subpage</h1></a></span>
-<span><span class="header-img" id="header-Edit-Pages">&nbsp;</span><h1 class="image-left">Edit Pages</h1></span>
+<span style="float:right"><a href="pages.php?page=new&parent='.$Page['id'].'" id="new-subpage"><span class="header-img" id="header-New-Page">&nbsp;</span><h1 class="image-left">' . $Template->e( 'pages_new_subpage' ) . '</h1></a></span>
+<span><span class="header-img" id="header-Edit-Pages">&nbsp;</span><h1 class="image-left">' . $Template->e( 'menu_new_page' ) . '</h1></span>
 <br/>
 <form method="post" id="pages-edit">
 	<table id="page-details">
 		<tr>
-                        <td class="small">Name:</td>
+                        <td class="small">' . $Template->e( 'name' ) . ':</td>
 			<td><input type="text" name="Name" id="page-name" value="'.$Page['name'].'" autocomplete="off"/></td>
-			<td class="options"><a id="options-link">' . $Template->e( 'pages_edit_show_options' ) . '</a></td>
+			<td class="options"><a id="options-link">' . $Template->e( 'pages_show_options' ) . '</a></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -343,12 +150,12 @@ $content='
 	</table>
 	<input type="hidden" name="slug" id="slug-put" value="' . $Page[ 'slug' ] . '"/>
 	<div id="options">
-		<h2>Options</h2>
+		<h2>' . $Template->e( 'options' ) . '</h2>
 		<table id="page-details">
 			<tr>
 				<td class="small">Type:</td>
 				<td><select name="Type" id="edit-type">
-					<option value="Normal">Normal</option>
+					<option value="Normal">' . $Template->e( 'normal' ) . '</option>
 ';
 
 $options=$Plugins->adminPageTypes();
@@ -363,13 +170,13 @@ $homepage = ( @$Page[ 'home' ] == 1 ) ? '<input type="checkbox" checked="checked
 
 $content.='
 				</select></td>
-				<td class="small">Is Home Page:</td>
+				<td class="small">' . $Template->e( 'pages_is_home' ) . ':</td>
 				<td>' . $homepage . '</td>
 			</tr>
 			<tr>
-				<td class="small">Template:</td>
+				<td class="small">' . $Template->e( 'template' ) . ':</td>
 				<td><select name="Template">
-					<option value="Default">Default</option>
+					<option value="Default">' . $Template->e( 'default' ) . '</option>
 ';
 
 $files = scandir( TEMPLATE_DIR );
@@ -389,11 +196,11 @@ $navigation=($Page['display']==1)?'':' checked="checked"';
 
 $content.='
 				</select></td>
-				<td class="small">Hide In Navigation</td>
+				<td class="small">' . $Template->e( 'pages_hide_in_navigation' ) . ':</td>
 				<td><input type="checkbox" value="1" name="Navigation"'.$navigation.'/></td>
 			</tr>
 			<tr>
-				<td class="small">Parent:</td>
+				<td class="small">' . $Template->e( 'parent' ) . ':</td>
 				<td><select id="select-parent" name="Parent">
 ';
 
@@ -415,13 +222,15 @@ else{
 }
 
 $content.='
-				<td class="small"><a class="link" id="page-permissions">Permissions</a><input type="hidden" name="perm" value="' . $Page[ 'perm' ] . '"/></td>
+				<td class="small">
+					<a class="link" id="page-permissions">' . $Template->e( 'permissions' ) . '</a>
+					<input type="hidden" name="perm" value="' . $Page[ 'perm' ] . '"/></td>
 			</tr>
 		</table>
 	</div>
 
 	<div id="pages-type-content" type="'.$Page['type'].'" page-id="'.$Page['id'].'">&nbsp;</div>
-<input type="submit" name="edit-save" value="Save" class="submit" id="edit-save"/>
+<input type="submit" name="edit-save" value="' . $Template->e( 'save' ) . '" class="submit" id="edit-save"/>
 </form>
 ';
 

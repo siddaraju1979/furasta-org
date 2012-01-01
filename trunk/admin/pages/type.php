@@ -30,21 +30,24 @@ if( $type == 'Normal' ){
 	if( $id != 0 )
 		$content = stripslashes( single( 'select content from ' . PAGES . ' where id= ' . $id, 'content' ) );
 
-		echo '
-			<script type="text/javascript">
-			$(function( ){
-				tinymce_changeConfig( "#page-content", "Normal" );
-			});
-			</script>
-			<textarea id="page-content" name="PageContent" class="tinymce" style="width:100%;display:block">
-				' . @$content . '
-			</textarea>';
+	$Template = Template::getInstance( );
+
+	$javascript = '
+	$(function(){
+		tinymce_changeConfig( "#page-content", "Normal" );
+	});';
+
+	$Template->loadJavascript( 'FURASTA_ADMIN_PAGES' . $id, $javascript );
+
+	$content = '
+	<textarea id="page-content" name="PageContent" class="tinymce" style="width:100%;display:block">
+		' . @$content . '
+	</textarea>';
+
+	$Template->add( 'content', $content );
 
 }
 else{
         $Plugins->adminPageType( $type, $id );
-
-	$Template = Template::getInstance( );
-	require HOME . 'admin/layout/ajax.php';
 }
 ?>
