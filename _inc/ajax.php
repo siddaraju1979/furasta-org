@@ -71,5 +71,9 @@ if( !file_exists( $file ) )
 
 require $file;
 
+if( !isset( $Template ) )
+	$Template = Template::getInstance( );
+require HOME . 'admin/layout/ajax.php';
+
 exit;
 ?>

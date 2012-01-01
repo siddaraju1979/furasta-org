@@ -11,7 +11,7 @@
  */
 
 if( typeof jQuery == 'undefined' )
-	window.location = window.furasta.site.url + "_inc/noscript.php";
+	window.location = window.furasta.site.url + '_inc/noscript.php';
 
 $(document).ready(function(){
         rowColor();
@@ -67,11 +67,11 @@ function loadPageType(type,id){
 function displayOptions(){
         var options=$("#options");
         if(options.is(":hidden")){
-                $("#options-link").html("Hide Options");
+                $("#options-link").html(trans( 'pages_hide_options' ));
                 $(options).slideDown('slow');
         }
         else{
-                $("#options-link").html("Show Options");
+                $("#options-link").html(trans( 'pages_show_options' ));
                 $(options).slideUp('slow');
         }
 

@@ -78,8 +78,9 @@ for( $n = 0; $n < count( $groups ); $n++ ){
 
 }
 
-echo '
-<script type="text/javascript">
+$Template = Template::getInstance( );
+
+$javascript =  '
 /**
  * toggleAttrs
  *  
@@ -212,27 +213,36 @@ $( document ).ready( function( ){
 	}
 	
 
-});
-</script>
+});';
+
+$Template->loadJavascript( 'FURASTA_ADMIN_PAGES_PERMISSIONS', $javascript );
+
+$content = '
 <div id="tabbed">
         <ul>
-                <li><a href="#tabs-1">Admin Area</a></li>
-                <li><a href="#tabs-2">Frontend</a></li>
+                <li><a href="#tabs-1">' . $Template->e( 'pages_permissions_admin_area' ) . '</a></li>
+                <li><a href="#tabs-2">' . $Template->e( 'pages_permissions_frontend' ) . '</a></li>
         </ul>
         <div id="tabs-1" style="border:none">
-                <p style="margin:1.5%"><i>Who can edit this page.</i></p>
-                <p><input type="radio" class="checkbox edit-everyone" name="who-can-edit" value="everyone"/> Everyone</p>
-                <p><input type="radio" class="checkbox edit-selected" name="who-can-edit" value="selected"/> Selected:</p>
-		<p style="margin:1.5%"><i>Select by User or by Group.</i></p>
+                <p style="margin:1.5%"><i>' . $Template->e( 'pages_permissions_who_can_edit' ) . '</i></p>
+                <p>
+			<input type="radio" class="checkbox edit-everyone" name="who-can-edit" value="everyone"/>
+			 ' . $Template->e( 'pages_permissions_everyone' ) . '
+		</p>
+                <p>
+			<input type="radio" class="checkbox edit-selected" name="who-can-edit" value="selected"/>
+			 ' . $Template->e( 'pages_permissions_selected' ) . ':
+		</p>
+		<p style="margin:1.5%"><i>' . $Template->e( 'pages_permissions_select_by_user_group' ) . '</i></p>
                 <table id="perms-table" class="row-color perms-edit">
-                        <tr><th>Groups</th><th>Users</th></tr>
+                        <tr><th>' . $Template->e( 'groups' ) . '</th><th>' . $Template->e( 'users' ) . '</th></tr>
 ';
 
 for( $i = 0; $i < count( $groups ); $i++ ){
 
 	$checked = ( isset( $edit_groups ) && in_array( $groups[ $i ][ 'id' ], $edit_groups ) ) ? ' checked="checked"' : '';
 
-        echo '<tr>
+        $content .= '<tr>
                         <td style="border-right:1px solid #999;width:30%"><input type="checkbox"' . $checked . ' class="checkbox groups" name="edit-groups" value="' . $groups[ $i ][ 'id' ] . '"
 /> ' . $groups[ $i ][ 'name' ] . '</td>
                         <td><ul style="list-style-type:none"';
@@ -241,28 +251,34 @@ for( $i = 0; $i < count( $groups ); $i++ ){
 
 		$checked = ( isset( $edit_users ) && in_array( $id, $edit_users ) ) ? ' checked="checked"' : '';
 
-                echo '  <li style="float:left"><input ' . $checked . ' type="checkbox" class="checkbox" name="edit-users" value="' . $id . '"/> ' . $name . '</li>';
+                $content .= '  <li style="float:left"><input ' . $checked . ' type="checkbox" class="checkbox" name="edit-users" value="' . $id . '"/> ' . $name . '</li>';
         }
-        echo '</td></tr>';
+        $content .= '</td></tr>';
 
 }
 
-echo '          </table>
+$content .= '          </table>
         </div>
         <div id="tabs-2" style="border:none">
-                <p style="margin:1.5%"><i>Who can see this page.</i></p>
-		<p><input type="radio" class="checkbox see-everyone" name="who-can-see" value="everyone"/> Everyone</p>
-		<p><input type="radio" class="checkbox see-selected" name="who-can-see" value="selected"/> Selected:</p>
-                <p style="margin:1.5%"><i>Select by User or by Group.</i></p>
+                <p style="margin:1.5%"><i>' . $Template->e( 'pages_permissions_who_can_see' ) . '</i></p>
+		<p>
+			<input type="radio" class="checkbox see-everyone" name="who-can-see" value="everyone"/>
+			 ' . $Template->e( 'pages_permissions_everyone' ) . '
+		</p>
+		<p>
+			<input type="radio" class="checkbox see-selected" name="who-can-see" value="selected"/>
+			 ' . $Template->e( 'pages_permissions_selected' ) . ':
+		</p>
+                <p style="margin:1.5%"><i>' . $Template->e( 'pages_permissions_select_by_user_group' ) . '</i></p>
 		<table id="perms-table" class="row-color perms-see">
-			<tr><th>Groups</th><th>Users</th></tr>
+			<tr><th>' . $Template->e( 'groups' ) . '</th><th>' . $Template->e( 'users' ) . '</th></tr>
 ';
 
 for( $i = 0; $i < count( $groups ); $i++ ){
 
         $checked = ( isset( $see_groups ) && in_array( $groups[ $i ][ 'id' ], $see_groups ) ) ? ' checked="checked"' : '';
 
-        echo '<tr>
+        $content .= '<tr>
                         <td style="border-right:1px solid #999;width:30%"><input type="checkbox"' . $checked . ' class="checkbox groups" name="see-groups" value="' . $groups[ $i ][ 'id' ] . '"
 /> ' . $groups[ $i ][ 'name' ] . '</td>
                         <td><ul style="list-style-type:none"';
@@ -271,15 +287,17 @@ for( $i = 0; $i < count( $groups ); $i++ ){
 
                 $checked = ( isset( $see ) && in_array( $id, $see ) ) ? ' checked="checked"' : '';
 
-                echo '  <li style="float:left"><input ' . $checked . ' type="checkbox" class="checkbox" name="see-users" value="' . $id . '"/> ' . $name . '</li>';
+                $content .= '  <li style="float:left"><input ' . $checked . ' type="checkbox" class="checkbox" name="see-users" value="' . $id . '"/> ' . $name . '</li>';
         }
-        echo '</td></tr>';
+        $content .= '</td></tr>';
 
 }
 
-echo '          </table>
+$content .= '          </table>
         </div>
 </div>
 ';
+
+$Template->add( 'content', $content );
 
 ?>

@@ -12,20 +12,24 @@
  * The options array should look something like this:
  *
  * {
- *   'Name' : {
+ *   'name-input' : {
+ *      'name' : 'Name',
  *      'required' : true,
  *      'minlength' : 5,
  *      'pattern' : /^[A-Za-z0-9 ]{2,40}$/
  *   },
- *   'Password' : {
+ *   'password-input' : {
+ *      'name' : 'Password',
  *      'required' : true,
  *      'minlength' : 10,
  *      'match' : 'Repeat-Password'
  *   },
- *   'Repeat-Password' : {
+ *   'repeat-password-input' : {
+ *      'name' : 'Repeat Password',
  *	'required' : true
  *   }
- *   'Content' : {
+ *   'content-input' : {
+ *   	'name' : 'Content',
  *      'pattern' : [ /^[A-Za-z0-9 ]{2,40}$/, 'The content field
  *      must be between 2 and 40 characters' ]
  *   }
@@ -43,6 +47,7 @@
  * apply to that input. A list of all the possible conditions
  * follows:
  *
+ * name		-	accepts string of name for input in errors, optional
  * required     -       accepts boolean true or false
  * email        -       accepts boolean true or false
  * minlength    -       accepts integer of minimum length
@@ -67,7 +72,7 @@
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com> http://blog.conormacaoidh.com
  * @license    The BSD License
- * @version    1.1
+ * @version    1.2
  */
 ( function( $ ){
 
@@ -105,6 +110,7 @@
 		 * below are arrays which contain the fields to
 		 * be processed by each validation function
 		 */
+		name_f : [ ],
 	        required_f : [ ],
         	email_f : [ ],
 	        pattern_f : [ ],
@@ -123,6 +129,10 @@
         	        for( var i in pieces ){
                 	        for( var n in pieces[ i ] ){
 	                                switch( n ){
+        	                                case "name":
+                	                                if( $( "input[name=" + i + "]").length != 0 )
+                        	                                this.name_f.push( i );
+                                	        break;
         	                                case "required":
                 	                                if( pieces[ i ][ n ] == true && $( "input[name=" + i + "]").length != 0 )
                         	                                this.required_f.push( i );

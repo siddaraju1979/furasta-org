@@ -10,8 +10,13 @@
  * @version    1.0
  */
 
-define('HOME',substr(dirname(__FILE__),0,-4));
+require 'define.php';
 
-die('<h1>JavaScript Error</h1><p>You must have a javascript enabled browser to contine. The jQuery library is also required. If you do not have internet access then you may not have access to jQuery. Please contact <a href="mailto:support@furasta.org">support@furasta.org</a> for support.</p>');
+$Template = Template::getInstance( );
+
+error(
+	$Template->e( 'error_javascript_body' ),
+	$Template->e( 'error_javascript_title' )
+);
 
 ?>
