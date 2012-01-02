@@ -37,6 +37,20 @@ $(document).ready(function(){
 });
 
 /**
+ * rowColor 
+ * 
+ * adds odd and even classes to trs in all tables
+ * with the row-color class
+ *
+ * @access public
+ * @return void
+ */
+function rowColor( ){
+	$( ".row-color tr:even" ).not( ":hidden" ).removeClass( "odd" ).addClass( "even" );
+	$( ".row-color tr:odd" ).not( ":hidden" ).removeClass( "even" ).addClass( "odd" );
+}
+
+/**
  * trans
  *
  * translates the string using language files

@@ -9,20 +9,6 @@
  * @version    1.0
  */
 
-/**
- * rowColor 
- * 
- * adds odd and even classes to trs in all tables
- * with the row-color class
- *
- * @access public
- * @return void
- */
-function rowColor( ){
-	$( ".row-color tr:even" ).not( ":hidden" ).removeClass( "odd" ).addClass( "even" );
-	$( ".row-color tr:odd" ).not( ":hidden" ).removeClass( "even" ).addClass( "odd" );
-}
-
 function fAlert(message){
 	var dialogButtons = {};
 	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
