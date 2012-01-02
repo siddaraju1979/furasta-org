@@ -96,17 +96,19 @@ function fetch( url, callback, param ){
 		url	:	url,
 		timeout	:	10000,
 		success	:	function( html ){
-					if( html == '1' )
+					if( html == '1' ){
 						fAlert( trans( 'error_unknown' ) );
-
-					else if( callback != null )
+					}
+					else if( callback != null ){
 						callback( param, html );
+					}
 
 				},
 		error	:	function( ){
 					fAlert( trans( 'error_unknown' ) );
-					if( callback != null )
+					if( callback != null ){
 						callback( param, "content not loaded" );
+					}
 
 				}
 	});
@@ -127,8 +129,10 @@ function queryString( name ){
 	var regexS = "[\\?&]"+name+"=([^&#]*)";
 	var regex = new RegExp( regexS );
 	var results = regex.exec( window.location.href );
-	if( results == null )
+	if( results == null ){
 		return "";
-  	else
+	}
+  	else{
     		return decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
 }

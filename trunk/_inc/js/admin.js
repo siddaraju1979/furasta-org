@@ -10,8 +10,9 @@
  * @version    1.0
  */
 
-if( typeof jQuery == 'undefined' )
+if( typeof jQuery == 'undefined' ){
 	window.location = window.furasta.site.url + '_inc/noscript.php';
+}
 
 $(document).ready(function(){
         rowColor();
@@ -59,8 +60,9 @@ function rowColor( ){
  * @return string or bool
  */
 function trans( string ){
-	if( window.furasta.lang[ string ] )
+	if( window.furasta.lang[ string ] ){
 		return window.furasta.lang[ string ];
+	}
 	return false;
 }
 
@@ -75,8 +77,9 @@ function trans( string ){
  * @return string
  */
 function trans_error( id, params ){
-	if( !window.furasta.lang_errors[ id ] )
+	if( !window.furasta.lang_errors[ id ] ){
 		return false;
+	}
 	error = window.furasta.lang_errors[ id ];
 	if( params ){
 		if( $.isArray( params ) ){
@@ -96,8 +99,9 @@ function loadPageType(type,id){
                 success: function(html){
                         $("#pages-type-content").html(html);
 
-	                if( $( "#ajax-errors" ).length != 0 )
+	                if( $( "#ajax-errors" ).length != 0 ){
         	                $( "#main" ).prepend( $( "#ajax-errors" ).html( ) );
+			}
                 }
         });
         return;
@@ -148,18 +152,21 @@ function slugCheck(url){
  */
 function getParents( page ){
 
-	if( page == null )
+	if( page == null ){
 		page = $( "#select-parent :selected" ).attr( 'class' );
+	}
 
-	if( page == 0 )
+	if( page == 0 ){
 		return '';
+	}
 
 	var parent = $( '#select-parent option[ value = ' + page + ' ]' );
 
 	var url = '';
 
-	if( parent.attr( 'class' ) != 0 )
+	if( parent.attr( 'class' ) != 0 ){
 		url += getUrl( parent.attr( 'class' ) ) + '/';
+	}
 
 	url += parent.text( ) + '/';
 
@@ -207,13 +214,12 @@ function toggleDisabled( selector ){
 
 	$( selector ).each( function( ){
 
-		if( $( this ).attr( 'disabled' ) == '' )
-
+		if( $( this ).attr( 'disabled' ) == '' ){
 			$( this ).attr( 'disabled', 'disabled' );
-
-		else
-
+		}
+		else{
 			$( this ).removeAttr( 'disabled' );
+		}
 
 	});
 

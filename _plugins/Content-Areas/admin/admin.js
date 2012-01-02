@@ -52,8 +52,9 @@ function update_template_areas( ){
 
 function update_content_area( ){
 	var area_name = $( '#content-area-select' ).val( );
-	if( area_name == '---' )
+	if( area_name == '---' ){
 		return;
+	}
 	$.ajax({
 		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/get-area.php',
 		type : 'POST',
@@ -72,8 +73,9 @@ function update_content_area( ){
 
 function save_area( ){
 	var area_name = $( '#content-area-select' ).val( );
-	if( area_name == '---' )
+	if( area_name == '---' ){
 		return;
+	}
 	var area_content = { 'all' : [ ] };
 	$( '.content-area-widgets .widget' ).each(function(){
 		var type = $( this ).attr( 'type' );
@@ -96,8 +98,9 @@ function sortable_stop_function( event, ui ){
 		var new_id = 1;
 		$( '.widget' ).each(function( ){
 			var id = parseInt( $( this ).attr( 'id' ) );
-			if( id >= new_id )
+			if( id >= new_id ){
 				new_id = id + 1;
+			}
 		});
 		ui.item.attr( 'id', new_id );
 		ui.item.prepend( 

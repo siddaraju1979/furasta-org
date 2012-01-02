@@ -12,8 +12,9 @@ $(function(){
 	$( '.delete' ).live( 'click', delete_subscriber );
 	$( '#show-bcc' ).click( toggle_bcc );
 
-	if( $( '#message-body' ).length )
+	if( $( '#message-body' ).length ){
 		tinymce_changeConfig( '#message-body', 'Normal' );
+	}
 });
 
 function add_subscriber( ){
@@ -54,15 +55,17 @@ function add_subscriber( ){
 
 					var result = $( "#new-sub-form" ).validate( "execute" );
 
-		                        if( !result )
+		                        if( !result ){
 		                                return false;
+					}
 
 					var sub_email = $( '#sub_email' ).val( );
 					var Data = {
 						email : sub_email
 					};
-					if( name )
+					if( name ){
 						Data.sub_name = $( '#sub_name' ).val( );
+					}
 
 					$.ajax({
 						url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/new-sub.php',
@@ -70,8 +73,9 @@ function add_subscriber( ){
 						type : 'POST',
 						success : function( id ){
 							var content = '<tr>';
-							if( name )
+							if( name ){
 								content += '<td>' + sub_name + '</td>';
+							}
 							content += '<td>' + sub_email + '</td>';
 							content += '<td><a class="link delete" id="' + id + '">'
 								+ '<span class="admin-menu-img" id="delete-img">&nbsp;</span></a></td>';
