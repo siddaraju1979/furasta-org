@@ -1,5 +1,5 @@
 /**
- * jQuery Form Validation Plugin
+ * jQuery Form Validation Plugin - Modified for Furasta.Org Multi-Lingual Support
  *
  * A jquery plugin which may be used to validate forms.
  * This function accepts an array of fields to be processed.
@@ -207,7 +207,7 @@
 	                        loc.removeClass( 'error' );
 
         	                if( loc.val( ) == '' ){
-                	                this.errors = 'Please do not leave the ' + this.required_f[ i ] + ' field blank.';
+					this.errors = trans_error( 5, this.name_f[ i ] );
                         	        loc.addClass( 'error' );
                                 	this.errorHandler( );
 	                                return false;
@@ -232,6 +232,7 @@
                 	        loc.removeClass( 'error' );
 
                         	if( filter.test( loc.val( ) ) == false ){
+					this.errors = trans_error( 6, this.name_f[ i ] );
 	                                this.errors = 'Please enter a valid email address';
         	                        loc.addClass( 'error' );
                 	                this.errorHandler( );
@@ -250,12 +251,14 @@
 		 */
 	        minlength : function( ){
 
+			var count = 0;
         	        for( var i in this.minlength_f ){
+				++count;
                 	        var loc = $( "input[name=" + i + "]" );
                         	loc.removeClass( 'error' );
 
 	                        if( loc.val( ).length < this.minlength_f[ i ] ){
-        	                        this.errors = 'The ' + i + ' field must be at least ' + this.minlength_f[ i ] + ' characters long.';
+					this.errors = trans_error( 8, [ this.name_f[ count ], this.minlength_f[ i ] ] );
                 	                loc.addClass( 'error' );
                         	        this.errorHandler( );
                                 	return false;
@@ -273,12 +276,14 @@
                  */
                 maxlength : function( ){
 
+			var count = 0;
                         for( var i in this.maxlength_f ){
+				++count;
                                 var loc = $( "input[name=" + i + "]" );
                                 loc.removeClass( 'error' );
 
                                 if( loc.val( ).length > this.maxlength_f[ i ] ){
-                                        this.errors = 'The ' + i + ' field must be a maximim of ' + this.minlength_f[ i ] + ' characters long.';
+					this.errors = trans_error( 18, [ this.name_f[ count ], this.minlength_f[ i ] ] );
                                         loc.addClass( 'error' );
                                         this.errorHandler( );
                                         return false;
@@ -295,14 +300,16 @@
 		 */
 	        match : function( ){
 	
+			var count = 0;
         	        for( var i in this.match_f ){
+				++count;
                 	        var locone = $("input[name=" + i + "]");
                         	var loctwo = $("input[name=" + this.match_f[ i ] + "]");
 	                        locone.removeClass( 'error' );
         	                loctwo.removeClass( 'error' );
 	
         	                if( locone.val( ) != loctwo.val( ) ){
-                	                this.errors = 'The ' + i + ' and ' + this.match_f[ i ] + ' fields do not match';
+					this.errors = trans_error( 9, [ this.name_f[ count ], this.match_f[ i ] ] );
                         	        locone.addClass( 'error' );
                                 	loctwo.addClass( 'error' );
 	                                this.errorHandler( );
@@ -330,7 +337,7 @@
 		                loc.removeClass( 'error' );
 
 	                        if( filter.test( loc.val( ) ) == false && loc.val( ) != "" ){
-                                	this.errors = 'Please enter a valid URL.';
+					this.errors = trans_error( 10, this.name_f[ i ] );
                                 	loc.addClass( 'error' );
 					this.errorHandler( );
 					return false;
@@ -349,7 +356,9 @@
 		 */
 		pattern : function( ){
 
+			var count = 0;
 			for( var i in this.pattern_f ){
+				++count;
 
 				/**
 				 * check if array, or standard notaion is being used
@@ -360,7 +369,7 @@
 				}
 				else{
 					var regex = this.pattern_f[ i ];
-					var message = 'The ' + i + ' field is not valid.';
+					var message = trans_error( 7, this.name_f[ count ] );
 				}
 
 				/**
@@ -393,9 +402,9 @@
 		 * already then it returns true
 		 */
 	        execute : function( ){
-
+	
         	        if( this.validated == 1 )
-                	        return true;
+                	        return false;
 
 	              	if( this.required_f.length != 0 && this.required( ) == false )
         	            	return false;
@@ -433,9 +442,14 @@
 	 * binds a submit function to the form
 	 */
 	$.fn.validate = function( conds, errorHandler ) {
-
-		if( conds == 'execute' )
-			return Validate.execute( );
+		switch( conds ){
+			case 'execute':
+				return Validate.execute( );
+			break;
+			case 'refresh':
+				return Validate.validated = 0;
+			break;
+		}
 
 	        if( typeof( errorHandler ) == 'function' )
         	        Validate.customErrorHandler = errorHandler;
@@ -445,7 +459,7 @@
 		var id = this.attr( 'id' );
 		this.unbind( 'submit.validate-' + id );
 	        this.bind( 'submit.validate-' + id, function( ){
-        	        return Validate.execute( );
+	  	        return Validate.execute( );
 	        });
 
 	        return this;

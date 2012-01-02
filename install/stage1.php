@@ -34,12 +34,15 @@ echo '
 $( document ).ready( function( ){
 	$( "#install" ).validate({
 		"DatabaseName" : {
+			"name" : "database name",
 			"required" : true
 		},
 		"Hostname" : {
+			"name" : "hostname",
 			"required" : true
 		},
 		"Username" : {
+			"name" : "username",
 			"required" : true
 		}
 	});

@@ -50,6 +50,31 @@ function trans( string ){
 	return false;
 }
 
+/**
+ * trans_error
+ *
+ * returns the error string associated with the
+ * given id and parses for params
+ *
+ * @params int id
+ * @params array params
+ * @return string
+ */
+function trans_error( id, params ){
+	if( !window.furasta.lang_errors[ id ] )
+		return false;
+	error = window.furasta.lang_errors[ id ];
+	if( params ){
+		if( $.isArray( params ) ){
+			for( var i = 1; i <= params.length; i++ )
+				error = error.replace( '%' + i, params[ i ] );
+		}
+		else
+			error = error.replace( '%1', params ); 
+	}
+	return error;
+}
+
 function loadPageType(type,id){
         var hash=Math.floor(Math.random()*1001);
         $.ajax({

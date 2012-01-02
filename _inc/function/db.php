@@ -166,21 +166,15 @@ function single( $query, $r, $alert = false ){
 
 	$result = query( $query );
 
+	if( !$result )
+		return false;
+
 	$array = mysql_fetch_array( $result, MYSQL_ASSOC );
 
 	/**
 	 * free all memory allocated to result
 	 */
 	mysql_free_result( $result );
-
-        /**
-         * if the query fails check if alert is true or that
-	 * diagnostic mode is enabled for debugging 
-         */
-	if( !$array && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
-		error_log( 'Furasta.Org Notice: MySQL Single Error: ' . mysql_error( ), 0 );
-		error( 'There has been a problem executing this MySQL single query:<br/><br/>' . htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' . mysql_error( ), 'MySQL Error' );
-	}
 
 	return $array[ $r ];
 }

@@ -17,6 +17,7 @@
  */
 $conds = array(
         'Name' => array(
+		'name' => $Template->e( 'name' ),
                 'required'	=>	true,
                 'minlength'	=>	2,
                 'pattern'	=>	"^[A-Z a-z0-9]{1,40}$"
@@ -342,8 +343,6 @@ foreach($files as $file){
                 $file_n=basename($file,'.html');
                 if($file_n=='index')
                         continue;
-                if($file_n==$Page['template'])
-                        $selected=' selected="selected"';
                 $content .= '<option value="'.$file_n.'"'.@$selected.'>'.$file_n.'</option>';
         }
 }

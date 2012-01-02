@@ -47,30 +47,16 @@ foreach( $plugin_functions as $name => $function )
 $content = $Plugins->filter( 'frontend', 'filter_page_content', $Page[ 'content' ] );
 
 /**
- * assign content according to page type 
- */
-$type = $Page[ 'type' ];
-
-if( $type == 'Normal' )
-	$Smarty->assign( 'page_content', $content );
-else{
-	/**
-	 * @todo this is a quick fix, going to do something more here
-	 */
-	$Template = Template::getInstance( );
-	$Plugins->frontendPageType( $type, $Page );
-	$Smarty->assign( 'page_content', $Template->display( 'content' ) );
-}
-
-/**
  * assign other page vars 
  */
+$Smarty->assign( '__page_content', $Page[ 'content' ] );
 $Smarty->assign( 'page_name', $Page[ 'name' ] );
 $Smarty->assign( 'page_id', $Page[ 'id' ] );
 $Smarty->assign( 'page_slug', $Page[ 'slug' ] );
 $Smarty->assign( 'page_edited', $Page[ 'edited' ] );
 $Smarty->assign( 'page_user', $Page[ 'user' ] );
 $Smarty->assign( 'page_parent_id', $Page[ 'parent' ] );
+$Smarty->assign( 'page_type', $Page[ 'type' ] );
 
 /**
  * assign site vars
@@ -82,6 +68,7 @@ $Smarty->assign( 'site_subtitle', $SETTINGS[ 'site_subtitle' ] );
 /**
  * register default template functions 
  */
+$Smarty->register_function( 'page_content', 'frontend_page_content' );
 $Smarty->register_function( 'menu', 'frontend_menu' );
 $Smarty->register_function( 'breadcrumbs', 'frontend_breadcrumbs' );
 $Smarty->register_function( 'metadata', 'frontend_metadata' );

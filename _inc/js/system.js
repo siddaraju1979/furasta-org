@@ -24,17 +24,14 @@ function rowColor( ){
 }
 
 function fAlert(message){
-	var close = trans( 'prompt_close' );
+	var dialogButtons = {};
+	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
         $('#dialog')
 		.html('<div id="dialog-content">'+message+'</div><div id="dialog-alert-logo">&nbsp;</div>')
 		.attr('title',trans( 'prompt_alert' ))
 		.dialog({
 			modal: true,
-			buttons:{
-				close :function(){
-					$(this).dialog('close');
-				}
-			},
+			buttons: dialogButtons,
 			hide:'fade',
 			show:'fade',
 			resizeable:false
@@ -44,22 +41,18 @@ function fAlert(message){
 
 
 function fConfirm(message,callback,param){
-	var cancel = trans( 'prompt_cancel' );
-	var yes = trans( 'prompt_yes' );
+	var dialogButtons = {};
+	dialogButtons[ trans( 'prompt_cancel' ) ] = function( ){ $( this ).dialog( 'close' ) };
+	dialogButtons[ trans( 'prompt_yes' ) ] = function( ){
+		callback( param );
+		$( this ).dialog( 'close' );
+	};
         $('#dialog')
 		.html('<div id="dialog-content">'+message+'</div><div id="dialog-confirm-logo">&nbsp;</div>')
 		.attr('title',trans( 'prompt_confirm' ) )
 		.dialog({
 			modal: true,
-			buttons:{
-				cancel:function(){
-					$(this).dialog('close');
-				},
-				yes:function(){
-					callback(param);
-					$(this).dialog('close');
-				}
-			},
+			buttons: dialogButtons,
 			hide:'fade',
 			show:'fade',
 			resizeable:false
@@ -68,17 +61,14 @@ function fConfirm(message,callback,param){
 }
 
 function fHelp(message){
-	var close = trans( 'prompt_close' );
+	var dialogButtons = {};
+	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ); };
         $('#dialog')
 		.html('<div id="dialog-content">'+message+'</div><div id="dialog-help-logo">&nbsp;</div>')
 		.attr('title',trans( 'prompt_help' ))
 		.dialog({
 			modal: true,
-			buttons:{
-				close:function(){
-					$(this).dialog('close');
-				}
-			},
+			buttons: dialogButtons,
 			hide:'fade',
 			show:'fade',
 			resizeable:false

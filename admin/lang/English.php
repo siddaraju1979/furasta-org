@@ -36,6 +36,8 @@ $lang_errors = array(
 $lang = array( 
 
 	// general terms
+	'yes' => 'Yes',
+	'no' => 'No',
 	'name' => 'Name',
 	'author' => 'Author',
 	'type' => 'Type',
@@ -86,6 +88,7 @@ $lang = array(
 
 	// Pages
 	'pages_new_subpage' => 'New Subpage',
+	'pages_edit_page' => 'Edit Page',
 	'pages_list_go_button' => 'Go',
 	'pages_list_expand_collapse_all' => 'Expand / Collapse all',
 	'pages_show_options' => 'Show Options',
@@ -105,16 +108,18 @@ $lang = array(
 
 	// Trash
 	'trash_empty' => 'No Trash!',
-	'trash_go_button' => 'Go',	
+	'trash_go_button' => 'Go',
+	'trash_confirm_restore' => 'Are you sure you want to restore this page? Certain features have not been preserved, such as page parent, type, and template settings.',
 
-	// Users & Groups
-	'Email' => 'Email',
-	'Delete' => 'Delete',
-	'New User' => 'New Users',
-	'Homepage' => 'Homepage',
-	'Change Password' => 'Change Password',
-	'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.' =>
-		'To reset the password an email will be sent to %1 with reset details. Press \'Yes\' to confirm.',
+	// Users
+	'users_password' => 'Password',
+	'users_repeat_pass' => 'Repeat Password',
+	'users_invalid_details' => 'The details you provided are not valid. Please try creating a user again. The cause may be that email adresses may only be used by one user.',
+	'users_user_added' => 'An email has been sent to your address for validation. This user will not be able to login until the email is validated.',
+
+	// Groups
+	'groups_delete_prompt' => 'Are you sure you want to delete this group? <br/><b>ALL USERS IN THE GROUP WILL BE DELETED</b>',
+	'groups_invalid_details' => 'The details you provided are not valid. Please try creating a group again. The group name may already be taken.',
 	
 	// Configuration
 	'configuration_website_options' => 'Website Options',
@@ -130,6 +135,7 @@ $lang = array(
 	// Prompts
 	'prompt_yes' => 'Yes',
 	'prompt_no' => 'No',
+	'prompt_save' => 'Save',
 	'prompt_close' => 'Close',
 	'prompt_cancel' => 'Cancel',
 	'prompt_confirm' => 'Are you sure?',
@@ -138,6 +144,7 @@ $lang = array(
 	'prompt_confirm_delete' => 'Are you sure you wish to delete this item?',
 	'prompt_confirm_multiple' => 'Are you sure you wish to perform a multiple action?',
 	'prompt_insufficient_privellages' => 'Sorry, you have insufficient privellages to perform this action',
+	'prompt_error' => 'There has been an error processing your request. Please try again.',
 	
 
 	// Help prompts

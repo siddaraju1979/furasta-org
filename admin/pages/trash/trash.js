@@ -13,7 +13,7 @@ $(document).ready(function(){
 
         $(".delete").live( "click", function(){
 
-                fConfirm("Are you sure you want to permenantly delete this page?",function(element){
+                fConfirm(trans( 'prompt_confirm_delete' ),function(element){
 
                         element.parent().parent().fadeOut( function( ){
 
@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 			});
 
-                        fetch("/_inc/ajax.php?file=admin/pages/trash/delete.php&id="+element.attr("id"));
+                        fetch(window.furasta.site.url + "/_inc/ajax.php?file=admin/pages/trash/delete.php&id="+element.attr("id"));
 
                 },$(this));
 
@@ -31,7 +31,7 @@ $(document).ready(function(){
 
         $(".restore").live( "click", function(){
 
-                fConfirm("Are you sure you want to restore this page? Certain features have not been preserved, such as page parent, type, and template settings.",function(element){
+                fConfirm( trans( 'trash_confirm_restore' ),function(element){
 
                         element.parent().parent().fadeOut( function( ){
 
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 			});
 
-                        fetch("/_inc/ajax.php?file=admin/pages/trash/restore.php&id="+element.attr("id"));
+                        fetch(window.furasta.site.url + "/_inc/ajax.php?file=admin/pages/trash/restore.php&id="+element.attr("id"));
 
                 },$(this));
 
@@ -89,7 +89,7 @@ $(document).ready(function(){
 
                         return false;
 
-                fConfirm("Are you sure you want to perform a multiple "+action+"?",function(){ window.location="pages.php?page=trash&action=multiple&act="+action+"&boxes="+boxes; });
+                fConfirm(trans( 'prompt_confirm_multiple' ),function(){ window.location="pages.php?page=trash&action=multiple&act="+action+"&boxes="+boxes; });
 
         });
 

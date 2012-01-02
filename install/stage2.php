@@ -40,18 +40,22 @@ echo '
 $(function(){
 	$("#install").validate({
 		"Name" : {
+			"name" : "name",
 			"required" : true
 		},
 		"Email" : {
+			"name" : "email",
 			"required" : true,
 			"email" : true
 		},
 		"Password" : {
+			"name" : "password",
 			"required" : true,
 			"minlength" : 6,
 			"match" : "Repeat-Password"
 		},	
 		"Repeat-Password" : {
+			"name" : "repeat password",
 			"required" : true
 		},	
 	});	

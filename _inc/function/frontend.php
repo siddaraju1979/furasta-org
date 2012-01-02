@@ -220,4 +220,24 @@ function frontend_javascript_load( $params ){
 
 }
 
+/**
+ * frontend_page_content
+ *
+ * gets the page content for the frontend
+ *
+ * @params object $smarty
+ * @params array $params
+ * @return void
+ */
+function frontend_page_content( $params, &$smarty ){
+	$type = $smarty->_tpl_vars{ 'page_type' };
+	if( $type == 'Normal' )
+		echo $smarty->_tpl_vars{ '__page_content' };
+	else{
+		$page_id = $smarty->_tpl_vars{ 'page_id' };
+		$Plugins = Plugins::getInstance( );
+		echo $Plugins->frontendPageType( $type, $page_id );
+	}
+}
+
 ?>
