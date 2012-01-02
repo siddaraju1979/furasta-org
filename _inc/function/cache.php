@@ -221,8 +221,7 @@ function cache_js( $name, $file ){
 		cache( $cache_file, $content, 'JS' );
 	elseif( !cache_exists( $cache_file, 'JS' ) ){
 
-		$packer = new JavaScriptPacker( $content, 'Normal', true, false );
-		$content = $packer->pack( );
+		$content = JSMin::minify( $content );
 		cache( $cache_file, $content, 'JS');
 
 	}
