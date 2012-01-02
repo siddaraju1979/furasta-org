@@ -438,11 +438,11 @@ class Plugins{
 	 * to the frontend page type accessed
 	 *
 	 * @param string $type 
-	 * @param array $Page
+	 * @param int $page_id
 	 * @access public
 	 * @return unknown
 	 */
-	public function frontendPageType( $type, $Page ){
+	public function frontendPageType( $type, $page_id ){
 
                 /**
                  * search plugins 
@@ -459,13 +459,13 @@ class Plugins{
                          * is correct, attempting functions 
                          */
                         if( function_exists( $plugin[ 'frontend' ][ 'page_type' ] ) )
-                                return call_user_func( $plugin[ 'frontend' ][ 'page_type' ], $Page );
+                                return call_user_func( $plugin[ 'frontend' ][ 'page_type' ], $page_id );
 
 			/**
 			 * using methods 
 			 */
 			elseif( method_exists( @$plugin[ 'frontend' ][ 'page_type' ][ 0 ], @$plugin[ 'frontend' ][ 'page_type' ][ 1 ] ) )
-				return call_user_func( $plugin[ 'frontend' ][ 'page_type' ][ 'function' ], $Page );
+				return call_user_func( $plugin[ 'frontend' ][ 'page_type' ][ 'function' ], $page_id );
 
                 }
 

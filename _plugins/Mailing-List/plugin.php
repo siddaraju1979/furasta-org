@@ -46,32 +46,39 @@ $plugin = array(
  * @params string $url
  * @return string
  */
-function mailing_list_filter_menu( $menu, $url ){
+function mailing_list_filter_menu( $items, $url ){
 
 	$Template = Template::getInstance( );
 
-	$menu[ 'menu_mailing_list' ] = array(
-		'name' => $Template->e( 'menu_mailing_list' ),
-		'url' => $url,
-		'submenu' => array(
-			'menu_mailing_list_subscribers' => array(
-				'name' => $Template->e( 'menu_mailing_list_subscribers' ),
-				'url' => $url . 'page=list',
-				'image' => SITEURL . '_plugins/Mailing-List/img/list.png'
-			),
-			'menu_mailing_send_mail' => array(
-				'name' => $Template->e( 'menu_mailing_send_mail' ),
-				'url' => $url . 'page=mail',
-				'image' => SITEURL . '_plugins/Mailing-List/img/send.png'
-			),
-			'menu_mailing_options' => array(
-				'name' => $Template->e( 'menu_mailing_options' ),
-				'url' => $url . 'page=options',	
-				'image' => SITEURL . '_plugins/Mailing-List/img/options.png'
-			)
-		)
-	);
+	$menu = array( );
 
+	foreach( $items as $item => $val ){
+		if( $item == 'menu_users_groups' ){
+			$menu[ 'menu_mailing_list' ] = array(
+				'name' => $Template->e( 'menu_mailing_list' ),
+				'url' => $url,
+				'submenu' => array(
+					'menu_mailing_list_subscribers' => array(
+						'name' => $Template->e( 'menu_mailing_list_subscribers' ),
+						'url' => $url . 'page=list',
+						'image' => SITEURL . '_plugins/Mailing-List/img/list.png'
+					),
+					'menu_mailing_send_mail' => array(
+						'name' => $Template->e( 'menu_mailing_send_mail' ),
+						'url' => $url . 'page=mail',
+						'image' => SITEURL . '_plugins/Mailing-List/img/send.png'
+					),
+					'menu_mailing_options' => array(
+						'name' => $Template->e( 'menu_mailing_options' ),
+						'url' => $url . 'page=options',	
+						'image' => SITEURL . '_plugins/Mailing-List/img/options.png'
+					)
+				)
+			);
+		}
+		$menu[ $item ] = $val;
+	}
+		
 	return $menu;
 }
 
@@ -128,16 +135,25 @@ function mailing_list_lang( $lang ){
 				'mailing_list_options_from' => 'From Address',
 				'mailing_list_options_reply_to' => 'Reply-to Address',
 				'mailing_list_options_template_description' => 'You can create a template here which will appear in the content section on the send mail page when you are sending an email.',
-				
+
+				// widget				
+				'mailing_list_widget_name' => 'Collect Subscriber Names'
 			);
 	}
 
 	return array_merge( $lang, $new_lang );
 }
 
+/**
+ * mailing_list_admin_widget_mailing_list
+ *
+ * adds widget options to the admin area
+ *
+ * @params int $id
+ * @return void
+ */
 function mailing_list_admin_widget_mailing_list( ){
-	$Template = Template::getInstance( );
-	$Template->add( 'content', 'test' );
+	require HOME . '_plugins/Mailing-List/admin/widget.php';
 }
 
 function mailing_list_frontend_widget_mailing_list( ){

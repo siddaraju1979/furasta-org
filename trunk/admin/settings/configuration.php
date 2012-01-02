@@ -16,12 +16,15 @@
  */
 $conds = array(
         'Title' => array(
+		'name' => $Template->e( 'configuration_website_title' ),
                 'required'      =>      true
         ),
 	'SubTitle' => array(
+		'name' => $Template->e( 'configuration_website_subtitle' ),
 		'required'	=>	true
 	),
 	'URL' => array(
+		'name' => $Template->e( 'configuration_website_url' ),
 		'required'	=> true,
 		'url'		=> true
 	)

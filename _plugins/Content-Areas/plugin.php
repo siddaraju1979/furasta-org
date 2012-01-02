@@ -88,10 +88,16 @@ function content_areas_frontend_template_function( $params, &$smarty ){
  * @params string $url
  * @return string
  */
-function content_areas_filter_menu( $menu, $url ){
+function content_areas_filter_menu( $items, $url ){
 
-	$menu[ 'menu_content_areas' ] = array( 'name' => 'Content Areas', 'url' => $url );
+	$menu = array( );
 
+	foreach( $items as $item => $val ){
+		if( $item == 'menu_users_groups' )
+			$menu[ 'menu_content_areas' ] = array( 'name' => 'Content Areas', 'url' => $url );
+		$menu[ $item ] = $val;
+	}
+		
 	return $menu;
 }
 

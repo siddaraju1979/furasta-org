@@ -14,10 +14,12 @@ if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
 $name = addslashes( @$_POST[ 'name' ] );
 $email = addslashes( @$_POST[ 'email' ] );
 
-if( empty( $name ) || empty( $email ) )
-	exit;
+if( empty( $email ) )
+	die ( 'email' );
 
 query( 'insert into ' . PREFIX . 'mailing_list values ( "", "' . $name . '", "' . $email . '")' );
 
 echo mysql_insert_id( );
+
+exit;
 ?>

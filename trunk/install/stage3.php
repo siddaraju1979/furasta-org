@@ -44,18 +44,22 @@ echo '
 $(function(){
 	$( "#install" ).validate({
 		"Title" : {
+			"name" : "title",
 			"required" : true,
 			"pattern" : "^[A-Za-z0-9., ]{2,40}$"
 		},
 		"SubTitle" : {
+			"name" : "sub title",
 			"required" : true,
 			"pattern" : "^[A-Za-z0-9., ]{2,40}$"
 		},
 		"Website-URL" : {
+			"name" : "website url",
 			"required" : true,
 			"pattern" : "^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$"
 		},
 		"User-Files" : {
+			"name" : "user files",
 			"required" : true
 		}
 	});

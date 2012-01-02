@@ -80,7 +80,7 @@ $perms = array(
                 'u' => 'Edit Users'
 );
 
-$perms = $Plugins->filter( 'admin', 'filter_group_permissions', array( $perms ) );
+$perms = $Plugins->filter( 'admin', 'filter_group_permissions', $perms );
 
 $group = row( 'select name,perm from ' . GROUPS . ' where id=' . $id . ' limit 1' );
 

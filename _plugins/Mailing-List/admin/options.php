@@ -54,7 +54,7 @@ $Template->loadJavascript( '_inc/js/tiny_mce.js' );
 
 $content = '
 <span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/options-large.png"/></span>
-<h1>' . $Template->e( 'menu_mailing_options' ) . '</h1>
+<h1 class="image-left">' . $Template->e( 'menu_mailing_options' ) . '</h1>
 
 <form method="post" id="options-form">
 <div id="tabs">

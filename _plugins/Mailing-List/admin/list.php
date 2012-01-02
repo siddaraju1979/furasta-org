@@ -16,14 +16,16 @@ $content = '
 <div id="add-subscriber-dialog" style="display:none">
 	<form id="new-sub-form">
 	<table>
-		<tr id="form-error"></tr>
+		<tr>
+			<td colspan="2" id="form-error"></td>
+		</tr>
 		<tr>';
 
 if( $mailing_list_options[ 'use_names' ] == 'Yes' )
-	$content .= '<td>' . $Template->e( 'name' ) . ':</td><td><input type="text" id="sub_name"/></td></tr><tr>';
+	$content .= '<td style="width:15%">' . $Template->e( 'name' ) . ':</td><td><input type="text" id="sub_name"/></td></tr><tr>';
 
 $content .= '
-		<td>' . $Template->e( 'email' ) . ':</td>
+		<td style="width:15%">' . $Template->e( 'email' ) . ':</td>
 		<td><input name="Email" type="text" id="sub_email"/></td>
 	</tr>
 	</table>

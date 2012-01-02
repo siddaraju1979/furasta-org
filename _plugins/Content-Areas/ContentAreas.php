@@ -223,6 +223,7 @@ class ContentAreas{
 			// update existing area
 			$id = $this->registered{ $name }{ 'id' };
 			$content = addslashes( json_encode( $content ) );
+			// add widgets for this area to widget options database
 			query( 'update ' . PREFIX . 'content_areas set content="' . $content . '" where id=' . $id );
 			$this->registered{ $name }{ 'content' } = $content;
 		}

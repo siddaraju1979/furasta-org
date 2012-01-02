@@ -117,6 +117,10 @@ function edit_widget( ){
 	var widget_name = $this.attr( 'type' );
 	var widget_id = $this.attr( 'id' );
 	var a_name = $( '#content-area-select' ).val( );
+	var dialogButtons = {}
+	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
+	dialogButtons[ trans( 'prompt_save' ) ] = function( ){ $( this ).dialog( 'close' ) };
+
 	$( '#dialog' )
 		.attr( 'title', widget_name + ' Widget' )
 		.html(
@@ -126,7 +130,8 @@ function edit_widget( ){
 		.dialog({
 			width : '80%',
 			height : 400,
-			modal : true
+			modal : true,
+			buttons: dialogButtons
 		});
 	$.ajax({
 		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',

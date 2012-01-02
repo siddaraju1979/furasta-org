@@ -30,15 +30,21 @@ function add_subscriber( ){
 					$( this ).dialog( 'close' );
 				},
 				'Save' : function( ){
+					var name = $( '#sub_name' ).length;
 		                        var conds = {
-        		                        "Name" : {
-		                                        "required" : true,
-		                                },
 		                                "Email" : {
+							'name' : trans( 'email' ),
 		                                        "email" : true,
 		                                        "required" : true
 		                                }
 		                        };
+
+					if( name ){
+						conds[ "Name" ] = {
+							"name" : trans( 'name' ),
+							"required" : true
+						};
+					}
 
 					$( "#new-sub-form" ).validate( conds, function( error ){
 
@@ -48,30 +54,34 @@ function add_subscriber( ){
 
 					var result = $( "#new-sub-form" ).validate( "execute" );
 
-		                        if( result == false )
+		                        if( !result )
+		                                return false;
 
-		                                return;
-
-					var sub_name = ( $( '#sub_name' ) ) ? $( '#sub_name' ).val( ) : '';
 					var sub_email = $( '#sub_email' ).val( );
+					var Data = {
+						email : sub_email
+					};
+					if( name )
+						Data.sub_name = $( '#sub_name' ).val( );
+
 					$.ajax({
 						url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/new-sub.php',
-						data : {
-							name : sub_name,
-							email : sub_email
-						},
+						data : Data,
 						type : 'POST',
 						success : function( id ){
 							var content = '<tr>';
-							if( $( '#sub_name' ) )
+							if( name )
 								content += '<td>' + sub_name + '</td>';
 							content += '<td>' + sub_email + '</td>';
 							content += '<td><a class="link delete" id="' + id + '">'
 								+ '<span class="admin-menu-img" id="delete-img">&nbsp;</span></a></td>';
 							var num = $( '#subscribers tr' ).length -1;
 							$( '#subscribers tr:nth-child(' + num + ')' ).after( content );
+							rowColor( );
 						}
 					});
+
+					$( '#new-sub-form' ).validate( 'refresh' );
 					$( this ).dialog( 'close' );
 				}
 			}

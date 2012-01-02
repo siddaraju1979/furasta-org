@@ -33,6 +33,7 @@ if( $error != '' )
  */
 $conds = array(
 	'Name' => array(
+		'name' => $Template->e( 'name' ),
 		'required'	=>	true,
 		'minlength'	=>	2,
 		'pattern'	=>	array(
@@ -133,7 +134,7 @@ $content='
 </div>
 
 <span style="float:right"><a href="pages.php?page=new&parent='.$Page['id'].'" id="new-subpage"><span class="header-img" id="header-New-Page">&nbsp;</span><h1 class="image-left">' . $Template->e( 'pages_new_subpage' ) . '</h1></a></span>
-<span><span class="header-img" id="header-Edit-Pages">&nbsp;</span><h1 class="image-left">' . $Template->e( 'menu_new_page' ) . '</h1></span>
+<span><span class="header-img" id="header-Edit-Pages">&nbsp;</span><h1 class="image-left">' . $Template->e( 'pages_edit_page' ) . '</h1></span>
 <br/>
 <form method="post" id="pages-edit">
 	<table id="page-details">
