@@ -23,7 +23,7 @@ require '_inc/define.php';
  */
 $User = new User( );
 if( $SETTINGS[ 'maintenance' ] == 1 && $User->verify( ) == false )
-	error($SETTINGS['site_title'].' is undergoing maintenance. It should be back to normal shortly.','Maintenance');
+	maintenance_message( );
 
 $page=@$_GET['page'];
 

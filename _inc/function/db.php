@@ -201,4 +201,35 @@ function options( $category ){
 
 	return $opts;
 }
+
+/**
+ * update_options
+ *
+ * updates the options of a given category with a
+ * given string of options
+ *
+ * @param array $options
+ * @param string $category
+ * @return bool
+ */
+function update_options( $options, $category ){
+
+	$options = addslashes_array( $options );
+	
+	if( count( $options ) != 0 ){
+		query( 'delete from ' . OPTIONS . ' where category="' . $category . '"' );
+		$query = 'insert into ' . OPTIONS . ' values ';
+		$i = 0;
+		foreach( $options as $option => $value ){
+			++$i;
+			$query .= '("' . addslashes( $option ) . '","' . addslashes( $value ) . '","' . $category . '")';
+			if( count( $options ) != $i )
+				$query .= ',';
+		}
+		query( $query );
+	}
+
+	return true;
+}
+
 ?>

@@ -44,6 +44,8 @@ if( isset( $_POST[ 'settings_general' ] ) && $valid == true ){
 	$url = @$_POST[ 'URL' ];
 	$constants = array( );
 
+	update_options( @$_POST[ 'options' ], 'configuration_page_options' );
+
 	/**
 	 * set the diagnostic mode setting if
 	 * diagnostic mode is to be enabled
@@ -110,16 +112,39 @@ $(document).ready(function(){
 
 	});
 
+	$( "input[name=Maintenance]" ).change( function( ){
+		var message = $( "#maintenance-message" );
+		if( message.hasClass( "hidden" ) ){
+			message.removeClass( "hidden" ).slideDown( "slow" );
+		}
+		else
+			message.addClass( "hidden" ).slideUp( "slow" );
+	});
+
 });
 ';
 
 $Template->add( 'javascript', $javascript );
+
+$options = options( 'configuration_page_options' );
+
+if( $SETTINGS[ 'maintenance' ] == 1 ){
+	$maintenance = 'checked="checked"';
+	$hidden = '';
+}
+else{
+	$maintenance = '';
+	$hidden = ' class="hidden"';
+}
 
 $maintenance = ( $SETTINGS[ 'maintenance' ] == 1 ) ? 'checked="checked"' : '';
 $index = ( $SETTINGS[ 'index' ] == 1 ) ? 'checked="checked"' : '';
 $diagnostic = ( $Template->diagnosticMode == 1 ) ? 'checked="checked"' : '';
 $url = ( isset( $url ) ) ? $url : SITEURL;
 $lang = ( isset( $lang ) ) ? $lang : LANG;
+$maintenance_message = ( isset( $options[ 'maintenance_message' ] ) ) ?
+	$options[ 'maintenance_message' ] :
+	$SETTINGS[ 'site_title' ] . ' is undergoing maintenance. It should be back to normal shortly.'; 
 
 $content='
 <span class="header-img" id="header-Configuration">&nbsp;</span><h1 class="image-left">Configuration</h1></span>
@@ -147,6 +172,10 @@ $content='
 	<tr>
 		<td>' . $Template->e( 'configuration_maintenance_mode' ) . ': <a class="help link" id="help-maintenance">&nbsp;</a></td>
 		<td><input type="checkbox" name="Maintenance" class="checkbox" value="1" '.$maintenance.'/></td>
+	</tr>
+	<tr id="maintenance-message"' . $hidden . '>
+		<td>' . $Template->e( 'configuration_maintenance_mode_message' ) . ':</td>
+		<td>' . tinymce( 'options[maintenance_message]', $maintenance_message ) . '</td>
 	</tr>
 	<tr>
 		<td>' . $Template->e( 'configuration_dont_index' ) . ': <a class="help link" id="help-index">&nbsp;</a></td>

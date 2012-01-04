@@ -45,23 +45,6 @@ if( isset( $_POST[ 'new-save' ] ) && $valid == true ){
         $perm = addslashes( @$_POST[ 'perm' ] );
 
 	/**
-	 * update options if they exist
-	 */
-	$options = @$_POST[ 'options' ];
-	if( count( $options ) != 0 ){
-		query( 'delete from ' . OPTIONS . ' where category="page_' . $id . '"' );
-		$query = 'insert into ' . OPTIONS . ' values ';
-		$i = 0;
-		foreach( $options as $option => $value ){
-			++$i;
-			$query .= '("' . addslashes( $option ) . '","' . addslashes( $value ) . '","page_' . $id . '")';
-			if( count( $options ) != $i )
-				$query .= ',';
-		}
-		query( $query );
-	}
-
-	/**
 	 * make sure a duplicate pagename isn't being created,
 	 * or a pagename already used by the system 
 	 */
@@ -85,7 +68,12 @@ if( isset( $_POST[ 'new-save' ] ) && $valid == true ){
 		 */	
         	cache_clear( 'PAGES' );
 
-	        header( 'location: pages.php?page=edit&error=3&id=' . mysql_insert_id( ) );
+		$id = mysql_insert_id( );
+
+		// update options if they exist
+		update_options( @$_POST[ 'options' ], 'page_' . $id );
+
+	        header( 'location: pages.php?page=edit&error=3&id=' . $id );
 	}
 	else
 		$Template->runtimeError( '4', $name );

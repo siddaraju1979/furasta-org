@@ -35,6 +35,17 @@ window.tinymceConfigs = {
 		external_link_list_url : "lists/link_list.js",
 		external_image_list_url : "lists/image_list.js",
 		media_external_list_url : "lists/media_list.js"
+	},
+	'Simple' : {
+		theme : "advanced",
+		mode: "exact",
+ 		elements : "content",
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,outdent,indent,separator,undo,redo",
+		theme_advanced_buttons2 : "",
+		theme_advanced_buttons3 : "",
+		height:"350px",
+		width:"600px"
 	}
 };
 
