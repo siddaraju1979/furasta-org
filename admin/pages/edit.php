@@ -66,6 +66,23 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
         $perm = addslashes( @$_POST[ 'perm' ] );
 
 	/**
+	 * update options if they exist
+	 */
+	$options = @$_POST[ 'options' ];
+	if( count( $options ) != 0 ){
+		query( 'delete from ' . OPTIONS . ' where category="page_' . $id . '"' );
+		$query = 'insert into ' . OPTIONS . ' values ';
+		$i = 0;
+		foreach( $options as $option => $value ){
+			++$i;
+			$query .= '("' . addslashes( $option ) . '","' . addslashes( $value ) . '","page_' . $id . '")';
+			if( count( $options ) != $i )
+				$query .= ',';
+		}
+		query( $query );
+	}
+
+	/**
 	 * get pages_array and remove current page
 	 */
 	$pages_array = pages_array( );
@@ -102,6 +119,11 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
 	else
 		$Template->runtimeError( '4', $name );
 }
+
+/**
+ * get options for page if present
+ */
+$page_options = options( 'page_' . $id );
 
 /**
  * get page rows in array and stripslashes 

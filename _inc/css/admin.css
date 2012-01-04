@@ -58,7 +58,7 @@ body{ text-align:center;background:#eee }
 .grey-link{ text-decoration:none;padding:4px 10px;background:#ccc;color:#fff;font-size:20px }
 .grey-submit{ text-decoration:none;background:#eee;color:#333;border:1px solid #666;font-weight:normal;padding:4px 25px }
 .php-error, #form-error{ color:red }
-.input{ width:230px;padding:3px;border:1px solid #aaa }
+.input{ width:230px;padding:3px 8px;border:1px solid #666;color:#444 }
 .red{ color:red }
 .green { color:green }
 .top_bar{ height:30px;background:url(../img/top_bar.png) repeat-x }

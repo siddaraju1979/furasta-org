@@ -45,6 +45,23 @@ if( isset( $_POST[ 'new-save' ] ) && $valid == true ){
         $perm = addslashes( @$_POST[ 'perm' ] );
 
 	/**
+	 * update options if they exist
+	 */
+	$options = @$_POST[ 'options' ];
+	if( count( $options ) != 0 ){
+		query( 'delete from ' . OPTIONS . ' where category="page_' . $id . '"' );
+		$query = 'insert into ' . OPTIONS . ' values ';
+		$i = 0;
+		foreach( $options as $option => $value ){
+			++$i;
+			$query .= '("' . addslashes( $option ) . '","' . addslashes( $value ) . '","page_' . $id . '")';
+			if( count( $options ) != $i )
+				$query .= ',';
+		}
+		query( $query );
+	}
+
+	/**
 	 * make sure a duplicate pagename isn't being created,
 	 * or a pagename already used by the system 
 	 */
@@ -74,6 +91,10 @@ if( isset( $_POST[ 'new-save' ] ) && $valid == true ){
 		$Template->runtimeError( '4', $name );
 }
 
+/**
+ * set page options in case its used!
+ */
+$page_options = array( );
 
 /**
  * page specific javascript 
