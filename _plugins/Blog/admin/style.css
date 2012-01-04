@@ -7,4 +7,6 @@
  */
 
 #tags-in{ width: 20% }
-#tags-add{ margin: 0 10px }
+#tags-add{ margin: 0 10px } 
+.tag{ padding:4px; background: #ff9; border:1px solid #bb5; margin: 3px 5px; border-radius: 3px }
+.blog-delete{ padding:3px;margin-top:-5px }

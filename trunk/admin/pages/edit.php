@@ -68,19 +68,7 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
 	/**
 	 * update options if they exist
 	 */
-	$options = @$_POST[ 'options' ];
-	if( count( $options ) != 0 ){
-		query( 'delete from ' . OPTIONS . ' where category="page_' . $id . '"' );
-		$query = 'insert into ' . OPTIONS . ' values ';
-		$i = 0;
-		foreach( $options as $option => $value ){
-			++$i;
-			$query .= '("' . addslashes( $option ) . '","' . addslashes( $value ) . '","page_' . $id . '")';
-			if( count( $options ) != $i )
-				$query .= ',';
-		}
-		query( $query );
-	}
+	update_options( @$_POST[ 'options' ], 'page_' . $id );
 
 	/**
 	 * get pages_array and remove current page

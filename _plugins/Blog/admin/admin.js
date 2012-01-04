@@ -25,7 +25,10 @@ function add_tags( ){
 	
 	var content = '';
 	for( var i = 0; i < tags.length; ++i ){
-		content += '<span class="tag">' + tags[ i ] + '</span>';
+		content += '<span class="tag">';
+		content += '<span>' + tags[ i ] + ' </span>';
+		content += '<a class="link delete-small-img blog-delete">&nbsp;</a>';
+		content += '</span>';
 	}
 
 	$( '#tags-put' ).append( content );

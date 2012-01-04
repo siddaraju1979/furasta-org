@@ -429,16 +429,16 @@ class Template {
          * @access public
          * @return bool
          */
-        public function loadJavascript( $name, $content = false ){
-		
+        public function loadJavascript( $name, $content = 'file' ){
+	
 		/**
 		 * determine wether a file or source code are being loaded
 		 */
-		if( $content == false ){
+		if( $content == 'file' || $content == false ){
 			if( !file_exists( HOME . $name ) || strpos( $name, '..' ) !== false )
 				return false;
 
-	                return ( array_push( $this->javascriptFiles, $name ) );
+	                return $this->javascriptFiles{ $name } = ( $content ) ? 'true' : 'false';
 		}
 		else
 			return ( $this->javascriptSources{ $name } = $content );
@@ -456,13 +456,16 @@ class Template {
          */
         public function javascriptUrls(){
 
-		$files = $this->javascriptFiles;
-                $sources = $this->javascriptSources;
-		$scripts = $files + $sources;
 		$urls = array( );
+		foreach( $this->javascriptFiles as $file => $cache ){
+			if( $cache == 'true' )
+				array_push( $urls, cache_js( $file, $file ) );
+			else
+				array_push( $urls, SITEURL . $file );
+		}
 
-		foreach( $scripts as $name => $file )
-			array_push( $urls, cache_js( $name, $file ) );
+		foreach( $this->javascriptSources as $file => $name )
+			array_push( $urls, cache_js( $file, $name ) );
 
 		return $urls;
 

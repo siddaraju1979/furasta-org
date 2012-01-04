@@ -96,9 +96,8 @@ strong{ font-weight:bold }
 #header-Auto-Update{ background: url( ../img/icons.png ) no-repeat -35px -124px }
 #header-Manual-Update{ background: url( ../img/icons.png ) no-repeat -30px -100px }
 #header-Add{ background: url( ../img/icons.png ) no-repeat -35px -53px }
-
 #delete-img{ background: url( ../img/icons.png ) no-repeat -24px -156px }
-
+.delete-small-img{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px }
 /* menu styles */
 
 #header #menu ul{ list-style-type:none;margin-top:16px;margin-left:0px }
@@ -152,7 +151,7 @@ strong{ font-weight:bold }
 .column{ width: 170px; float: left; padding-bottom: 100px; }
 .th{ margin:0;height:30px;text-align:left;color:#fff;font-size:13px;background:url(../img/th.png) repeat-x;border-width:1px 1px 0 1px;border-style:solid:border-color:#666 }
 p.th span{ float:left;color:#fff;font-size:13px;padding:8px 0 0 4px }
-.closed{ display:none }
+.closed, .hidden{ display:none }
 
 /* Admin Area Pages */
 
@@ -203,7 +202,7 @@ ul#pages li span{ padding:0 10px }
 /* Admin Area Settings */
 
 #config-table{ border-width:1px 1px 1px 0;border-color:#999;border-style:solid;padding:0;width:80%;margin:25px 10%;border-spacing:0 }
-#config-table td{ border-left:1px solid #999;padding:7px 9px }
+#config-table > td{ border-left:1px solid #999;padding:7px 9px }
 #perms-table{ border:1px solid #999;padding:0;width:95%;margin:10px 2.5% }
 #perms-table tr{ border-bottom: 1px solid #999 }
 .opacity{ opacity: 0.6; filter: alpha( opacity=60 ); }
@@ -233,10 +232,10 @@ p.th span.status{ float:right;margin-right:5px }
 .ui-dialog .ui-dialog-buttonpane button{ background:#333;float:right;margin:1.5px 3px 0 0;cursor:pointer;padding:3px 4px 2px;line-height:1.4em;width:auto;overflow:visible;border:1px solid #666 }
 .ui-dialog .ui-dialog-buttonpane button span{ color:#fff }
 .ui-draggable .ui-dialog-titlebar { cursor:move }
-.ui-widget-content .ui-icon-closethick{ background:url(../img/icons.png) no-repeat -90px -184px;width:10px;height:10px; margin:5px;text-indent:-10000px }
+.ui-widget-content .ui-icon-closethick{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px; margin:5px;text-indent:-10000px }
 .ui-widget-overlay{  opacity: .4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter:alpha(opacity=40);background:#333;left:0;top:0;height:100%;width:100%;position:absolute }
 .ui-widget-content { border: 1px solid #cccccc; background: #f9f9f9; color: #222222; }
-.ui-widget-header { background:#333333 url(../img/th.png) repeat-x;font-weight:bold;color:#fff }
+.ui-widget-header { background:#333333 url(%SITEURL%_inc/img/th.png) repeat-x;font-weight:bold;color:#fff }
 
 #fdialog table{ border-width:1px 1px 1px 0;border-color:#999;border-style:solid;padding:0;border-spacing:0 }
 #fdialog table td{ border-left:1px solid #999;padding:7px 9px }

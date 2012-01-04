@@ -129,6 +129,7 @@ $lang = array(
 	'configuration_website_subtitle' => 'Subtitle',
 	'configuration_website_url' => 'URL',
 	'configuration_maintenance_mode' => 'Maintenance Mode',
+	'configuration_maintenance_mode_message' => 'Maintenance Mode Message',
 	'configuration_dont_index' => 'Don\'t Index Website',
 	'configuration_diagnostic_mode' => 'Diagnostic Mode',
 	'configuration_language' => 'Language',

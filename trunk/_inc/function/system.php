@@ -448,13 +448,26 @@ function validate($conds,$selector,$post){
  * 
  * permforms the stripslashes function on an array
  *
- * @param string $value 
+ * @param array $value 
  * @access public
  * @return array
  */
 function stripslashes_array( $value ){
-
 	$value = is_array( $value ) ? array_map( 'stripslashes_array', $value ) : stripslashes( $value );
+
+	return $value;
+}
+
+/**
+ * addslashes_array
+ *
+ * performs the addslashes function on an array
+ * 
+ * @param array $value 
+ * @return array
+ */
+function addslashes_array( $value ){
+	$value = is_array( $value ) ? array_map( 'addslashes_array', $value ) : addslashes( $value );
 
 	return $value;
 }
@@ -564,4 +577,15 @@ function validate_file( $file ){
 	return true;
 }
 
+/**
+ * maintenance_message
+ *
+ * displays the maintenance mode error
+ *
+ * @return void
+ */
+function maintenance_message( ){
+	$message = single( 'select value from ' . OPTIONS . ' where category="configuration_page_options" and name="maintenance_message"', 'value' );
+	error( $message, '' );
+}
 ?>
