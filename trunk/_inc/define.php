@@ -64,6 +64,12 @@ $SETTINGS = stripslashes_array( $SETTINGS );
 session_start( );
 
 /**
+ * if no htaccess create one
+ */
+if( !file_exists( HOME . '.htaccess' ) )
+	htaccess_rewrite( );
+
+/**
  * get instance of plugins class, load plugin files
  * and register plugins
  */

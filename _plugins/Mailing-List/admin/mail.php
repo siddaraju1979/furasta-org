@@ -22,9 +22,10 @@ $bcc = implode( '; ', $bcc );
 $content = '
 <span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/send-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_send_mail' ) . '</h1>
+<br style="clear:both"/>
 
 <form id="mail-form" action="plugin.php?p_name=Mailing-List&page=send" method="post">
-<table style="width:95%">
+<table>
 	<tr>
 		<td class="small">' . $Template->e( 'mailing_list_subject' ) . ':</td>
 		<td><input type="text" name="Subject"/></td>

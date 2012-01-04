@@ -63,7 +63,7 @@ function trans( string ){
 	if( window.furasta.lang[ string ] ){
 		return window.furasta.lang[ string ];
 	}
-	return false;
+	return string;
 }
 
 /**
