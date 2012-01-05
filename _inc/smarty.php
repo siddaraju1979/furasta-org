@@ -42,9 +42,9 @@ foreach( $plugin_functions as $name => $function )
 	$Smarty->register_function( $name, $function );
 
 /**
- * plugins - filter page content 
+ * filter $Page before output, in case plugins want to change anything
  */
-$content = $Plugins->filter( 'frontend', 'filter_page_content', $Page[ 'content' ] );
+$Page = $Plugins->filter( 'frontend', 'filter_page_vars', $Page );
 
 /**
  * assign other page vars 

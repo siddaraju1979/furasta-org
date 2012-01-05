@@ -197,7 +197,7 @@ class Template {
 		require_once HOME . 'admin/lang/' . LANG . '.php';
 
 		// filter through plugins
-		$Plugins = PLUGINS::getInstance( );
+		$Plugins = Plugins::getInstance( );
 		$lang_errors = $Plugins->filter( 'admin', 'filter_lang_errors', $lang_errors );
 		$lang = $Plugins->filter( 'admin', 'filter_lang', $lang );
 
@@ -303,8 +303,6 @@ class Template {
 	 * @param array $params optional, can be string or array with multiple params
 	 * @access public
 	 * @return bool
-	 * @todo add multiple language support, major re-jigging required
-	 *       for that, add plugin language file support
 	 */
 	public function runtimeError( $id, $params = false ){
 

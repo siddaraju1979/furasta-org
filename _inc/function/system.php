@@ -174,6 +174,15 @@ function htaccess_rewrite(){
         		error('The apache module mod_rewrite must be installed. Please visit <a href="http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html">Apache Module mod_rewrite</a> for more details.','Apache Error');
 	}
 
+	$rules = array(
+		'admin' => 'RewriteRule ^admin[/]*$ /admin/index.php [L]',
+		'sitemap' => 'RewriteRule ^sitemap.xml /_inc/sitemap.php [L]',
+		'files' => 'RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [L]',
+		'pages' => 'RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]',
+	);
+
+	$rules = $Plugins->filter( 'general', 'filter_htaccess', $rules );
+
 	$htaccess=
 		"# .htaccess - Furasta.Org\n".
 		"<IfModule mod_deflate.c>\n".
@@ -184,18 +193,17 @@ function htaccess_rewrite(){
         	"php_flag magic_quotes_gpc off\n\n".
 
 		"RewriteEngine on\n".
-		"RewriteCond %{SCRIPT_NAME} !\.php\n".
-		"RewriteRule ^admin[/]*$ /admin/index.php [L]\n".
-	        "RewriteRule ^sitemap.xml /_inc/sitemap.php [L]\n".
-		"RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [L]\n".
-		"RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]\n\n".
+		"RewriteCond %{SCRIPT_NAME} !\.php\n";
 
-		"AddCharset utf-8 .js\n".
+	foreach( $rules as $rule ){
+		$htaccess .= $rule . "\n";
+	}
+
+	$htaccess .=
+		"\nAddCharset utf-8 .js\n".
 		"AddCharset utf-8 .xml\n".
 		"AddCharset utf-8 .css\n".
                 "AddCharset utf-8 .php";
-
-	$htaccess = $Plugins->filter( 'general', 'filter_htaccess', $htaccess );
 
 	file_put_contents(HOME.'.htaccess',$htaccess);
 	$_url='http://'.$_SERVER["SERVER_NAME"].'/';

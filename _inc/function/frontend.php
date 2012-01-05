@@ -71,19 +71,40 @@ function frontend_breadcrumbs( $params ){
 
 	$seperator = isset( $params[ 'seperator' ] ) ? $params[ 'seperator' ] : ' > ';
 
-	$content = '<ul id="page-tree" style="list-style-type:none">
-			<li style="display:inline"><a href="' . SITEURL . '">' . $SETTINGS[ 'site_title' ] . '</a></li>';
-
+	/**
+	 * create breadcrumbs array in form $name => $url
+	 */ 
+	$breadcrumbs = array( );
 	for( $i = 0; $i < count( $array ); $i++ ){
-
-		$name = ( ( $i + 1 ) == count( $array ) ) ? '<b>' . str_replace( '-', ' ', $array[ $i ] ) . '</b>' : str_replace( '-', ' ', $array[ $i ] );
+		$name = str_replace( '-', ' ', $array[ $i ] );
 
 		$url = SITEURL;
 		for( $n = 0; $n < ( $i + 1 ); $n++ )
-			$url .=	$array[ $n ] . '/';
+			$url .= $array[ $n ] . '/';
+
+		$breadcrumbs[ $name ] = $url;
+
+	}
+
+	/**
+	 * filter breadcrumbs array through plugins
+	 */ 
+	$Plugins = Plugins::getInstance( );
+	$breadcrumbs = $Plugins->filter( 'frontend', 'filter_breadcrumbs', $breadcrumbs );
+
+
+	/**
+	 * generate html
+	 */
+	$content = '<ul id="page-tree" style="list-style-type:none">
+			<li style="display:inline"><a href="' . SITEURL . '">' . $SETTINGS[ 'site_title' ] . '</a></li>';
+
+	$i = 0;
+	foreach( $breadcrumbs as $name => $url ){
+		$name = ( ( $i + 1 ) == count( $array ) ) ? '<b>' . $name . '</b>' : $name;
 
 		$content .= '<li style="display:inline">' . $seperator . '<a href="' . $url . '">' . $name . '</a></li>';
-
+		++$i;
 	}
 
 	$content .= '</ul>';
