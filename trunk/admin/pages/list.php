@@ -73,7 +73,7 @@ $content = '
  */
 
 $pages=array();
-$query=query('select id,name,type,edited,user,parent,home,perm from '.PAGES.' order by position,name desc');
+$query=query('select id,name,type,edited,user,parent,home,perm from '.PAGES.' order by position,name asc');
 while($row=mysql_fetch_assoc($query)){
 	$pages[$row['parent']][]=$row;
 }

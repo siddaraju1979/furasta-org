@@ -97,7 +97,7 @@ strong{ font-weight:bold }
 #header-Manual-Update{ background: url( ../img/icons.png ) no-repeat -30px -100px }
 #header-Add{ background: url( ../img/icons.png ) no-repeat -35px -53px }
 #delete-img{ background: url( ../img/icons.png ) no-repeat -24px -156px }
-.delete-small-img{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px }
+.delete-small-img{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px;background-position:bottom }
 /* menu styles */
 
 #header #menu ul{ list-style-type:none;margin-top:16px;margin-left:0px }

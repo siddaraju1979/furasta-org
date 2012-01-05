@@ -21,10 +21,23 @@ $lang = array(
 	'blog_full_items' => 'Full',
 	'blog_summary_items' => 'Summary',
 
-	// admin page	
+	// admin page
+	'menu_blog' => 'Blog',	
+	'blog_admin_blog_page' => 'Blog Page',
 	'blog_admin_post_title' => 'Post Title',
 	'blog_tags' => 'Tags',
 	'blog_add_tags' => 'Add Tags',
+	'blog_help_tags' => 'Tags are used as a method of Search Engine Optimisation (SEO). For best effect, choose keywords from your blog post and use them as tags. <b>Please enter a comma de-limeted list of tags.</b>',
+	'blog_help_page' => 'This is only important if you have more than one blog page, here you can select which one you would like to post to.',
+	'blog_admin_pattern' => 'The post title must be between 2 and 40 characters in length. It must only contain alphabetical characters, numbers and spaces.',	
+	'blog_admin_error_no_blog' => 'Please select a blog page to post to. If you do not have a blog page you must create one.',
+
+	// overview item
+	'blog_overview_item' => 'Recent Blog Posts',
+
+	// frontend
+	'blog_frontend_read_full' => 'Read Full',
+	'blog_no_posts' => 'No Posts Found',
 );
 
 ?>

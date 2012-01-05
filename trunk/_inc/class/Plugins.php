@@ -102,9 +102,13 @@
  *                       'function' => 'function_name',
  *               ),
  *
- *               'filter_page_content' => 'function_name',
+ *		 # $Page
+ *               'filter_page_vars' => 'function_name',
  *
  *               'filter_metadata' => 'function_name',
+ *
+ *		 # $breadcrumbs
+ *		 'filter_breadcrumbs' => 'function_name',
  *
  *       ),
  *
@@ -122,6 +126,7 @@
  *
  *               # $sitemap
  *               'filter_sitemap' => 'function_name',
+ *
  *       ),
  *
  * );
@@ -225,6 +230,7 @@ class Plugins{
 		if( !in_array( $plugin, $this->plugins ) ){
 			if( isset( $plugin[ 'name' ] ) && isset( $plugin[ 'version' ] ) ){
 				array_push( $this->plugins, $plugin );
+
 				return true;
 			}
 			error('Plugins must define at least the name and version variables.','Plugin Error');

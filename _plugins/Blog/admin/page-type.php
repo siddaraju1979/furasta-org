@@ -48,7 +48,7 @@ $content = '
 				}
 				else{
 					foreach( $Posts as $post ){
-						$link = '<a href="plugin.php?p_name=Blog&blog_id=' . $Page[ 'id' ] . '" class="list-link">';
+						$link = '<a href="plugin.php?p_name=Blog&blog_id=' . $Page[ 'id' ] . '&post=' . $post[ 'id' ] . '" class="list-link">';
 						$user = single( 'select name from ' . USERS . ' where id=' . $post[ 'user' ], 'name' );
 						$content .= '<tr>
 							<td>' . $link . $post[ 'title' ] . '</a></td>
