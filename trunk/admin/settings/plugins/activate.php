@@ -16,7 +16,7 @@ $p_name = addslashes( @$_GET[ 'p_name' ] );
 if( !plugin_exists( $p_name ) )
 	error( 'Plugin does not exist. Please contact bugs@furasta.org for more details.', 'Plugin Error' );
 
-array_push( $PLUGINS, $p_name );
+$PLUGINS[ $p_name ] = 0;
 
 /**
  * rewrite settings file with new plugin array 
@@ -24,13 +24,6 @@ array_push( $PLUGINS, $p_name );
 settings_rewrite( $SETTINGS, $DB, $PLUGINS );
 
 cache_clear( );
-
-/**
- * run plugin install file 
- */
-$file = HOME . '_plugins/' . $p_name . '/install.php';
-if( file_exists( $file ) )
-	require $file;
 
 header('location: settings.php?page=plugins');
 ?>

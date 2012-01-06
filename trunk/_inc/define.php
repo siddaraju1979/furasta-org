@@ -71,17 +71,35 @@ if( !file_exists( HOME . '.htaccess' ) )
 
 /**
  * get instance of plugins class, load plugin files
- * and register plugins
+ * and register plugins, check if they need upgrading
  */
 $Plugins = Plugins::getInstance( );
+$update = false;
 
-foreach( $PLUGINS as $plugin ){
-	require HOME . '_plugins/' . $plugin . '/plugin.php';
+foreach( $PLUGINS as $p_name => $version ){
+	require HOME . '_plugins/' . $p_name . '/plugin.php';
+
+	/**
+	 * if upgrade required, run install script
+	 */
+	if( $version < $plugin[ 'version' ] && file_exists( HOME . '_plugins/' . $p_name . '/install.php' ) ){
+		$update = true;
+		require HOME . '_plugins/' . $p_name . '/install.php';
+		$PLUGINS[ $p_name ] = $plugin[ 'version' ];
+	}
 
 	/**
 	 * register the $plugin array from the plugins file
 	 */
 	$Plugins->register( $plugin );
 }
+
+/**
+ * rewrite settings file with new plugin versions
+ * if required
+ */
+if( $update )
+	settings_rewrite( $SETTINGS, $DB, $PLUGINS );
+
 //$Plugins->refactor( );
 ?>
