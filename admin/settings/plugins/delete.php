@@ -35,10 +35,10 @@ remove_dir( $plugin_dir );
  * remove the plugin from plugin array 
  */
 $new_plugs = array( );
-foreach( $PLUGINS as $plugin ){
+foreach( $PLUGINS as $plugin => $version ){
         if( $plugin == $p_name )
                 continue;
-        array_push( $new_plugs, $plugin );
+        $new_plugs[ $plugin ] = $version;
 }
 
 /**

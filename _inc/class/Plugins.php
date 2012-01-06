@@ -210,7 +210,6 @@ class Plugins{
                 return self::$instance;
         }
 
-
 	/**
 	 * register 
 	 * 
@@ -230,7 +229,6 @@ class Plugins{
 		if( !in_array( $plugin, $this->plugins ) ){
 			if( isset( $plugin[ 'name' ] ) && isset( $plugin[ 'version' ] ) ){
 				array_push( $this->plugins, $plugin );
-
 				return true;
 			}
 			error('Plugins must define at least the name and version variables.','Plugin Error');

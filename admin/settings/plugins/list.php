@@ -11,59 +11,7 @@
  * @package    admin_settings
  */
 
-$javascript = '
-$(document).ready(function(){
-
-        $(".checkbox-all").click(function(){
-
-                if($(".checkbox-all").attr("all")=="checked"){
-
-                        $("input[type=checkbox]").attr("checked","");
-
-                        $(".checkbox-all").attr("all","");
-
-                }
-
-                else{
-
-                        $("input[type=checkbox]").attr("checked","checked");
-
-                        $(".checkbox-all").attr("all","checked");
-
-                }
-
-         });
-
-	$(".p-submit").click(function(){
-
-		var action=$(".select-"+$(this).attr("id")).val();
-
-		if(action=="---")
-
-			return false;
-
-		var boxes=[];
-
-		$("#users input[name=trash-box]:checked").each(function() {
-
-			boxes.push($(this).val());
-
-		});
-
-		var boxes=boxes.join(",");
-
-		if(boxes=="")
-
-			return false;
-
-		fConfirm("Are you sure you want to perform a multiple "+action+"?",function(){ window.location="settings.php?page=plugins&action=multiple&act="+action+"&boxes="+boxes; });
-
-	});
-
-});
-';
-
-$Template->loadJavascript( 'FURASTA_ADMIN_SETTINGS_PLUGINS', $javascript );
+$Template->loadJavascript( 'admin/settings/plugins/list.js' );
 
 $content='
 <span class="right"><select name="action" class="trash-select select-p_1"><option default="default">---</option><option>Activate</option><option>Deactivate</option><option>Delete</option></select> <input id="p_1" class="p-submit submit" type="submit" value="Go"/></span>
@@ -90,7 +38,7 @@ $plugins = $Plugins->registeredPlugins( );
  * load inactive plugins and merge $plugin array to registerd plugins array 
  */
 foreach( $p_inactive as $plugin_file ){
-	if( in_array( $plugin_file, $PLUGINS ) || !is_dir( HOME . '_plugins/' . $plugin_file ) )
+	if( isset( $PLUGINS[ $plugin_file ] ) || !is_dir( HOME . '_plugins/' . $plugin_file ) )
 		continue;
 
 	require HOME . '_plugins/' . $plugin_file . '/plugin.php';
@@ -105,7 +53,7 @@ foreach( $p_inactive as $plugin_file ){
 foreach( $plugins as $plugin){
         $num++;
 	$p_name = str_replace( ' ', '-', $plugin[ 'name' ] );
-	$status=(in_array($p_name,$PLUGINS))?'<a href="settings.php?page=plugins&action=deactivate&p_name='.$p_name.'">De-activate</a>':'<a href="settings.php?page=plugins&action=activate&p_name='.$p_name.'">Activate</a>';
+	$status=(isset($PLUGINS[$p_name]))?'<a href="settings.php?page=plugins&action=deactivate&p_name='.$p_name.'">De-activate</a>':'<a href="settings.php?page=plugins&action=activate&p_name='.$p_name.'">Activate</a>';
         $content.='<tr>
                         <td class="small"><input type="checkbox" class="p-box" value="'.$plugin[ 'name' ].'" name="trash-box"/></td>
                         <td class="first">' . $plugin[ 'name' ] . '</a></td>

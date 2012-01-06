@@ -287,8 +287,8 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 
 $PLUGINS = array(';
 
-	foreach( $PLUGINS as $plugin )
-		$filecontents .= '\'' . $plugin . '\',';
+	foreach( $PLUGINS as $plugin => $version )
+		$filecontents .= '\'' . $plugin . '\' => \'' . $version . '\',';
 
 	$filecontents .= ');
 

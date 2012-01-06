@@ -27,7 +27,7 @@ switch( $action ){
 				/**
 				 * add plugin to plugin array
 				 */
-				array_push( $PLUGINS, $box );
+				$PLUGINS[ $box ] = 0;
 
 				/**
 				 * run plugin install file
@@ -44,9 +44,7 @@ switch( $action ){
                                 /**
                                  * remove plugin from plugin array 
                                  */
-                                $PLUGINS = array_flip( $PLUGINS );
 				unset( $PLUGINS[ $box ] );
-				$PLUGINS = array_flip( $PLUGINS );
 
 				/**
 				 * run plugin uninstall script
@@ -77,11 +75,8 @@ switch( $action ){
 			/**
 			 * remove plugin from plugins array
 			 */
-			if( in_array( $box, $PLUGINS ) ){
-                                $PLUGINS = array_flip( $PLUGINS );
+			if( in_array( $box, $PLUGINS ) )
                                 unset( $PLUGINS[ $box ] );
-                                $PLUGINS = array_flip( $PLUGINS );
-			}
 		}
 	break;
 	default:
