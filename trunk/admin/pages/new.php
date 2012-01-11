@@ -61,7 +61,7 @@ if( isset( $_POST[ 'new-save' ] ) && $valid == true ){
 		 * save page to database 
 		 */
         	query('insert into '.PAGES.' values ("","'.$name.'","'.$content.'","'.$slug.'","'.$template.'","'.$type.'","'.date("Y-m-d
-		").'","'.$User->name.'","","'.$parent.'","'.$perm.'","'.$home.'","'.$navigation.'")');
+		").'","'.$User->name.'","10000","'.$parent.'","'.$perm.'","'.$home.'","'.$navigation.'")');
 
 		/**
 		 * clear pages cache and redirect to edit pages

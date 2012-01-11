@@ -11,7 +11,7 @@
 $plugin = array(
 	'name' => 'Blog',
 	'description' => 'Adds a blog page type which allows creation of blog posts.',
-	'version' => 1,
+	'version' => 2,
 	'href' => 'http://furasta.org',
 	'email' => 'support@furasta.org',
 

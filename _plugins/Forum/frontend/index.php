@@ -8,5 +8,6 @@
  * @version	1
  */
 
-echo '<h1>test</h1>';
+echo 'test';
+
 ?>

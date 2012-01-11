@@ -24,6 +24,8 @@ foreach( $pages as $position => $page ){
 	query( 'update ' . PAGES . ' set position=' . $position . ', parent=' . $page[ 'parent' ] . ' where id=' . $page[ 'id' ] );
 }
 
+cache_clear( 'PAGES' );
+
 exit;
 
 ?>

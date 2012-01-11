@@ -25,7 +25,7 @@ $forums = single(
 );
 
 $content = '
-<div id="new-forum-dialog" style="display:none">
+<div id="new-forum-dialog" style="display:none" title="Add Forum">
 	<form id="new-forum-form">
 		<table>
 			<tr>
@@ -37,7 +37,7 @@ $content = '
 			</tr>
 			<tr>
 				<td>' . $Template->e( 'forum_description' ) . ':</td>
-				<td><textarea name="forum-description">&nbsp;</textarea></td>
+				<td><textarea name="forum-desc"></textarea></td>
 			</tr>
 		</table>
 	</form>
@@ -49,7 +49,7 @@ $content = '
 		<li><a href="#tabs-3">' . $Template->e( 'forum_options' ) . '</a></li>
 	</ul>
 	<div id="tabs-1">
-		<table class="tabs-content row-color">
+		<table class="tabs-content row-color" style="border:1px solid #bbb;width:25%">
 			<tr>
 				<td>' . $Template->e( 'users' ) . ':</td>
 				<td>' . $users . '</td>
@@ -71,7 +71,7 @@ $content = '
 				<h1 class="image-left">Add Forum</h1>
 			</a>
 			<br style="clear:both"/>
-			<table class="row-color">
+			<table class="row-color" id="forums">
 				<tr class="th">
 					<th>' . $Template->e( 'name' ) . '</th>
 					<th>' . $Template->e( 'forum_description' ) . '</th>
@@ -82,14 +82,14 @@ $content = '
 
 $forums = rows( 'select id, name, description from ' . PREFIX . 'forums' );
 if( count( $forums ) == 0 )
-	$content .= '<tr class="empty-table" colspan="4"><td>No forums yet! <a class="link add-forum">Add one</a>.</td></tr>';
+	$content .= '<tr class="empty-table"><td colspan="4">No forums yet! <a class="link add-forum">Add one</a>.</td></tr>';
 foreach( $forums as $forum ){
-	$posts = single( 'select count(id) from posts where id=' . $forum[ 'id' ], 'count(id)' );
+	$posts = single( 'select count(id) from ' . PREFIX . 'forum_posts where id=' . $forum[ 'id' ], 'count(id)' );
 	$content .= '<tr>
 		<td>' . $forum[ 'name' ] . '</td>
 		<td>' . $forum[ 'description' ] . '</td>
 		<td>' . $posts . '</td>
-		<td><a class="link delete"><span id="delete-img" class="admin-menu-img">&nbsp;</span></a></td>
+		<td><a class="link delete" id="' . $forum[ 'id' ] . '"><span id="delete-img" class="admin-menu-img">&nbsp;</span></a></td>
 	</tr>';
 }
 

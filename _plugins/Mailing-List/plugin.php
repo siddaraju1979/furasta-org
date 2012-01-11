@@ -152,7 +152,7 @@ function mailing_list_lang( $lang ){
  * @params int $id
  * @return void
  */
-function mailing_list_admin_widget_mailing_list( ){
+function mailing_list_admin_widget_mailing_list( $area_name, $widget_id, $pages ){
 	require HOME . '_plugins/Mailing-List/admin/widget.php';
 }
 

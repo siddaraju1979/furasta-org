@@ -8,19 +8,23 @@
  * @version     1
  */
 
-/**
- * add mailing list table to database
- */
-query( 'create table if not exists ' . PREFIX . 'mailing_list ( id int auto_increment primary key, name text, email text )' );
+switch( $version ){
+	case 1:
+		// add mailing list table to database
+		query( 'create table if not exists ' . PREFIX . 'mailing_list ('
+			. 'id int auto_increment primary key,'
+			. ' name text,'
+			. ' email text'
+		. ')' );
 
-/**
- * add default options to database
- */
-query( 'insert into ' . OPTIONS . ' values '
-	. '( "use_names", "Yes", "mailing_list_options" ),'
-	. '( "from", "", "mailing_list_options" ),'
-	. '( "reply_to", "", "mailing_list_options" ),'
-	. '( "template", "", "mailing_list_options" )'
-);
+		// add default options to database
+		query( 'insert into ' . OPTIONS . ' values '
+			. '( "use_names", "Yes", "mailing_list_options" ),'
+			. '( "from", "", "mailing_list_options" ),'
+			. '( "reply_to", "", "mailing_list_options" ),'
+			. '( "template", "", "mailing_list_options" )'
+		);
+	break;
+}
 
 ?>

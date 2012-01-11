@@ -8,8 +8,12 @@
  * @version	1
  */
 
+if( $widget_id == 0 ){
+
+}
+
 $Template = Template::getInstance( );
-$widget_options = options( 'mailing_list_widget' );
+$widget_options = options( 'mailing_list_widget_' . $id );
 $opts = array( 'yes', 'no' );
 
 $content = '

@@ -16,6 +16,7 @@ $lang = array(
 	'forum_moderators' => 'Moderators',
 	'forum_description' => 'Description',
 	'forum_posts_count' => 'Posts',
+	'forum_add_name' => 'The forum name is a required field and cannot be empty'
 );
 
 ?>
