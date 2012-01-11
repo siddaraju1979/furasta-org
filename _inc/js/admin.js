@@ -152,20 +152,18 @@ function slugCheck(url){
  */
 function getParents( page ){
 
-	if( page == null ){
+	if( !page ){ // assume its the selected page
 		page = $( "#select-parent :selected" ).attr( 'class' );
 	}
 
-	if( page == 0 ){
+	if( page == 0 )
 		return '';
-	}
 
-	var parent = $( '#select-parent option[ value = ' + page + ' ]' );
-
+	var parent = $( '#select-parent option[value="' + page + '"]' );
 	var url = '';
 
-	if( parent.attr( 'class' ) != 0 ){
-		url += getUrl( parent.attr( 'class' ) ) + '/';
+	if( parent.attr( 'class' ) ){
+		url += getParents( parent.attr( 'class' ) );
 	}
 
 	url += parent.text( ) + '/';
