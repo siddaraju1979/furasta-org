@@ -106,6 +106,7 @@ $lang = array(
 	'pages_permissions_everyone' => 'Everyone',
 	'pages_permissions_selected' => 'Selected',
 	'pages_permissions_select_by_user_group' => 'Select by User or by Group',
+	'pages_help_reorder' => 'To reorder pages simply drag and drop them where you want. You can also make pages into subpages by dropping them on top of a page when it is highlighted.',
 	
 
 	// Trash
