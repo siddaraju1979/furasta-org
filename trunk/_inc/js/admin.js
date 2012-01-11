@@ -47,8 +47,8 @@ $(document).ready(function(){
  * @return void
  */
 function rowColor( ){
-	$( ".row-color tr:even" ).not( ":hidden" ).removeClass( "odd" ).addClass( "even" );
-	$( ".row-color tr:odd" ).not( ":hidden" ).removeClass( "even" ).addClass( "odd" );
+	$( ".row-color tr:not(:hidden):even" ).removeClass( "odd" ).addClass( "even" );
+	$( ".row-color tr:not(:hidden):odd" ).removeClass( "even" ).addClass( "odd" );
 }
 
 /**

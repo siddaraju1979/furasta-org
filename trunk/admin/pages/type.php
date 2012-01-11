@@ -20,6 +20,8 @@
 if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
         die( );
 
+require HOME . '_inc/function/admin.php';
+
 /**
  * set up $_GET variables 
  */

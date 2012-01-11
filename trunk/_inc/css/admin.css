@@ -163,19 +163,20 @@ table tr td.options-show{ background:#eee }
 table tr td#slug-url a{ color:#050;font-style:italic }
 table#add-user{ width:60%;text-align:left;margin:0 auto }
 table#perm{ width:50%;text-align:left;margin:0 auto }
-#pages{ margin-top:0 }
+#pages{ margin-top:0; background: #89a }
 #options-bar-left{ height: 26px; border-top: 1px solid transparent;margin-bottom:8px }
 #options-bar-left a:focus{ outline:none }
 #list-pages-dropbox{ display:none;position:absolute }
 
 .pages-table-left{ padding:6px 15px 6px 6px;width:25px }
-.treeTable tr td .expander{ background-position:left center;background-repeat:no-repeat;cursor:pointer;padding:0;zoom:1 }
-.treeTable tr.collapsed td .expander{ background-image:url(../img/toggle-expand-dark.png) }
-.treeTable tr.expanded td .expander{ background-image:url(../img/toggle-collapse-dark.png) }
-.treeTable tr.selected, .treeTable tr.accept{ background-color:#3875d7;color:#fff }
-.treeTable tr.collapsed.selected td .expander, .treeTable tr.collapsed.accept td .expander{ background-image:url(../img/toggle-expand-light.png) }
-.treeTable tr.expanded.selected td .expander, .treeTable tr.expanded.accept td .expander{ background-image:url(../imgtoggle-collapse-light.png) }
-.treeTable .ui-draggable-dragging{ color:#000;z-index:1 }
+#pages tr td .expander{ background-position:left center;background-repeat:no-repeat;cursor:pointer;padding:6px 19px 4px 0!important;zoom:1 }
+#pages tr.collapsed td .expander{ background-image:url(%SITEURL%_inc/img/toggle-expand-dark.png) }
+#pages tr.expanded td .expander{ background-image:url(%SITEURL%_inc/img/toggle-collapse-dark.png) }
+#pages tr.selected, .treeTable tr.accept{ background-color:#3875d7;color:#fff }
+
+.holder{ background: #89a; height:4px }
+.hovered{ background: #89a  }
+.ui-sortable-helper{ opacity:0.6;filter:alpha(opacity=60); }
 
 select{ border:1px solid #666;padding:3px;width:100% }
 textarea{ border:1px solid #666; padding: 3px; width:100%; overflow-y: scroll }

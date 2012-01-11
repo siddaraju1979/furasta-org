@@ -107,10 +107,11 @@ function list_pages( $id, $pages, $level=0 ){
 
 		if( $User->pagePerm( $perm[ 1 ] ) ){
 	                $num++;
+			$parent = ( isset( $pages[ $page[ 'id' ] ] ) ) ? ' parent' : '';
         	        $href = '<a href="pages.php?page=edit&id='.$page['id'].'" class="list-link">';
-                	$class = ( $level == 0 ) ? ' ':' class="child-of-node-'.$page['parent'].'"';
+                	$class = ( $level == 0 ) ? ' ':' child-of-node-'.$page['parent'].'';
 			$delete = ( $page[ 'home' ] == 1 ) ? '' : '<a id="' . $page[ 'id' ] . '" class="delete link"><span class="admin-menu-img" id="menu_trash-img" title="Delete Page" alt="Delete Page">&nbsp;</span></a>';
-	                $list .= '<tr id="node-'.$page['id'].'"'.$class.'>
+	                $list .= '<tr id="node-'.$page['id'].'" class="expanded odd '.$class.$parent.'">
         	                	<td class="pages-table-left"><input type="checkbox" value="' . $page[ 'id' ] . '" name="trash-box"/></td>
                 	                <td class="first">'.$href.$page['name'].'</a></td>
                         	        <td>'.$href.$page['user'].'</a></td>
@@ -281,4 +282,5 @@ function tinymce( $name, $content, $config = 'Normal' ){
 	$content = '<textarea name="' . $name . '" id="tinymce_' .$name . '">' . $content . '</textarea>';
 	return $content;
 }
+
 ?>

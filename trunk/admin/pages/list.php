@@ -14,7 +14,7 @@
 /**
  * load the treeTable jquery plugin and some page specific javascript 
  */
-$Template->loadJavascript( '_inc/js/jquery/treeTable.min.js' );
+$Template->loadJavascript( '_inc/js/jquery/tree.js' );
 $Template->loadJavascript( 'admin/pages/list.js' );
 
 $content = '
@@ -55,7 +55,7 @@ $content = '
 
 <table id="pages" class="row-color expanded">
 
-	<tr class="top_bar">
+	<tr class="top_bar not-sortable">
 		<th class="pages-table-left">
 			<input type="checkbox" class="checkbox-all" all=""/>
 		</th>
@@ -81,7 +81,7 @@ while($row=mysql_fetch_assoc($query)){
 $content .= list_pages( 0, $pages );
 
 $content .= '
-	<tr>
+	<tr class="not-sortable">
 		<th class="pages-table-left">
 			<input type="checkbox" class="checkbox-all" all=""/>
 		</th>
@@ -97,6 +97,8 @@ $content .= '
 	</select> 
 	<input id="p_2" class="p-submit submit" type="submit" value="' . $Template->e( 'pages_list_go_button' ) . '"/>
 </div>
+
+<p>Howto reorder pages: <a class="link help" id="help-reorder">&nbsp;</a></p>
 
 <br style="clear:both"/>
 ';
