@@ -98,7 +98,7 @@ $content .= '
 	<input id="p_2" class="p-submit submit" type="submit" value="' . $Template->e( 'pages_list_go_button' ) . '"/>
 </div>
 
-<p>Howto reorder pages: <a class="link help" id="help-reorder">&nbsp;</a></p>
+<p>' . $Template->e( 'pages_howto_reorder' ) . ': <a class="link help" id="help-reorder">&nbsp;</a></p>
 
 <br style="clear:both"/>
 ';

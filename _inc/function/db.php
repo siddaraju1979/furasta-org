@@ -214,6 +214,9 @@ function options( $category ){
  */
 function update_options( $options, $category ){
 
+	if( $options == 0 || empty( $options ) )
+		return false;
+
 	$options = addslashes_array( $options );
 	
 	if( count( $options ) != 0 ){
