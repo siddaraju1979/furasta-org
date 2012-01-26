@@ -16,6 +16,7 @@ $ContentAreas = ContentAreas::getInstance( );
 
 
 $content = '
+<div id="edit-dialog" style="display:none"></div>
 <div id="content-areas">
 	<div id="content-right">
 		<table>

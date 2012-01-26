@@ -9,10 +9,10 @@
  */
 
 switch( $version ){
-	case 1:
+	case 0:
 		// add forums table
-		query( 'create table ' . PREFIX . 'forums ( '
-			. 'id int auto_incremenet primary key,'
+		query( 'create table if not exists ' . PREFIX . 'forums ( '
+			. 'id int auto_increment primary key,'
 			. 'page_id int,'
 			. 'name text,'
 			. 'description text,'
@@ -20,7 +20,7 @@ switch( $version ){
 		. ')' );
 
 		// add topics table
-		query( 'create table ' . PREFIX . 'forum_topics ('
+		query( 'create table if not exists ' . PREFIX . 'forum_topics ('
 			. 'id int auto_increment primary key,'
 			. 'forum_id int,'
 			. 'name text,'
@@ -31,7 +31,7 @@ switch( $version ){
 		. ')' );
 
 		// add forum posts table
-		query( 'create table ' . PREFIX . 'forum_posts ('
+		query( 'create table if not exists ' . PREFIX . 'forum_posts ('
 			. 'id int auto_increment primary key,'
 			. 'forum_id int,'
 			. 'topic_id int,'

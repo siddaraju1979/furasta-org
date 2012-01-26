@@ -14,18 +14,20 @@ $(function(){
 	$( '.delete' ).live( 'click', delete_widget );
 
 
-	$( '.widget-left' ).draggable({
-		connectToSortable : ".content-area-widgets",
-		helper : 'clone',
-		revert : 'invalid',
-		stop : function( event, ui ){
-			if( $( '.content-area-widgets' ).hasClass( 'empty' ) ){
-				$( '.content-area-widgets p' ).remove( );
-				$( '.content-area-widgets' ).removeClass( 'empty' );
-			}
-		}
-	});
+	$( '.widget-left' ).draggable( options );
 });
+
+var options = {
+	connectToSortable : ".content-area-widgets",
+	helper : 'clone',
+	revert : 'invalid',
+	stop : function( event, ui ){
+		if( $( '.content-area-widgets' ).hasClass( 'empty' ) ){
+			$( '.content-area-widgets p' ).remove( );
+			$( '.content-area-widgets' ).removeClass( 'empty' );
+		}
+	}
+};
 
 function update_template_areas( ){
 	if( $( '#content-area-select' ).val( ) != '---' ){
@@ -95,14 +97,6 @@ function save_area( ){
 function sortable_stop_function( event, ui ){
 	if( ui.item.hasClass( 'widget-left' ) ){
 		ui.item.removeClass( 'widget-left' );
-		var new_id = 1;
-		$( '.widget' ).each(function( ){
-			var id = parseInt( $( this ).attr( 'id' ) );
-			if( id >= new_id ){
-				new_id = id + 1;
-			}
-		});
-		ui.item.attr( 'id', new_id );
 		ui.item.prepend( 
 			'<span class="right"><a class="link edit">'
 			+ trans( 'edit' ) + 
@@ -112,7 +106,23 @@ function sortable_stop_function( event, ui ){
 		);
 		ui.item.addClass( 'widget' );
 	}
-	save_area( );
+
+	var widget_name = ui.item.attr( 'type' );
+	var a_name = $( '#content-area-select' ).val( );
+	// get new id from widget itself
+	$.ajax({
+		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		type : 'post',
+		data : {
+			name : widget_name,
+			area_name : a_name,
+			id : 0
+		},
+		success : function( ht ){
+			ui.item.attr( 'id', ht );
+			save_area( );
+		}
+	});
 }
 
 function edit_widget( ){
@@ -124,7 +134,7 @@ function edit_widget( ){
 	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
 	dialogButtons[ trans( 'prompt_save' ) ] = function( ){ $( this ).dialog( 'close' ) };
 
-	$( '#dialog' )
+	$( '#edit-dialog' )
 		.attr( 'title', widget_name + ' Widget' )
 		.html(
 			trans( 'loading' ) + '... <img src="' + 
@@ -145,7 +155,7 @@ function edit_widget( ){
 			id : widget_id
 		},
 		success : function( ht ){
-			$( '#dialog' ).html( ht );
+			$( '#edit-dialog' ).html( ht );
 		}
 	});
 }
@@ -167,4 +177,8 @@ function delete_widget( ){
 			}
 		});
 	});
+}
+
+// calls save_area when finished
+function create_widget( ){
 }

@@ -209,6 +209,7 @@
         	                if( loc.val( ) == '' ){
 					this.errors = trans_error( 5, this.name_f[ i ] );
                         	        loc.addClass( 'error' );
+
                                 	this.errorHandler( );
 	                                return false;
         	                }
@@ -235,6 +236,7 @@
 					this.errors = trans_error( 6, this.name_f[ i ] );
 	                                this.errors = 'Please enter a valid email address';
         	                        loc.addClass( 'error' );
+
                 	                this.errorHandler( );
                         	        return false;
 	                        }
@@ -402,8 +404,8 @@
 		 * already then it returns true
 		 */
 	        execute : function( ){
-	
-        	        if( this.validated == 1 )
+
+       	 	        if( this.validated == 1 )
                 	        return false;
 
 	              	if( this.required_f.length != 0 && this.required( ) == false )

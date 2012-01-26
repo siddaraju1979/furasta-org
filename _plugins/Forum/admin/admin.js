@@ -33,7 +33,8 @@ function add_forum_dialog( ){
 			type : 'post',
 			data : {
 				forum_name : name,
-				forum_desc : desc
+				forum_desc : desc,
+				forum_id : window.furasta.page.id 
 			},
 			success : function( html ){
 				$( '.empty-table' ).remove( );

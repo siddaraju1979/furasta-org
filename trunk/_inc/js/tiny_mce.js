@@ -65,10 +65,6 @@ window.tinymceConfigs = {
     }
 })();
 
-/**
- * load up tinymce without creating any
- * instances
- */
 $(function(){
 	tinyMCE.init({
 		mode : "none",

@@ -474,7 +474,7 @@ class Template {
 	 *
 	 * Works with the same syntax and principal as
 	 * the loadJavascript function above, except
-	 * this function uses compression rather than packing.
+	 * this function uses compression rather than minification.
 	 *
 	 * note: the compression is actually done in the
 	 * cssUrls function
@@ -489,12 +489,8 @@ class Template {
                 /**
                  * determine wether a file or source code are being loaded
                  */
-                if( $content == false ){
-                        if( !file_exists( HOME . $name ) || strpos( $name, '..' ) !== false )
-                                return false;
-
+                if( $content == false )
                         return ( array_push( $this->cssFiles, $name ) );
-                }
                 else
                         return ( $this->cssSources{ $name } = $content );
         }

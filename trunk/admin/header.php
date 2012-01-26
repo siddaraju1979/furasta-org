@@ -18,8 +18,12 @@ $admin_dir = HOME . 'admin/';
 
 $User = User::getInstance( );
 
+// make sure user is logged in
 if( !$User->verify( ) )
         require 'login.php';
+
+if( !$User->hasPerm( 'a' ) )
+	error( 'You have insufficient privellages to use the admin area', 'Permissions Error' );
 
 $Template = Template::getInstance( );
 

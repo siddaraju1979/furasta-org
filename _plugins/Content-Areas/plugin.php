@@ -110,13 +110,12 @@ function content_areas_admin( ){
 	require HOME . '_plugins/Content-Areas/admin/index.php';
 }
 
-function content_areas_admin_widget_textarea( ){
-	$Template = Template::getInstance( );
-	$Template->add( 'content', 'test' );
+function content_areas_admin_widget_textarea( $area_name, $widget_id, $pages ){
+	require HOME . '_plugins/Content-Areas/widgets/textarea-admin.php';
 }
 
 function content_areas_frontend_widget_textarea( ){
-	echo 'test';
+	require HOME . '_plugins/Content-Areas/widgets/textarea-frontend.php';
 }
 
 /**
@@ -124,14 +123,8 @@ function content_areas_frontend_widget_textarea( ){
  *
  *
  */
-function content_areas_admin_widget_breadcrumbs( ){
-	$Template = Template::getInstance( );
-
-	$content = '
-		test breadcrumb options
-	';
-
-	$Template->add( 'content', $content );
+function content_areas_admin_widget_breadcrumbs( $area_name, $widget_id, $pages ){
+	require HOME . '_plugins/Content-Areas/widgets/breadcrumbs-admin.php';
 }
 
 /**
@@ -141,12 +134,11 @@ function content_areas_admin_widget_breadcrumbs( ){
  *
  */
 function content_areas_frontend_widget_breadcrumbs( ){
-	echo frontend_breadcrumbs( array( ) );
+	require HOME . '_plugins/Content-Areas/widgets/breadcrumbs-frontend.php';
 }
 
-function content_areas_admin_widget_menu( ){
-	$Template = Template::getInstance( );
-	$Template->add( 'content', 'bread crumbs!' );
+function content_areas_admin_widget_menu( $area_name, $widget_id, $pages ){
+	require HOME . '_plugins/Content-Areas/widgets/menu-admin.php';
 }
 
 /**
@@ -156,7 +148,7 @@ function content_areas_admin_widget_menu( ){
  *
  */
 function content_areas_frontend_widget_menu( ){
-	echo frontend_menu( );
+	require HOME . '_plugins/Content-Areas/widgets/menu-frontend.php';
 }
 
 /**

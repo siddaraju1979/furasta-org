@@ -23,7 +23,7 @@ $Template->loadJavascript( '_inc/js/admin/admin.js' );
 $Template->loadJavascript( '_inc/js/system.js' );
 $Template->loadJavascript( '_inc/js/jquery/validate.js' );
 
-$Template->loadCSS('_inc/css/admin.css');
+$Template->loadCSS( '_inc/css/admin.css' );
 
 /**
  * filter page content - plugins 
@@ -39,7 +39,7 @@ echo'
 <noscript><meta http-equiv="refresh" content="0;url=' . SITEURL . '_inc/noscript.php"></noscript>';
 
 foreach( $Template->cssUrls( ) as $url )
-	echo '<link rel="stylesheet" href="' . $url . '"/>';
+	echo '<link rel="stylesheet" href="' . $url . '"/>' . "\n";
 
 echo '
 	<title>' . $Template->display( 'title' ) . ' - Furasta.Org</title>
@@ -93,7 +93,7 @@ echo '
 ';
 
 foreach( $Template->javascriptUrls( ) as $url )
-	echo '<script type="text/javascript" src="' . $url . '"></script>';
+	echo '<script type="text/javascript" src="' . $url . '"></script>' . "\n";
 
 echo '
 <script type="text/javascript">

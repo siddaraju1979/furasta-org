@@ -147,12 +147,14 @@ function cache_exists($file,$dir=''){
  */
 function cache_css( $name, $file ){
 
-	$cache_file = md5( $name );
-
-	if( file_exists( HOME . $file ) && strpos( $file, '..' ) === false )
+	if( file_exists( HOME . $file ) && strpos( $file, '..' ) === false ){
+		$cache_file = md5( $file );
 		$content = file_get_contents( HOME . $file );
-	else
+	}
+	else{
+		$cache_file = md5( $name );
 		$content = $file;
+	}
 
 	/**
 	 * check if diagnostic mode is enabled

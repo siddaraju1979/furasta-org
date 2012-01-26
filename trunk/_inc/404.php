@@ -27,19 +27,13 @@ $smarty=new Smarty();
 $smarty->template_dir=$smarty_dir.'templates';
 $smarty->compile_dir=$smarty_dir.'templates_c';
 
-$meta='
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
-<script type="text/javascript" src="' . SITEURL . '_inc/js/jquery/multi-ddm.min.js"></script>
-<script type="text/javascript" src="' . SITEURL . '_inc/js/frontend.js"></script>
-<link rel="stylesheet" type="text/css" href="' . SITEURL . '_inc/css/frontend.css"/>
-';
-
 $plugin_functions=$Plugins->frontendTemplateFunctions();
 foreach($plugin_functions as $function)
 	$smarty->register_function($function->frontendTemplateFunction,array($function,'frontendTemplateFunction'));
 
-$smarty->assign('metadata',$meta);
+$smarty->register_function( 'metadata', 'frontend_metadata' );
+$smarty->register_function( 'page_content', 'frontend_page_content' );
+$smarty->register_function('menu','frontend_menu');
 
 $content = '
 <h2>404 - Page Not Found</h2>
@@ -48,14 +42,14 @@ $content = '
 <p><a href="' . SITEURL . '">Return to site index</a></p>
 ';
 
-$smarty->assign('page_content',$content);
-
+$smarty->assign('__page_content',$content);
 $smarty->assign('page_name', '404 - Page Not Found');
 $smarty->assign('page_id','0');
 $smarty->assign('page_slug','');
 $smarty->assign('page_edited','');
 $smarty->assign('page_user','');
 $smarty->assign('page_parent_id','');
+$smarty->assign('page_type', 'Normal' );
 
 $smarty->assign( 'siteurl', SITEURL );
 
@@ -64,8 +58,6 @@ $smarty->assign('page_load_time',$time);
 
 $smarty->assign('site_title',$SETTINGS['site_title']);
 $smarty->assign('site_subtitle',$SETTINGS['site_subtitle']);
-
-$smarty->register_function('menu','frontend_menu');
 
 if(!file_exists(TEMPLATE_DIR.'index.html'))
 	error( 'Template files could not be found.', 'Template Error' );

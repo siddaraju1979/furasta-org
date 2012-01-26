@@ -311,8 +311,14 @@ class Plugins{
 		$types = array( );
 
 		foreach( $this->plugins as $plugin ){
-			if( isset( $plugin[ 'admin' ][ 'page_type' ][ 'name' ] ) )
-                        	array_push( $types, $plugin[ 'admin' ][ 'page_type' ][ 'name' ] );
+			if( isset( $plugin[ 'admin' ][ 'page_type' ] ) ){
+				if( is_array( @$plugin[ 'admin' ][ 'page_type' ] ) ){ // multiple page types support
+					foreach( $plugin[ 'admin' ][ 'page_type' ] as $type )
+						array_push( $types, $type[ 'name' ] );
+				}
+				else
+	                        	array_push( $types, @$plugin[ 'admin' ][ 'page_type' ][ 'name' ] );
+			}
                 }
 
 		return $types;
@@ -332,23 +338,43 @@ class Plugins{
 
 		foreach( $this->plugins as $plugin ){
 
-			/**
-			 * check if correct plugin
-			 */
-			if( @$plugin[ 'admin' ][ 'page_type' ][ 'name' ] != $type || !isset( $plugin[ 'admin' ][ 'page_type' ][ 'function' ] ) )
-				continue;
+			if( is_array( @$plugin[ 'admin' ][ 'page_type' ] ) ){ // plugin has multiple page types
+				foreach( $plugin[ 'admin' ][ 'page_type' ] as $t ){
+					if( $t[ 'name' ] != $type )
+						continue;
 
-			/**
-			 * using functions
-			 */
-			if( function_exists( $plugin[ 'admin' ][ 'page_type' ][ 'function' ] ) )
-                               	return call_user_func( $plugin[ 'admin' ][ 'page_type' ][ 'function' ], $id );
+					if( function_exists( @$t[ 'function' ] ) )
+						return call_user_func( $t[ 'function' ], $id );
 
-			/**
-			 * using methods
-			 */
-			elseif( method_exists( @$plugin[ 'admin' ][ 'page_type' ][ 'function' ][ 0 ], @$plugin[ 'admin' ][ 'page_type' ][ 'function' ][ 1 ] ) )
-				return call_user_func( $plugin[ 'admin' ][ 'page_type' ][ 'function' ], $id );
+					if( is_array( @$t[ 'function' ] ) && method_exists( $t[ 'function' ][ 0 ], $t[ 'function' ][ 1 ] ) );
+						return call_user_func( $t[ 'function' ], $id );
+					
+				}
+			}
+			else{ // plugin has one page type
+
+				/**
+				 * check if correct plugin
+				 */
+				if( @$plugin[ 'admin' ][ 'page_type' ][ 'name' ] != $type 
+					|| !isset( $plugin[ 'admin' ][ 'page_type' ][ 'function' ] ) )
+					continue;
+
+				/**
+				 * using functions
+				 */
+				if( function_exists( $plugin[ 'admin' ][ 'page_type' ][ 'function' ] ) )
+	                               	return call_user_func( $plugin[ 'admin' ][ 'page_type' ][ 'function' ], $id );
+
+				/**
+				 * using methods
+				 */
+				elseif( is_array( @$plugin[ 'admin' ][ 'page_type' ][ 'function' ] ) 
+					&& method_exists( $plugin[ 'admin' ][ 'page_type' ][ 'function' ][ 0 ],
+					@$plugin[ 'admin' ][ 'page_type' ][ 'function' ][ 1 ] ) )
+					return call_user_func( $plugin[ 'admin' ][ 'page_type' ][ 'function' ], $id );
+
+			}
 
                 }
 
@@ -453,24 +479,37 @@ class Plugins{
                  */
                 foreach( $this->plugins as $plugin ){
 
-			/**
-			 * if not correct plugin, continue
-			 */
-			if( @$plugin[ 'admin' ][ 'page_type' ][ 'name' ] != $type || !isset( $plugin[ 'frontend' ][ 'page_type' ] ) )
-				continue;
+			if( is_array( @$plugin[ 'frontend' ][ 'page_type' ] ) ){ // plugin has multiple page types
+				for( $i = 0; $i < count( $plugin[ 'frontend' ][ 'page_type' ] ); $i++ ){
+					$p = $plugin[ 'frontend' ][ 'page_type' ][ $i ];
 
-                        /**
-                         * is correct, attempting functions 
-                         */
-                        if( function_exists( $plugin[ 'frontend' ][ 'page_type' ] ) )
-                                return call_user_func( $plugin[ 'frontend' ][ 'page_type' ], $page_id );
+					if( $plugin[ 'admin' ][ 'page_type' ][ $i ][ 'name' ] != $type )
+						continue;
 
-			/**
-			 * using methods 
-			 */
-			elseif( method_exists( @$plugin[ 'frontend' ][ 'page_type' ][ 0 ], @$plugin[ 'frontend' ][ 'page_type' ][ 1 ] ) )
-				return call_user_func( $plugin[ 'frontend' ][ 'page_type' ][ 'function' ], $page_id );
+					if( function_exists( @$p ) )
+						return call_user_func( $p, $page_id );
 
+					if( method_exists( @$p[ 0 ], @$p[ 1 ] ) );
+						return call_user_func( $p, $page_id );
+					
+				}
+			}
+			else{ // plugin has one page type
+				if( $plugin[ 'admin' ][ 'page_type' ] != $type )
+					continue;
+
+	                        /**
+	                         * is correct, attempting functions 
+	                         */
+	                        if( function_exists( $plugin[ 'frontend' ][ 'page_type' ] ) )
+	                                return call_user_func( $plugin[ 'frontend' ][ 'page_type' ], $page_id );
+
+				/**
+				 * using methods 
+				 */
+				elseif( method_exists( @$plugin[ 'frontend' ][ 'page_type' ][ 0 ], @$plugin[ 'frontend' ][ 'page_type' ][ 1 ] ) )
+					return call_user_func( $plugin[ 'frontend' ][ 'page_type' ][ 'function' ], $page_id );
+			}
                 }
 
 	}

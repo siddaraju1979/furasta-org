@@ -13,7 +13,8 @@
  * @version    1.0
  */
 
-require '../define.php';
+require '../../.settings.php';
+require '../function/cache.php';
 
 $cache_file=$_SERVER['QUERY_STRING'];
 
