@@ -42,22 +42,23 @@
  * keys - refer to the plugin documentation for details on
  * that.
  * 
- * +---------------+-------------------------+
- * |      e        |      edit pages         |
- * |      c        |      create pages       |
- * |      d        |      delete pages       |
- * |      t        |      manage trash       |
- * |      o        |      order pages        | // @todo make order pages perms work
- * |      s	   |	  edit settings	     |
- * |      u	   |      edit users	     |
- * +---------------+-------------------------+
+ * +---------------+----------------------------+
+ * |      a        |      login to admin area   |    
+ * |      e        |      edit pages            |
+ * |      c        |      create pages          |
+ * |      d        |      delete pages          |
+ * |      t        |      manage trash          |
+ * |      o        |      order pages           | // @todo make order pages perms work
+ * |      s	   |	  edit settings	        |
+ * |      u	   |      edit users	        |
+ * +---------------+----------------------------+
  * 
  * The class can also be used to check if the user has
  * permission to edit a certain page. The function accepts
  * an array of page permissions, or the string of perms
  * directly from the database.
  *
- * if( $User->pagePerm( $perm_array ) ){
+ * if( $User->adminPagePerm( $perm_array ) ){
  *   // user has permission to access page
  * }
  *
@@ -139,6 +140,14 @@ class User{
 	 */
 	public $perm = array( );
 
+	/**
+	 * _group
+	 *
+	 * @var bool/array
+	 * @access private
+	 */
+	public $_group = false;
+
         /**
          * getInstance 
          * 
@@ -180,7 +189,7 @@ class User{
 	 * @access public
 	 * @return bool
 	 */
-	public function login( $email, $password ){
+	public function login( $email, $password, $permissions ){
 
 		/**
 		 * store user data in class and session
@@ -234,7 +243,18 @@ class User{
 			 */
 			$group = row( 'select name, perm from ' . GROUPS . ' where id="' . $array[ 'user_group' ] . '"' );
 
-			$perm = explode( ',', $group[ 'perm' ] );
+			$perm = self::permToArray( $group[ 'perm' ] );
+
+			// make sure user has login perms
+			if( !is_array( $permissions ) )
+				$permissions = array( $permissions );
+			foreach( $permissions as $p ){
+				if( in_array( $p, $perm ) ){
+					$Template = Template::getInstance( );
+					$Template->runtimeError( '19' );
+					return false;
+				}
+			}
 
 			$group_name = $group[ 'name' ];
 		}
@@ -395,17 +415,17 @@ class User{
 	}
 
 	/**
-	 * pagePerm
+	 * adminPagePerm
 	 * 
 	 * used to check if the user has permission
-	 * to access the page, pass the pages permissions 
+	 * to edit the page, pass the pages permissions 
 	 * string
 	 * 
 	 * @param string $perm 
 	 * @access public
 	 * @return bool 
 	 */
-	public function pagePerm( $perm ){
+	public function adminPagePerm( $perm ){
 
 		/**
 		 *  if user is super user bypass all permissions
@@ -467,6 +487,83 @@ class User{
 	}
 
 	/**
+	 * frontendPagePerm
+	 * 
+	 * used to check if the user has permission
+	 * to view the page, pass the pages permissions 
+	 * string
+	 * 
+	 * @param string $perm 
+	 * @access public
+	 * @return bool 
+	 */
+	public function frontendPagePerm( $perm ){
+
+		/**
+		 *  if user is super user bypass all permissions
+		 */
+		if( $this->group == '_superuser' )
+			return true;
+
+                /**
+                 * if no perms are set for page, then everyone
+                 * can view it
+                 */
+                if( empty( $perm ) )
+			return true;
+
+		/**
+		 * check if groups are used, if so add
+		 * all users from that group to the array
+		 * of users
+		 */
+		if( strpos( $perm, "#" ) !== false ){
+
+
+			/**
+			 * user is not logged in
+			 */
+			if( empty( $this->group ) )
+				return false;
+
+			$perm = explode( '#', $perm );
+
+			/**
+			 *  users and groups arrays
+			 */
+			$users = explode( ',', $perm[ 0 ] );
+
+			$groups = explode( ',', $perm[ 1 ] );
+			
+			foreach( $groups as $group ){
+
+				/**
+				 * if user is in group, then he has
+				 * permission
+				 */
+				if( $this->group == $group )
+					return true;
+		
+			}
+
+		}
+		else
+			$users = explode( ',', $perm );
+
+		/**
+		 * check if user id is in the array of allowed
+		 * ids to edit page 
+		 */
+		if( in_array( $this->id, $users ) )
+			return true;
+
+		/**
+		 * user cannot edit page
+		 */
+		return false;
+	}
+
+	/**
 	 * about
 	 * 
 	 * accessor method for class vars
@@ -478,6 +575,85 @@ class User{
 	public function about( $var ){
 		if( isset( $this->$var ) )
 			return $this->$var; 
+	}
+
+	/**
+	 * isInGroup
+	 * 
+	 * checks if a user is in a given group
+	 *
+	 * @todo add multiple groups per person
+	 * @params name
+	 * @return public
+	 */
+	public function isInGroup( $name ){
+		$id = $this->getGroupId( $name );
+		if( $this->group == $id )
+			return true;
+		return false;
+	}
+
+	/**
+	 * getGroupId
+	 *
+	 * returns a group id if given a group
+	 * name
+	 *
+	 * @params string $name
+	 * @return int
+	 * @access public
+	 */
+	public function getGroupId( $name ){
+		if( !$this->_groups )
+			$this->_groups = rows( 'select id,name from ' . GROUPS );
+
+		foreach( $this->_groups as $group ){ // find group id
+			if( $group[ 'name' ] == $name )
+				return $group[ 'id' ];
+		}
+		// no matches
+		return false;
+	}
+
+	/**
+	 * getGroupName
+	 *
+	 * returns a group name if given a group
+	 * id
+	 *
+	 * @params int $id
+	 * @return string
+	 * @access public
+	 */
+	public function getGroupName( $id ){
+		if( !$this->_groups )
+			$this->_groups = rows( 'select id,name from ' . GROUPS );
+
+		foreach( $this->_groups as $group ){ // find group name
+			if( $group[ 'id' ] == $id )
+				return $group[ 'name' ];
+		}
+		// no matches
+		return false;
+	}
+
+	/**
+	 * permToArray
+	 *
+	 * converts a perm string ( comma delimited ) to
+	 * an array of perms, example:
+	 *
+	 * input: "a,c,p,t"
+	 * output: array( 'a', 'c', 'p', 't' )
+	 *
+	 * @params string $permString
+	 * @return array
+	 * @access public
+	 */
+	public static function permToArray( $permString ){
+		if( strpos( ',', $permString ) == -1 )
+			return array( $permString );
+		return explode( ',', $permstring );
 	}
 }
 ?>

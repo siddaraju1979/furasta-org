@@ -105,7 +105,7 @@ function list_pages( $id, $pages, $level=0 ){
         foreach( $pages[ $id ] as $page ){
 		$perm = explode( '|', $page[ 'perm' ] );
 
-		if( $User->pagePerm( $perm[ 1 ] ) ){
+		if( $User->adminPagePerm( $perm[ 1 ] ) ){
 	                $num++;
 			$parent = ( isset( $pages[ $page[ 'id' ] ] ) ) ? ' parent' : '';
         	        $href = '<a href="pages.php?page=edit&id='.$page['id'].'" class="list-link">';
@@ -267,8 +267,8 @@ function tinymce( $name, $content, $config = 'Normal' ){
 	$Template = Template::getInstance( );
 
 	// add javascript files
-	$Template->loadJavascript( '_inc/js/tiny_mce.js' );
 	$Template->loadJavascript( '_inc/tiny_mce/tiny_mce.js', false );
+	$Template->loadJavascript( '_inc/js/tiny_mce.js' );
 
 	// add tinymce load to javascript
 	$javascript = '

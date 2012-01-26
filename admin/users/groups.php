@@ -18,6 +18,7 @@ $Template->loadJavascript( 'admin/users/groups.js' );
  * plugins can alter/expand them 
  */
 $perms = array(
+		'a' => 'Login To Admin Area',
 		'e' => 'Edit Pages',
 		'c' => 'Create Pages',
 		'd' => 'Delete Pages',

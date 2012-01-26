@@ -129,6 +129,7 @@ function frontend_metadata( $params, &$smarty ){
 	$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
 
 	$Template = Template::getInstance( );
+	// @todo add caching for multi-ddm and frontend javascript
 	$metadata='
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>

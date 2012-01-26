@@ -30,7 +30,8 @@ $lang_errors = array(
 	'15'=> 'Pages Trashed',
 	'16'=> 'Pages Restored',
 	'17'=> 'Pages Deleted',
-	'18'=> 'The %1 field must be at most %2 characters long'
+	'18'=> 'The %1 field must be at most %2 characters long',
+	'19'=> 'You do not have privellages to log into this area',
 );
 
 $lang = array( 

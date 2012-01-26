@@ -43,8 +43,6 @@ $conds = array(
 	)
 );
 
-//$conds = $Plugins->filter( 'admin', 'filter_pages_required_conds' );
-
 $valid = validate( $conds, "#pages-edit", 'edit-save' );
 
 /**
@@ -124,7 +122,7 @@ $Page = stripslashes_array( $Page );
  * in general, then check for this page
  */
 $perm = explode( '|', $Page[ 'perm' ] );
-if( !$User->hasPerm( 'e' ) && !$User->pagePerm( $perm[ 1 ] ) )
+if( !$User->hasPerm( 'e' ) && !$User->adminPagePerm( $perm[ 1 ] ) )
 	error( $Template->e( 'pages_permissions_error' ), $Template->e( 'error_permissions_title' ) );
 
 /**

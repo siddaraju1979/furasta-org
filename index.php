@@ -22,7 +22,8 @@ require '_inc/define.php';
  * mantinence template 
  */
 $User = new User( );
-if( $SETTINGS[ 'maintenance' ] == 1 && $User->verify( ) == false )
+$login = $User->verify( );
+if( $SETTINGS[ 'maintenance' ] == 1 && !$login )
 	maintenance_message( );
 
 $page=@$_GET['page'];
@@ -35,7 +36,7 @@ else{
                 array_pop($array);
         $slug=addslashes(end($array));
 	$id=single('select id from '.PAGES.' where slug="'.$slug.'"','id' );
-	if($id==false)
+	if(!$id)
 		require HOME . '_inc/404.php';
 }
 
@@ -45,10 +46,10 @@ else{
 $Page = row( 'select * from ' . PAGES . ' where id=' . $id, true );
 $Page = stripslashes_array( $Page );
 
-//$perm = explode( '|', $Page[ 'perm' ] );
-//if( !$User->pagePerm( $perm[ 0 ] ) )
-//	die( );
-//	header( 'location: ' . SITEURL . 'admin/index.php?redirect=' . $_SERVER[ 'REQUEST_URI' ] );
+// make sure user has permission to view page
+$perm = explode( '|', $Page[ 'perm' ] );
+if( !$User->frontendPagePerm( $perm[ 0 ] ) )
+	error( 'You have insufficient privellages to view this page.', 'Permissions Error' );
 
 /**
  * execute onload plugin functions
