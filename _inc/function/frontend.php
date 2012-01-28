@@ -142,7 +142,7 @@ function frontend_metadata( $params, &$smarty ){
 	<meta name="keywords" content="' . $keywords . '" />
 	<link rel="shortcut icon" href="' . SITEURL . '_inc/img/favicon.ico" />
 	<script type="text/javascript">
-		window.$furasta = {
+		window.furasta = {
 			site : { 
 				url : "' . SITEURL . '",
 				title : "' . $smarty->_tpl_vars{ 'site_title' } . '",
@@ -154,8 +154,9 @@ function frontend_metadata( $params, &$smarty ){
 				slug : "' . $smarty->_tpl_vars{ 'page_slug' } . '" ,
 				parent_id : "' . $smarty->_tpl_vars{ 'parent_id' } . '"
 			}';
-	$User = User::getInstance( );
-	if( $User->verify( ) ){
+
+	if( User::verify( ) ){
+		$User = User::getInstance( );
 		$metadata .= ',
 		user:{
 			id: ' . $User->about( 'id' ) . ',

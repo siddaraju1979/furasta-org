@@ -48,13 +48,13 @@ else{
 	 */
 	include 'define.php';
 
-	$User = new User( );
-
 	/**
 	 * if user is verified, define ajax verified
 	 */
-	if( $User->verify( ) )
+	if( User::verify( ) ){
 		define( 'AJAX_VERIFIED', true );
+		$User = User::getInstance( );
+	}
 }
 
 

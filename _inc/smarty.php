@@ -92,7 +92,7 @@ if( !file_exists( $file ) )
  * templates to be previewed. only works for
  * logged in users
  */
-if( isset( $_GET[ 'preview' ] ) && $User->verify( ) ){
+if( isset( $_GET[ 'preview' ] ) && User::verify( ) ){
 	$preview = $_GET[ 'preview' ];
 
 	if( strpos( '..', $preview ) === false && is_dir( HOME . '_www/' . $preview ) )

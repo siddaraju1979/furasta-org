@@ -16,15 +16,44 @@
  * 
  * Used for user management. Some examples below:
  * 
- * VERIFY LOGIN
+ * == GENERAL USAGE ===
+ *
+ * This class can be used to simply get access to
+ * details on a user. Using this code:
+ *
+ * $User = new User( $id );
+ *
+ * you can gain access to user info. If no $id is
+ * provided then the constructor will check for
+ * currently a currently logged in user id
+ *
+ * === VERIFY LOGIN ===
  * 
- * $User = User::getInstance( );
- * 
- * if( $User->verify( ) ){
+ * if( User::verify( ) ){
  *   // user is logged in
  * }
+ *
+ * === LOGIN USER ===
+ *
+ * This is usefull in the case of creating another
+ * login area for the CMS, through the use of a
+ * plugin. You can see how it works in admin/login.php
+ * Basically you can use the static method "login" to log
+ * the user in:
+ *
+ * if( User::login( $email, $password, $permissions, $instance ) ){
+ *	$User = User::getInstance( );
+ * 	// user is logged in
+ * }
+ * else
+ * 	// user login failed
+ *
+ * An array of permissions required to log into the
+ * area can also be passed. The last paramater decides
+ * whether to create a new instance of the class for the
+ * user if login is successful
  * 
- * CHECK USER PERMISSIONS
+ * === CHECK USER PERMISSIONS ===
  *
  * This class also manages group permissions for the
  * user. To check wether the user has permission to do
@@ -59,7 +88,7 @@
  * directly from the database.
  *
  * if( $User->adminPagePerm( $perm_array ) ){
- *   // user has permission to access page
+ *   // user has permission to edit page
  * }
  *
  * When using the pagePerm function it handles group
@@ -133,12 +162,28 @@ class User{
 	public $group_name;
 
 	/**
+	 * hash
+	 *
+	 * @var string
+	 * @access public
+	 */
+	private $hash;
+
+	/**
 	 * perm 
 	 * 
 	 * @var array
 	 * @access public
 	 */
 	public $perm = array( );
+
+	/**
+	 * data
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $data = array( );
 
 	/**
 	 * _group
@@ -179,97 +224,129 @@ class User{
         }
 
 	/**
+	 * __construct
+	 *
+	 * sets up the user. will take an id
+	 * but will use session id if isset and
+	 * no id given
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public function __construct( $id = false ){
+
+		// if no id, use session user id
+		// if logged in else return false
+		if( !$id ){
+			if( self::verify( ) )
+				$id = $_SESSION[ 'user' ][ 'id' ];
+			else
+				return false;
+		}
+
+		$user = row( 'select * from ' . USERS . ' where id=' . $id );
+
+		// user doesn't exist
+		if( count( $user ) == 0 )
+			return false;		
+
+		$this->id = $user[ 'id' ];
+		$this->name = $user[ 'name' ];
+		$this->email = $user[ 'email' ];
+		$this->password = $user[ 'password' ];
+		$this->group = $user[ 'user_group' ];
+		$this->hash = $user[ 'hash' ];
+		$this->data = json_decode( $user[ 'data' ], true );
+
+		// if not superuser check perms
+		if( $this->group != '_superuser' ){
+			$group = row( 'select name,perm from ' . GROUPS . ' where id=' . $user[ 'user_group' ] );
+			$this->perm = self::permToArray( $group[ 'perm' ] );
+			$this->group_name = $group[ 'name' ];
+		}
+		
+		return true;
+	}
+
+	/**
 	 * login
 	 *
 	 * attempts to login the user, returns
 	 * false on failure
+	 *
+	 * NOTE : If $instance is set to true, creates
+	 * instance of user after login, stores it
+	 * in instance var, use User::getInstance( ) to 
+	 * access the now logged in user
 	 * 
-	 * @param string $email 
-	 * @param md5 string $password 
+	 * $permissions should be in the form of an array
+	 * of group names such as array( 'users' )
+	 *
+	 * @param string $email
+	 * @param md5 string $password
+	 * @param array $permissions ( groups in array )
+	 * @param bool $instance, create new instance of user after successful login
 	 * @access public
 	 * @return bool
 	 */
-	public function login( $email, $password, $permissions ){
+	public static function login( $email, $password, $permissions = array( ), $instance = false ){
 
-		/**
-		 * store user data in class and session
-		 */
-		$_SESSION[ 'user' ][ 'email' ] = $email;
-		$_SESSION[ 'user' ][ 'password' ] = $password;
-		$this->email = $email;
-		$this->password = $password;
+		$user = row( 'select id,hash,user_group from ' . USERS . ' where email="' . $email . '" and password="' . $password . '"' );
 
-		/**
-		 * check if user is in database and activated
-		 */
-	        $query = mysql_query( 'select * from ' . USERS . ' where email="' . $email . '" and password="' . $password . '" and hash="activated"' );
-	        $num = mysql_num_rows( $query );
-
-		/**
-		 * if no rows match query check if user exists or is not activated 
-		 */
-	        if( $num != 1 ){
-	                $result = mysql_query( 'select id from ' . USERS . ' where email="' . $email . '" and password="' . $password . '"' );
-	                $num_res = mysql_num_rows( $result );
-
-			/**
-			 * get instance of template class and show error
-			 * from lang files
-			 */
+		// user not in db
+		if( !$user ){
 			$Template = Template::getInstance( );
-
-	                if( $num_res == 1 )
-	                        $Template->runtimeError( '11' );
-	                else
-	                        $Template->runtimeError( '12' );
-
+			$Template->runtimeError( '12' );
 			return false;
-
-	        }
+		}
 
 		/**
-		 * get further user details from db
+		 * get instance of template class and show error
+		 * from lang files
 		 */
-		$array = mysql_fetch_array( $query );
+		if( $user[ 'hash' ] != 'activated' ){
+			$Template = Template::getInstance( );
+			$Template->runtimeError( '11' );
+			return false;
+		}
 
-		$_SESSION[ 'user' ][ 'id' ] = $array[ 'id' ];
-		$this->id = $array[ 'id' ];
-		$this->name = $array[ 'name' ];
-		$this->group = $array[ 'user_group' ];
-
-		if( $array[ 'user_group' ] != '_superuser' ){
-			/**
-			 * get user group permissions and group name
-			 */
-			$group = row( 'select name, perm from ' . GROUPS . ' where id="' . $array[ 'user_group' ] . '"' );
-
-			$perm = self::permToArray( $group[ 'perm' ] );
+		/**
+	 	 * check permissions if not super user and permissions
+		 * check is required
+		 */
+		if( $user[ 'user_group' ] != '_superuser' && !empty( $permissions ) ){
+			$perm = single( 'select perm from ' . GROUPS . ' where id=' . $user[ 'user_group' ], 'perm' );
+			$perm = self::permToArray( $perm );
 
 			// make sure user has login perms
 			if( !is_array( $permissions ) )
 				$permissions = array( $permissions );
+
+			$match = false;
 			foreach( $permissions as $p ){
-				if( in_array( $p, $perm ) ){
-					$Template = Template::getInstance( );
-					$Template->runtimeError( '19' );
-					return false;
-				}
+				if( in_array( $p, $perm ) )
+					$match = true;
 			}
 
-			$group_name = $group[ 'name' ];
+			if( !$match ){
+				$Template = Template::getInstance( );
+				$Template->runtimeerror( '19' );
+				return false;
+			}
 		}
-		else{
-			$perm = '';
-			$group_name = '_superuser';
-		}
 
-		$_SESSION[ 'user' ][ 'perm' ] = $perm;
-		$this->perm = $perm;
+		$_SESSION[ 'user' ][ 'id' ] = $user[ 'id' ];
+		$_SESSION[ 'user' ][ 'email' ] = $email;
+		$_SESSION[ 'user' ][ 'password' ] = $password;
+		$_SESSION[ 'user' ][ 'perm' ] = @$perm;
+		$_SESSION[ 'user' ][ 'login' ] = true;
 
-		$_SESSION[ 'user' ][ 'group_name' ] = $group_name;
-		$this->group_name = $group_name;
+		// create new instance of user if required
+		if( $instance )
+			self::$instance = new User( );	
 
-		return true;
+		return true;;
 
 	}
 
@@ -281,38 +358,12 @@ class User{
 	 * @access public
 	 * @return bool
 	 */
-	public function verify( ){
+	public static function verify( ){
 
-		/**
-		 * check session vars are set
-		 */
-		if( !isset( $_SESSION[ 'user' ][ 'email' ] ) || !isset( $_SESSION[ 'user' ][ 'password' ] ) || !isset( $_SESSION[ 'user' ][ 'perm' ] ) )
-			return false;
+		if( isset( $_SESSION[ 'user'][ 'login' ] ) && $_SESSION[ 'user' ][ 'login' ] == true )
+			return true;
 
-		$this->email = $_SESSION[ 'user' ][ 'email' ];
-		$this->password = $_SESSION[ 'user' ][ 'password' ];
-
-		/**
-		 * get user data from db
-		 */
-		$verify = row( 'select * from ' . USERS . ' where email="' . $this->email . '" && password="' . $this->password . '"' );
-
-		/**
-		 * return false if user is not in db
-		 */
-		if( $verify == false )
-			return false;
-
-		/**
-		 * set other vars
-		 */
-		$this->id = $verify[ 'id' ];
-		$this->name = $verify[ 'name' ];
-		$this->group = $verify[ 'user_group' ];
-		$this->group_name = $_SESSION[ 'user' ][ 'group_name' ];
-		$this->perm = $_SESSION[ 'user' ][ 'perm' ];
-
-		return true;
+		return false;
 	}
 
 	/**
@@ -599,11 +650,14 @@ class User{
 	 * returns a group id if given a group
 	 * name
 	 *
-	 * @params string $name
+	 * @params string $name optional
 	 * @return int
 	 * @access public
 	 */
-	public function getGroupId( $name ){
+	public function getGroupId( $name = 'false' ){
+		if( !$name )
+			return $this->group;
+
 		if( !$this->_groups )
 			$this->_groups = rows( 'select id,name from ' . GROUPS );
 
@@ -621,11 +675,15 @@ class User{
 	 * returns a group name if given a group
 	 * id
 	 *
-	 * @params int $id
+	 * @params int $id optional
 	 * @return string
 	 * @access public
 	 */
-	public function getGroupName( $id ){
+	public function getGroupName( $id = 'false' ){
+
+		if( !$id )
+			return $this->group_name;
+
 		if( !$this->_groups )
 			$this->_groups = rows( 'select id,name from ' . GROUPS );
 
@@ -653,7 +711,19 @@ class User{
 	public static function permToArray( $permString ){
 		if( strpos( ',', $permString ) == -1 )
 			return array( $permString );
-		return explode( ',', $permstring );
+		return explode( ',', $permString );
+	}
+
+	/**
+	 * getData
+	 *
+	 * accessor method for the data array
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function getData( ){
+		return $this->data;
 	}
 }
 ?>

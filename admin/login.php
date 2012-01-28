@@ -51,19 +51,20 @@ elseif( isset( $_COOKIE[ 'furasta' ][ 'email' ] ) && isset( $_COOKIE[ 'furasta' 
  */
 if( @$check == 1 ){
 
-	$User = new User( );
-
-	$login = $User->login( $email, $pass );
+	$login = User::login( $email, $pass, array( 'a' ), true );
 
 	if( $login == true ){
 
 		/**
 		 * if remember is set then set cookie
 		 */
-		if( $remember == 1 )
+		if( $remember == 1 ){
+			$User = User::getInstance( );
 			$User->setCookie( );
+		}
 
                 header( 'location: ' . calculate_url( ) );
+		exit;
 	}
 
 }

@@ -6,7 +6,6 @@
 29. possibly combine all common ajax requests in admin area to one file with a switch statement, similar to wordpress
 30. create a page perms function for the frontend of the cms
 31. fix security hole, handling downloaded files _inc/files.php should enable login to download files as well as viewing files
-32. fix 404 error handling
 
 # TODO list for Furasta.Org v1.0 - General Release #
 
