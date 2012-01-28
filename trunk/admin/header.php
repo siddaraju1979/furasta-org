@@ -19,7 +19,7 @@ $admin_dir = HOME . 'admin/';
 $User = User::getInstance( );
 
 // make sure user is logged in
-if( !$User->verify( ) )
+if( !User::verify( ) )
         require 'login.php';
 
 if( !$User->hasPerm( 'a' ) )

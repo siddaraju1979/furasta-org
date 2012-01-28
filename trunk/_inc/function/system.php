@@ -56,9 +56,6 @@ function error( $error, $title = 'Error', $report = true ){
 		$error = $Template->errorToString( $error ); 
 	}
 
-	if( $report )
-		$User = User::getInstance( );
-
 	/**
 	 * if ajax loaded then error output
 	 * will be dfferent
@@ -67,7 +64,7 @@ function error( $error, $title = 'Error', $report = true ){
 		echo '<span style="font-weight:bold">' . $title . '</span><br />' . $error;
 		if( $report ){
 			generate_error_report( @$error_id, $error, $title );
-			if( $User->verify( ) )
+			if( User::verify( ) )
 				echo '<br /><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a>';
 		}
 		exit;	
@@ -79,7 +76,7 @@ function error( $error, $title = 'Error', $report = true ){
 	$Template->add( 'title', 'Fatal Error' );
 	if( $report ){
 		generate_error_report( @$error_id, $error, $title );
-		if( $User->verify( ) )
+		if( User::verify( ) )
 			$Template->add( 'content', '<br/><p><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a></p>' );
 	}
 	require HOME . 'admin/layout/error.php';
@@ -538,8 +535,6 @@ function meta_keywords( $string ){
 function generate_error_report( $error_id, $error, $name ){
 	$mysql = ( mysql_ping( ) == true ) ? 'active' : 'not active';	
 	global $PLUGINS;
-	$User = User::getInstance( );
-	$User->verify( );
 
 	$report = '
 	# Furasta.Org Version ' . VERSION . ' Error Report
@@ -552,13 +547,6 @@ function generate_error_report( $error_id, $error, $name ){
 
 	# mysql status
 	mysql : ' . $mysql . '
-
-	# user details
-	name : ' . $User->about( 'name' ) . '
-	id : ' . $User->about( 'id' ) . '
-	group : ' . $User->about( 'group' ) . '
-	group_name : ' . $User->about( 'group_name' ) . '
-	perm : ' . implode( ',', $User->about( 'perm' ) ) . '
 	';
 
 	file_put_contents( USERFILES . 'files/error-report.txt', $report );	

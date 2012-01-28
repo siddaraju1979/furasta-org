@@ -100,10 +100,10 @@ function row( $query, $alert = false ){
 	 * if the query fails check if alert is true or that
 	 * diagnostic mode is enabled for debugging
 	 */
-	if( !$array && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
-		error_log( 'Furasta.Org Notice: MySQL Row Error: ' . mysql_error( ), 0 );
-		error( 'There has been a problem executing this MySQL row query:<br/><br/>' . htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' . mysql_error( ) , 'MySQL Error' );
-	}
+//	if( $array && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
+//		error_log( 'Furasta.Org Notice: MySQL Row Error: ' . mysql_error( ), 0 );
+//		error( 'There has been a problem executing this MySQL row query:<br/><br/>' . htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' . mysql_error( ) , 'MySQL Error' );
+//	}
 
 	return $array;
 }

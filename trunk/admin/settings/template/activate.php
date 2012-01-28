@@ -13,13 +13,13 @@
 
 require '../../../_inc/define.php';
 
-$User = new User ( );
-
 /**
  * if user not logged in die 
  */
-if( !$User->verify( ) )
+if( !User::verify( ) )
 	die( );
+
+$User = User::getInstance( );
 
 /**
  * check if user has permission to activate template

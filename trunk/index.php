@@ -22,7 +22,7 @@ require '_inc/define.php';
  * mantinence template 
  */
 $User = new User( );
-$login = $User->verify( );
+$login = $User::verify( );
 if( $SETTINGS[ 'maintenance' ] == 1 && !$login )
 	maintenance_message( );
 
