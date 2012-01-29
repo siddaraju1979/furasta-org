@@ -11,6 +11,8 @@
  * @version    1.0
  */
 
+ob_start( );
+
 require '../_inc/define.php';
 require $function_dir . 'admin.php';
 

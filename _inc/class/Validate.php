@@ -89,6 +89,13 @@ class Validate{
 	 */
 	private $url_f = array( );
 
+	/**
+	 * file_f
+	 * 
+	 * @var array
+	 * @access private
+	 */
+
         /**
          * customErrorHandler 
          * 
@@ -186,6 +193,9 @@ class Validate{
         	                        case 'url':
                 	                        array_push( $this->url_f, $selector );
                         	        break;
+					case 'file':
+						$this->file_f{ $selector } = $value;					
+					break;
 	                        }
         	        }
 	        }
@@ -224,6 +234,9 @@ class Validate{
                         return false;
 
                 if( count( $this->url_f ) != 0 && $this->url( ) == false )
+                        return false;
+
+                if( count( $this->file_f ) != 0 && $this->file( ) == false )
                         return false;
 
                 return true;
@@ -393,7 +406,7 @@ class Validate{
 	 * url 
 	 * 
 	 * @access private
-	 * @return void
+	 * @return bool
 	 */
 	private function url( ){
 
@@ -406,6 +419,38 @@ class Validate{
                 }
 
 		return true;
+
+	}
+
+	/**
+	 * file
+	 *
+	 * @access private
+	 * @return bool
+	 */
+	private function file( ){
+
+		foreach( $this->file_f as $selector => $value ){
+			if( !empty( $value[ 'extensions' ] ) ){
+				$val = $value[ 'extensions' ];
+				$file = $_FILES[ $selector ][ 'name' ];
+				$extension = end( explode( '.', $file ) );
+				$allowed_extensions = ( strpos( ',', $val ) == -1 ) ? array( $val ) : explode( ',', $val );
+				if( !in_array( $allowed_extensions, $extension ) ){
+					$this->error = 20; 
+					$this->errorHandler( htmlspecialchars( $val ) );
+					return false;
+				}
+			}
+			if( !empty( $value[ 'size' ] ) ){
+				$size = ( $_FILES[ $selector ][ 'size' ] / 1024 );
+				if( $size < $value[ 'size' ] ){
+					$this->error = 21; 
+					$this->errorHandler( htmlspecialchars( $value[ 'size' ] ) );
+					return false;
+				}
+			}
+		}
 
 	}
 

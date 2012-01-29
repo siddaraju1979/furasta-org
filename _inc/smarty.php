@@ -13,8 +13,6 @@
  * @version    1.0
  */
 
-header('Content-Type: text/html; charset=UTF-8');
-
 /**
  * @todo move to _user dir 
  */
@@ -57,6 +55,10 @@ $Smarty->assign( 'page_edited', $Page[ 'edited' ] );
 $Smarty->assign( 'page_user', $Page[ 'user' ] );
 $Smarty->assign( 'page_parent_id', $Page[ 'parent' ] );
 $Smarty->assign( 'page_type', $Page[ 'type' ] );
+
+// assign other vars
+$Smarty->assign( 'logged_in', User::verify( ) ); 
+$Smarty->assign( 'home', HOME );
 
 /**
  * assign site vars

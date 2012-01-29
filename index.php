@@ -13,6 +13,10 @@
  * @package    admin_overview
  */
 
+ob_start('ob_gzhandler');
+header('Connection: close');
+header('Content-type: text/html; charset: UTF-8');
+
 require '_inc/define.php';
 
 /**
@@ -57,4 +61,15 @@ if( !$User->frontendPagePerm( $perm[ 0 ] ) )
 $Plugins->hook( 'frontend', 'on_load' );
 
 require HOME.'_inc/smarty.php';
+
+/**
+ * show output, cancel request connection
+ * and execute plugin
+ */
+ignore_user_abort( true );
+ob_end_flush();
+flush();
+
+// execute plugin on_finish stuff
+$Plugins->hook( 'frontend', 'on_finish' );
 ?>
