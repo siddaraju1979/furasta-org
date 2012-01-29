@@ -44,6 +44,7 @@ if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
         $homepage = addslashes( $_POST[ 'Homepage' ] );
         $group = addslashes( $_POST[ 'Group' ] );
         query( 'update ' . USERS . ' set name="' . $name . '",email="' . $email . '", homepage="' . $homepage . '", user_group="' . $group . '" where id=' . $id );
+	cache_clear( 'USERS' );
 }
 
 

@@ -40,5 +40,8 @@ if( num( 'select name from ' . GROUPS . ' where name="' . $name .'"' ) != 0 )
 mysql_query( 'insert into ' . GROUPS . ' values( "", "' . $name . '", "' . $perms . '" )' );
 $id = mysql_insert_id( );
 
+// clear caches
+cache_clear( 'USERS' );
+
 die( print( $id ) );
 ?>

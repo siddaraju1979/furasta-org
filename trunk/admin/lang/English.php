@@ -32,6 +32,8 @@ $lang_errors = array(
 	'17'=> 'Pages Deleted',
 	'18'=> 'The %1 field must be at most %2 characters long',
 	'19'=> 'You do not have privellages to log into this area',
+	'20'=> 'The file must be in one of the following formats: %1',
+	'21'=> 'The file is too large. It must be a maximum of %1 bytes',
 );
 
 $lang = array( 

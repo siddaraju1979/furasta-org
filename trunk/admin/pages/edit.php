@@ -57,7 +57,7 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
         $type = addslashes( $_POST[ 'Type' ] );
         $template = addslashes( $_POST[ 'Template' ] );
         $content = addslashes( $_POST[ 'PageContent' ] );
-        $slug = addslashes( $_POST[ 'slug' ] );
+        $slug = str_replace( ' ', '-', $name );
         $home = ( int ) @$_POST[ 'Homepage' ];
         $navigation = ( @$_POST[ 'Navigation' ] == 1 ) ? 0 : 1;
         $parent = (int) $_POST[ 'Parent' ];

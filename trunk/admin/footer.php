@@ -11,8 +11,21 @@
  * @version    1.0
  */
 
-
+// start output
+ob_start('ob_gzhandler');
+header('Connection: close');
+header('Content-type: text/html; charset: UTF-8');
 
 require $admin_dir . 'layout/admin.php';
-exit;
+
+/**
+ * echo output, cancel request connection,
+ * execute admin on finish
+ */
+ignore_user_abort( true );
+ob_end_flush();
+flush();
+
+// execute on finish plugin code
+$Plugins->hook( 'admin', 'on_finish' );
 ?>

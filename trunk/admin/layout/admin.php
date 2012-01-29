@@ -12,9 +12,6 @@
  * @package    admin_template
  */
 
-ob_start('ob_gzhandler');
-header('Content-type: text/html; charset: UTF-8');
-
 /**
  * load javascript and CSS files 
  */
@@ -101,5 +98,4 @@ echo '
 </script>
 </html>';
 
-ob_end_flush();
 ?>

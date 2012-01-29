@@ -292,6 +292,10 @@ class User{
 	 */
 	public static function login( $email, $password, $permissions = array( ), $instance = false ){
 
+		// already logged in, so destroy old login
+		if( User::verify( ) )
+			User::logout( );
+
 		$user = row( 'select id,hash,user_group from ' . USERS . ' where email="' . $email . '" and password="' . $password . '"' );
 
 		// user not in db

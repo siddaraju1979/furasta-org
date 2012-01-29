@@ -56,6 +56,7 @@ $smarty->assign( 'siteurl', SITEURL );
 $time=microtime(true)-START_TIME;
 $smarty->assign('page_load_time',$time);
 
+$smarty->assign( 'home', HOME );
 $smarty->assign('site_title',$SETTINGS['site_title']);
 $smarty->assign('site_subtitle',$SETTINGS['site_subtitle']);
 
