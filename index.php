@@ -69,7 +69,7 @@ require HOME.'_inc/smarty.php';
 ignore_user_abort( true );
 ob_end_flush();
 flush();
-
+file_put_contents( HOME . 'test', 'tetetetete' );
 // execute plugin on_finish stuff
 $Plugins->hook( 'frontend', 'on_finish' );
 ?>

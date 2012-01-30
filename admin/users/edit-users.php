@@ -27,9 +27,6 @@ $conds = array(
 	'Email' => array(
 		'required'	=>	true,
 		'email'		=>	true
-	),
-	'Homepage' => array(
-		'url'		=>	true
 	)
 );
 
@@ -41,9 +38,8 @@ $valid = validate( $conds, "#users-edit", 'Edit-User' );
 if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
         $name = addslashes( $_POST[ 'Name' ] );
         $email = addslashes( $_POST[ 'Email' ] );
-        $homepage = addslashes( $_POST[ 'Homepage' ] );
         $group = addslashes( $_POST[ 'Group' ] );
-        query( 'update ' . USERS . ' set name="' . $name . '",email="' . $email . '", homepage="' . $homepage . '", user_group="' . $group . '" where id=' . $id );
+        query( 'update ' . USERS . ' set name="' . $name . '",email="' . $email . '", user_group="' . $group . '" where id=' . $id );
 	cache_clear( 'USERS' );
 }
 
@@ -87,10 +83,6 @@ $content='
                 	<tr>
 				<td>Email:</td>
 				<td><input type="text" name="Email" value="'.$user['email'].'"/></td>
-			</tr>
-			<tr>
-				<td>Homepage:</td>
-	                        <td><input type="text" name="Homepage" value="' . $user['homepage'] . '"/></td>
 			</tr>
 			<tr>
 				<td>Group:</td>

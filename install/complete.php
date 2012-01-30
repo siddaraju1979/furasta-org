@@ -43,8 +43,8 @@ mysql_query('create table '.$pages.' (id int auto_increment primary key,name tex
 mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
 
 mysql_query('drop table if exists '.$users);
-mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,homepage text,user_group text,hash text,reminder text)');
-mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","","_superuser","'.$hash.'","")');
+mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,user_group text,hash text,reminder text, data text)');
+mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","_superuser","'.$hash.'","","")');
 
 mysql_query( 'drop table if exists ' . $groups );
 mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text )' );

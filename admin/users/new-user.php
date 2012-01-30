@@ -48,7 +48,7 @@ $hash = md5( mt_rand( ) );
 /**
  * add user to database 
  */
-mysql_query( 'insert into ' . USERS . ' values( "", "' . $name . '", "' . $email . '", "' . md5( $password ) . '", "", "' . $group . '", "' . $hash. '","", "" )' );
+mysql_query( 'insert into ' . USERS . ' values( "", "' . $name . '", "' . $email . '", "' . md5( $password ) . '", "' . $group . '", "' . $hash. '","", "" )' );
 $id = mysql_insert_id( );
 
 /**
