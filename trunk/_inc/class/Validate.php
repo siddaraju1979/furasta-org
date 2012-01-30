@@ -274,7 +274,7 @@ class Validate{
 	private function required( ){
 
                 foreach( $this->required_f as $field ){
-                        if( empty( $_POST[ $field ] ) ){
+                        if( empty( $_POST[ $field ] ) && ! isset( $this->file_f[ $field ] ) ){					
 				$this->error = 5;
                                 $this->errorHandler( htmlspecialchars( $field ) );
                                 return false;
@@ -436,21 +436,23 @@ class Validate{
 				$file = $_FILES[ $selector ][ 'name' ];
 				$extension = end( explode( '.', $file ) );
 				$allowed_extensions = ( strpos( ',', $val ) == -1 ) ? array( $val ) : explode( ',', $val );
-				if( !in_array( $allowed_extensions, $extension ) ){
+				if( !in_array( $extension, $allowed_extensions ) ){
 					$this->error = 20; 
 					$this->errorHandler( htmlspecialchars( $val ) );
 					return false;
 				}
 			}
 			if( !empty( $value[ 'size' ] ) ){
-				$size = ( $_FILES[ $selector ][ 'size' ] / 1024 );
-				if( $size < $value[ 'size' ] ){
+				$size = $_FILES[ $selector ][ 'size' ];
+				if( $size > $value[ 'size' ] ){
 					$this->error = 21; 
 					$this->errorHandler( htmlspecialchars( $value[ 'size' ] ) );
 					return false;
 				}
 			}
 		}
+
+		return true;
 
 	}
 
