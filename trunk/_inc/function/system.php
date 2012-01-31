@@ -256,7 +256,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'GROUPS' => GROUPS,
 		'OPTIONS' => OPTIONS,
 		'SITEURL' => SITEURL,
-		'USERFILES' => USERFILES,
+		'USER_FILES' => USER_FILES,
 		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,
 		'LANG' => LANG,
 	);
@@ -549,7 +549,7 @@ function generate_error_report( $error_id, $error, $name ){
 	mysql : ' . $mysql . '
 	';
 
-	file_put_contents( USERFILES . 'files/error-report.txt', $report );	
+	file_put_contents( USER_FILES . 'files/error-report.txt', $report );	
 }
 
 /**

@@ -51,6 +51,14 @@ $hash = md5( mt_rand( ) );
 mysql_query( 'insert into ' . USERS . ' values( "", "' . $name . '", "' . $email . '", "' . md5( $password ) . '", "' . $group . '", "' . $hash. '","", "" )' );
 $id = mysql_insert_id( );
 
+// add user dir to database
+$public = PUBLIC_FILES . 'users/' . $id;
+if( !is_dir( $public ) )
+	mkdir( $public );
+$private = PRIVATE_FILES . 'users/' . $id;
+if( !is_dir( $private ) )
+	mkdir( $private );
+
 /**
  * send email to user 
  */

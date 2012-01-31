@@ -12,7 +12,7 @@
  * @package    admin_settings
  */
 
-$zip_file=USERFILES.'update.zip';
+$zip_file=USER_FILES.'update.zip';
 if(!file_exists($zip_file))
 	exit;
 

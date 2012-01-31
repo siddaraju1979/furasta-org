@@ -27,11 +27,11 @@ function cache($name,$content,$dir=''){
         if($dir!=''){
 		if(substr($dir,-1)!='/')
 	                $dir=$dir.'/';
-		if(!is_dir(USERFILES.'cache/'.$dir))
-			mkdir(USERFILES.'cache/'.$dir);
+		if(!is_dir(USER_FILES.'cache/'.$dir))
+			mkdir(USER_FILES.'cache/'.$dir);
 	}
 
-	$file=USERFILES.'cache/'.$dir.$name;
+	$file=USER_FILES.'cache/'.$dir.$name;
 	return file_put_contents($file,$content);
 }
 
@@ -49,7 +49,7 @@ function cache_get($name,$dir=''){
         if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 
-	$file=USERFILES.'cache/'.$dir.$name;
+	$file=USER_FILES.'cache/'.$dir.$name;
 	return file_get_contents($file);
 }
 
@@ -68,7 +68,7 @@ function cache_is_good($name,$length,$dir=''){
         if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 	
-	$file=USERFILES.'cache/'.$dir.$name;
+	$file=USER_FILES.'cache/'.$dir.$name;
 
 	if(!file_exists($file))
 		return false;
@@ -93,7 +93,7 @@ function cache_clear($dir=''){
 	if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
-	$dir=USERFILES.'cache/'.$dir;
+	$dir=USER_FILES.'cache/'.$dir;
 
 	if(!is_dir($dir))
 		return false;
@@ -132,7 +132,7 @@ function cache_exists($file,$dir=''){
 	if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
-	return (file_exists(USERFILES.'cache/'.$dir.$file));
+	return (file_exists(USER_FILES.'cache/'.$dir.$file));
 }
 
 

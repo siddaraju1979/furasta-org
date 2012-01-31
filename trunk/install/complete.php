@@ -42,9 +42,11 @@ mysql_query('drop table if exists '.$pages);
 mysql_query('create table '.$pages.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text, home int,display int)');
 mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
 
+// user
 mysql_query('drop table if exists '.$users);
 mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,user_group text,hash text,reminder text, data text)');
 mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","_superuser","'.$hash.'","","")');
+$user_id = mysql_insert_id( );
 
 mysql_query( 'drop table if exists ' . $groups );
 mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text )' );
@@ -67,7 +69,9 @@ define(\'TEMPLATE_DIR\',\''.HOME.'_www/\');
 define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
 define(\'SITEURL\',\''.$site_url.'\');
-define(\'USERFILES\',\''.$user_files.'\');
+define(\'USER_FILES\',\''.$user_files.'\');
+define(\'PUBLIC_FILES\',\''.$user_files.'files/public\');
+define(\'PRIVATE_FILES\',\''.$user_files.'files/private\');
 define(\'DIAGNOSTIC_MODE\',\'0\');
 define(\'LANG\', \'English\' );
 
@@ -93,21 +97,32 @@ $DB=array(
 
 file_put_contents(HOME.'.settings.php',$filecontents) or error('Please grant <i>0777</i> write access to the <i>'.HOME.'</i> directory then reload this page to complete installation.');
 
-$cache_dir=$user_files.'files';
-$files_dir=$user_files.'cache';
-$backup_dir = $user_files . 'backup';
+// dirs to create
+$dirs = array(
+	// system dirs
+	$user_files . 'cache',
+	$user_files . 'backup',
+	$user_files . 'smarty',
+	$user_files . 'smarty/templates',
+	$user_files . 'smarty/template_c',
+	
+	// files dirs
+	$user_files . 'files',
+	$user_files . 'files/private',
+	$user_files . 'files/private/users',
+	$user_files . 'files/private/users/' . $user_id,
+	$user_files . 'files/private/groups',
+	$user_files . 'files/public',
+	$user_files . 'files/public/users',
+	$user_files . 'files/public/users/' . $user_id,
+	$user_files . 'files/public/groups',
+);
 
-if( !is_dir( $user_files ) )
-	mkdir( $user_files );
-
-if( !is_dir( $backup_dir ) )
-	mkdir( $backup_dir );
-
-if(!is_dir($cache_dir))
-	mkdir($cache_dir);
-
-if(!is_dir($files_dir))
-	mkdir($files_dir);
+// create dirs
+foreach( $dirs as $dir ){
+	if( !is_dir( $dir ) )
+		mkdir( $dir );
+}
 
 $htaccess=
 	"# .htaccess - Furasta.Org\n".

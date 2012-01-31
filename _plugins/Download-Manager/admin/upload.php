@@ -5,7 +5,7 @@
 if(isset($_POST['Upload'])){
 	if(isset($_FILES['Upload-Package'])&&file_exists($_FILES['Upload-Package']['tmp_name'])){
 		$file_name=md5($_FILES['Upload-Package']['name']);
-        	if(!move_uploaded_file($_FILES['Upload-Package']['tmp_name'],USERFILES.'files/downloads/'.$file_name.'.zip'))
+        	if(!move_uploaded_file($_FILES['Upload-Package']['tmp_name'],USER_FILES.'files/downloads/'.$file_name.'.zip'))
 			error('There has been a fatal error moving the uploaded package, please check your permissions in the '.HOME.' directory','Upload Error');
 	}
 	else

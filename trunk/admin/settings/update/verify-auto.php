@@ -26,7 +26,7 @@ if( !file_exists( $file ) )
 
 $update = file_get_contents( $file );
 
-file_put_contents( USERFILES . 'update.zip', $update );
+file_put_contents( USER_FILES . 'update.zip', $update );
 
 require 'perform-update.php';
 

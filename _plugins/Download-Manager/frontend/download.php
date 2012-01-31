@@ -8,7 +8,7 @@ $file=addslashes(@$_GET['filename']);
 if($file=='')
 	exit;
 
-$file_loc=USERFILES.'files/downloads/'.$file.'.zip';
+$file_loc=USER_FILES.'files/downloads/'.$file.'.zip';
 if(!file_exists($file_loc))
 	exit;
 
