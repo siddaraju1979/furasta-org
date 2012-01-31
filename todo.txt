@@ -8,6 +8,7 @@
 31. fix security hole, handling downloaded files _inc/files.php should enable login to download files as well as viewing files
 34. add file validation functions to validation plugin, remove translation for frontend. follow example of connect4 validation
 35. add _user/files/users ,_user/files/groups and _user/files/public. make dir for each user and dir for each group. add permissions to file viewing in _inc/files.php
+36. remove language dependencies from _inc/js/system.js
 
 # TODO list for Furasta.Org v1.0 - General Release #
 

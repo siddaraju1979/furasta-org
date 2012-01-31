@@ -24,7 +24,7 @@ if( is_dir( HOME . 'update' ) )
 	remove_dir(HOME.'update');
 
 unlink(HOME.'update.php');
-unlink(USERFILES.'update.zip');
+unlink(USER_FILES.'update.zip');
 
 die('ok');
 ?>

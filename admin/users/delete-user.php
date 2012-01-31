@@ -40,6 +40,14 @@ $message=$user['name'].',
         $headers='From: support@furasta.org'."\r\n".'Reply-To: support@furasta.org'."\r\n".'X-Mailer: PHP/' .phpversion();
         mail($user['email'],$subject,$message,$headers);
 
+// delete user dir
+$public = PUBLIC_FILES . 'users/' . $id;
+if( is_dir( $public ) )
+	remove_dir( $public );
+$private = PRIVATE_FILES . 'users/' . $id;
+if( is_dir( $private ) )
+	remove_dir( $private );
+
 query('delete from '.USERS.' where id='.$id);
 
 cache_clear( 'USERS' );

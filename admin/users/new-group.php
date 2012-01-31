@@ -35,10 +35,18 @@ if( num( 'select name from ' . GROUPS . ' where name="' . $name .'"' ) != 0 )
 	die( 'error' ); 
 
 /**
- * add user to database 
+ * add group to database 
  */
 mysql_query( 'insert into ' . GROUPS . ' values( "", "' . $name . '", "' . $perms . '" )' );
 $id = mysql_insert_id( );
+
+// make group dirs
+$public = PUBLIC_FILES . 'groups/' . $id;
+if( !is_dir( $public ) )
+	mkdir( $public );
+$private = PRIVATE_FILES . 'groups/' . $id;
+if( !is_dir( $private ) )
+	mkdir( $private );
 
 // clear caches
 cache_clear( 'USERS' );

@@ -13,16 +13,12 @@
  * @version    1.0
  */
 
-/**
- * @todo move to _user dir 
- */
-$smarty_dir = HOME . '_inc/Smarty/';
-
-require $smarty_dir . 'libs/Smarty.class.php';
+require HOME . '_inc/Smarty/libs/Smarty.class.php';
 require $function_dir . 'frontend.php';
 
 $Smarty = new Smarty( );
 
+$smarty_dir = USER_FILES . 'smarty/';
 $Smarty->template_dir = $smarty_dir . 'templates';
 $Smarty->compile_dir = $smarty_dir . 'templates_c';
 

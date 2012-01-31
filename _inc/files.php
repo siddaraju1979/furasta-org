@@ -20,8 +20,8 @@ $name=@$_GET['name'];
 if($name=='')
 	error( 'You must select an item to view.','No File Selected', false );
 
-if(file_exists(USERFILES . 'files/' . $name) && strpos( $name, '..' ) === false){
-	$content=file_get_contents(USERFILES . 'files/' . $name);
+if(file_exists(USER_FILES . 'files/' . $name) && strpos( $name, '..' ) === false){
+	$content=file_get_contents(USER_FILES . 'files/' . $name);
 	echo $content;
 }
 else

@@ -13,14 +13,14 @@
  * 			   _user dir and create that dir during installation.
  */
 
-if(!is_dir(USERFILES.'backup'))
-	mkdir(USERFILES.'backup');
+if(!is_dir(USER_FILES.'backup'))
+	mkdir(USER_FILES.'backup');
 
 $dump=new MYSQL_DUMP($DB['host'],$DB['user'],$DB['pass']);
 
 $sql=$dump->dumpDB($DB['name']);
 
-$dump->save_sql($sql,USERFILES.'backup/db-backup.sql');
+$dump->save_sql($sql,USER_FILES.'backup/db-backup.sql');
 
 die('ok');
 ?>
