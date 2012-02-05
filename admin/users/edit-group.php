@@ -43,45 +43,10 @@ if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
 	cache_clear( 'USERS' );
 }
 
-$javascript = '
-$( document ).ready( function( ){
+$Template->loadJavascript( 'admin/users/edit-group.js' );
 
-	$( "#users-edit" ).submit( function( ){
-
-		var perms_array = [];
-
-		$( "input[name=\'perms\']:checked" ).each( function( i ){
-
-			perms_array[ i ] = $( this ).val( );
-
-		});
-
-		perms_array = perms_array.join( "," );
-
-		$( "input[ name=\'perm\' ]" ).val( perms_array );
-
-	});
-
-});
-';
-
-$Template->add( 'javascript', $javascript );
-
-/**
- * get perm checkboxes into array so that
- * plugins can alter/expand them 
- */
-$perms = array(
-		'a' => 'Login To Admin Area',
-                'e' => 'Edit Pages',
-                'c' => 'Create Pages',
-                'd' => 'Delete Pages',
-                't' => 'Manage Trash',
-                's' => 'Edit Settings',
-                'u' => 'Edit Users'
-);
-
-$perms = $Plugins->filter( 'admin', 'filter_group_permissions', $perms );
+// get default permissions
+require_once HOME . 'admin/users/permissions.php';
 
 $group = row( 'select name,perm from ' . GROUPS . ' where id=' . $id . ' limit 1' );
 
@@ -102,7 +67,7 @@ $content='
 				<td><input type="text" name="Name" value="' . $group[ 'name' ] . '"/></td>
 			</tr>
 			<tr>
-				<td colspan="2"><h3>Permissions</h3></td>
+				<td colspan="2"><h3>General Permissions</h3></td>
 			</tr>
                         <tr><td colspan="2">';
 

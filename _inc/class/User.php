@@ -719,6 +719,31 @@ class User{
 	}
 
 	/**
+	 * createUserDirs
+	 * 
+	 * creates the directory structure for users
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public static function createUserDirs( $id ){
+		$dirs = array(
+			USER_FILES . 'files/users/' . $id,
+			USER_FILES . 'files/users/' . $id . '/public',
+			USER_FILES . 'files/users/' . $id . '/private'
+		);
+
+		$mkdir = true;
+		foreach( $dirs as $dir ){
+			if( !is_dir( $dir ) )
+				mkdir( $dir ) || $mkdir == false;
+		}
+
+		return $mkdir;
+	}
+
+	/**
 	 * getData
 	 *
 	 * accessor method for the data array

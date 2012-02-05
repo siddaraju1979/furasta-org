@@ -52,12 +52,7 @@ mysql_query( 'insert into ' . USERS . ' values( "", "' . $name . '", "' . $email
 $id = mysql_insert_id( );
 
 // add user dir to database
-$public = PUBLIC_FILES . 'users/' . $id;
-if( !is_dir( $public ) )
-	mkdir( $public );
-$private = PRIVATE_FILES . 'users/' . $id;
-if( !is_dir( $private ) )
-	mkdir( $private );
+User::createUserDirs( $id );
 
 /**
  * send email to user 

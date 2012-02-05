@@ -13,21 +13,8 @@
 
 $Template->loadJavascript( 'admin/users/groups.js' );
 
-/**
- * get perm checkboxes into array so that
- * plugins can alter/expand them 
- */
-$perms = array(
-		'a' => 'Login To Admin Area',
-		'e' => 'Edit Pages',
-		'c' => 'Create Pages',
-		'd' => 'Delete Pages',
-		't' => 'Manage Trash',
-		's' => 'Edit Settings',
-		'u' => 'Edit Users'
-);
-
-$perms = $Plugins->filter( 'admin', 'filter_group_permissions', $perms );
+// load default permissions
+require_once HOME . 'admin/users/permissions.php';
 
 $content='
 <div id="new-group-dialog" title="New Group" style="display:none">

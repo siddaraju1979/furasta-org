@@ -174,7 +174,7 @@ function htaccess_rewrite(){
 	$rules = array(
 		'admin' => 'RewriteRule ^admin[/]*$ /admin/index.php [L]',
 		'sitemap' => 'RewriteRule ^sitemap.xml /_inc/sitemap.php [L]',
-		'files' => 'RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [L]',
+		'files' => 'RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [QSA,L]',
 		'pages' => 'RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]',
 	);
 

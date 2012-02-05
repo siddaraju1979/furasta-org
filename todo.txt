@@ -2,13 +2,12 @@
 
 10. Develop a few plugins to test, and adjust, the plugin architecture: File Manager (*), News Plugin (with RSS), something else..
 17. Finish the password reminder!
-25. Create bugs@furasta.org and support@furasta.org emails
-29. possibly combine all common ajax requests in admin area to one file with a switch statement, similar to wordpress
-30. create a page perms function for the frontend of the cms
 31. fix security hole, handling downloaded files _inc/files.php should enable login to download files as well as viewing files
 34. add file validation functions to validation plugin, remove translation for frontend. follow example of connect4 validation
-35. add _user/files/users ,_user/files/groups and _user/files/public. make dir for each user and dir for each group. add permissions to file viewing in _inc/files.php
+35. add permissions to file viewing in _inc/files.php
 36. remove language dependencies from _inc/js/system.js
+37. upgrade users section in admin area to using email function instead of mail
+38. add user file perms, group file perms should be added - extra field in groups
 
 # TODO list for Furasta.Org v1.0 - General Release #
 
