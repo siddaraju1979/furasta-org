@@ -70,8 +70,6 @@ define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
 define(\'SITEURL\',\''.$site_url.'\');
 define(\'USER_FILES\',\''.$user_files.'\');
-define(\'PUBLIC_FILES\',\''.$user_files.'files/public\');
-define(\'PRIVATE_FILES\',\''.$user_files.'files/private\');
 define(\'DIAGNOSTIC_MODE\',\'0\');
 define(\'LANG\', \'English\' );
 
@@ -108,21 +106,24 @@ $dirs = array(
 	
 	// files dirs
 	$user_files . 'files',
-	$user_files . 'files/private',
-	$user_files . 'files/private/users',
-	$user_files . 'files/private/users/' . $user_id,
-	$user_files . 'files/private/groups',
-	$user_files . 'files/public',
-	$user_files . 'files/public/users',
-	$user_files . 'files/public/users/' . $user_id,
-	$user_files . 'files/public/groups',
+	$user_files . 'files/users',
+	$user_files . 'files/users/' . $user_id,
+	$user_files . 'files/users/' . $user_id . '/public',
+	$user_files . 'files/users/' . $user_id . '/private',
+	$user_files . 'files/groups',
+	$user_files . 'files/groups/_superuser',
+	$user_files . 'files/groups/_superuser/public',
+	$user_files . 'files/groups/_superuser/private'
 );
 
 // create dirs
+$match = true;
 foreach( $dirs as $dir ){
 	if( !is_dir( $dir ) )
-		mkdir( $dir );
+		mkdir( $dir ) || $match = false;
 }
+if( $match == false )
+	die( 'could not create some of the required directories in the user dir. make sure your user dir is writable' );
 
 $htaccess=
 	"# .htaccess - Furasta.Org\n".

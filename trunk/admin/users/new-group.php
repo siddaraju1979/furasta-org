@@ -41,12 +41,7 @@ mysql_query( 'insert into ' . GROUPS . ' values( "", "' . $name . '", "' . $perm
 $id = mysql_insert_id( );
 
 // make group dirs
-$public = PUBLIC_FILES . 'groups/' . $id;
-if( !is_dir( $public ) )
-	mkdir( $public );
-$private = PRIVATE_FILES . 'groups/' . $id;
-if( !is_dir( $private ) )
-	mkdir( $private );
+Group::createGroupDirs( $id );
 
 // clear caches
 cache_clear( 'USERS' );

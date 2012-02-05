@@ -14,19 +14,42 @@
  */
 
 require '../_inc/define.php';
+require HOME . '_inc/function/files.php';
 
 $name=@$_GET['name'];
 
-if($name=='')
-	error( 'You must select an item to view.','No File Selected', false );
+// make sure name is valid
+if($name==''||strpos( $name, '..' ) !== false )
+	error( 'The file request is invalid.','Invalid Filename', false );
 
-if(file_exists(USER_FILES . 'files/' . $name) && strpos( $name, '..' ) === false){
-	$content=file_get_contents(USER_FILES . 'files/' . $name);
-	echo $content;
+$name = explode( '/', $name );
+$section = ( @$name[ 0 ] == 'users' ) ? 'users' : 'groups'; // users or groups
+$id = ( int ) @$name[ 1 ]; // user/group id
+$status = ( @$name[ 2 ] == 'public' ) ? 'public' : 'private'; // public or private
+$filename = @$name[ 3 ];
+
+// if filename or id is 0 then
+if( empty( $filename ) || $id == 0 )
+	error( 'The file request is invalid.','Invalid Filename', false );
+
+// if private file, check users are logged in
+if( $status == 'private' && !User::verify( ) )
+	error( 'You do not have sufficient privellages to view this item.', 'Permissions Error', false );
+
+$path = USER_FILES . 'files/' . $section . '/' . $id . '/' . $status . '/' . $filename;
+if( !file_exists( $path ) )
+	error( 'The requested file does not exist.', '404 - File Not Found', false );
+
+/**
+ * determine how to load file
+ */
+if( @getimagesize( $path ) ){ // image
+	$width = ( empty( $_GET[ 'width' ] ) ) ? false : $_GET[ 'width' ];
+	display_image( $path, $width );
 }
-else
-	error( 'File does not exist.','404 - Not Found', false);
-
+else{ // download file
+	download_file( $path );
+}
 exit;
 
 ?>

@@ -231,3 +231,33 @@ function cache_js( $name, $file ){
 	return SITEURL . '_inc/js/js.php?' . $cache_file;
 
 }
+
+/**
+ * cache_image
+ * 
+ * Used to make a cache of an image that could be
+ * hardware intensive to re-render, for usage later
+ *
+ * @param mixed $name of cache file 
+ * @param mixed $image to be cached
+ * @access public
+ * @return bool
+ */
+function cache_image( $name, $image ){
+	$file = USER_FILES . 'cache/IMAGES/' . $name;
+	return imagepng( $image, $file );
+}
+
+/**
+ * cache_get_image
+ *
+ * Used to retrieve cached images
+ *  
+ * @param mixed $name of cache file
+ * @access public
+ * @return bool
+ */
+function cache_get_image( $name ){
+	$file = USER_FILES . 'cache/IMAGES/' . $name;
+	return imagecreatefrompng( $file );
+}

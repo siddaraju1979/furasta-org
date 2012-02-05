@@ -44,7 +44,7 @@ if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
 }
 
 
-$user = row( 'select name,user_group,email,homepage,password from ' . USERS . ' where id=' . addslashes( $id ) . ' limit 1', true );
+$user = row( 'select name,user_group,email,password from ' . USERS . ' where id=' . addslashes( $id ) . ' limit 1', true );
 
 $javascript='
 $( document ).ready( function( ){
