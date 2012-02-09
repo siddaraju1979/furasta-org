@@ -13,6 +13,9 @@
  * @package    admin_settings
  */
 
+if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
+        exit;
+
 $zip=new zipfile();
 
 $files=scandir(HOME);

@@ -744,6 +744,23 @@ class User{
 	}
 
 	/**
+	 * removeUserDirs
+	 * 
+	 * removes the directory structure for users
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public static function removeUserDirs( $id ){
+		$dir = USER_FILES . 'files/users/' . $id;
+		$rmdir = true;
+		if( is_dir( $dir ) )
+			remove_dir( $dir ) || $rmdir = false;
+		return $rmdir;
+	}
+
+	/**
 	 * getData
 	 *
 	 * accessor method for the data array
