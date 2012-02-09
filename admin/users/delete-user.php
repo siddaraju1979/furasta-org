@@ -41,12 +41,7 @@ $message=$user['name'].',
         mail($user['email'],$subject,$message,$headers);
 
 // delete user dir
-$public = PUBLIC_FILES . 'users/' . $id;
-if( is_dir( $public ) )
-	remove_dir( $public );
-$private = PRIVATE_FILES . 'users/' . $id;
-if( is_dir( $private ) )
-	remove_dir( $private );
+User::removeUserDirs( $id );
 
 query('delete from '.USERS.' where id='.$id);
 

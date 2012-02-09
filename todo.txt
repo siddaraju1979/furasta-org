@@ -8,6 +8,7 @@
 36. remove language dependencies from _inc/js/system.js
 37. upgrade users section in admin area to using email function instead of mail
 38. add user file perms, group file perms should be added - extra field in groups
+39. simplify the process of plugins adding menu items, maybe leave filter method but add shorthand method through plugin array
 
 # TODO list for Furasta.Org v1.0 - General Release #
 
@@ -39,3 +40,4 @@
 18. use jquery.cookie.js for admin overview area
 19. load select boxes in pages area via ajax
 20. all content, including ajax requests and plugins should run through the Template class for both clarity and compression
+21. enable custom templates for the email function

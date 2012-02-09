@@ -115,4 +115,24 @@ function resize_dimensions( $width, $height, $old_width, $old_height ){
     return $return; 
 }
 
+/**
+ * download_file
+ *
+ * sends a given file to the user
+ *
+ * @params string $file
+ * @return void
+ */
+function download_file( $file ){
+
+	$type = mime_content_type( $file );
+	$name = basename( $file );	
+
+	header( 'Content-type: ' . $type );
+	header( 'Content-Disposition: attachment; filename="' . $name . '" ');
+
+	echo file_get_contents( $file );
+
+}
+
 ?>

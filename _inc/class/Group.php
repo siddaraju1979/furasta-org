@@ -43,6 +43,23 @@ class Group{
 		return $mkdir;
 	}
 
+	/**
+	 * removeGroupDirs
+	 * 
+	 * removes the directory structure for a given group
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public static function removeGroupDirs( $id ){
+		$dir = USER_FILES . 'files/groups/' . $id;
+		$rmdir = true;
+		if( is_dir( $dir ) )
+			remove_dir( $dir ) || $rmdir = false;
+		return $rmdir;
+	}
+
 }
 
 ?>

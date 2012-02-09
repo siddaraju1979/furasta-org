@@ -11,7 +11,8 @@
  * @package    admin_settings
  */
 
-
+if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
+	exit;
 
 echo '
 <script type="text/javascript">
@@ -40,5 +41,5 @@ echo '
 	</form>
 
 </div>';
-
+exit;
 ?>

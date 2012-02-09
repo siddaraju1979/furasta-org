@@ -9,9 +9,10 @@
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
  * @package    admin_settings
- * @todo	   change the location of the backup folder to inside the
- * 			   _user dir and create that dir during installation.
  */
+
+if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
+        exit;
 
 if(!is_dir(USER_FILES.'backup'))
 	mkdir(USER_FILES.'backup');

@@ -39,19 +39,11 @@ foreach( $users as $user ){
 
 // delete user / group dirs
 $users = rows( 'select id from ' . USERS . ' where user_group="' . $id . '"' );
-$public = PUBLIC_FILES . 'users/';
-$private = PRIVATE_FILES . 'users/';
 foreach( $users as $user ){
-	if( is_dir( $public . $user[ 'id' ] ) )
-		remove_dir( $public . $user[ 'id' ] );
-	if( is_dir( $private . $user[ 'id' ] ) )
-		remove_dir( $public . $user[ 'id' ] );
+	User::removeUserDirs( $user[ 'id' ] );
 }
 
-if( is_dir( PUBLIC_FILES . 'groups/' . $id ) )
-	remove_dir( PUBLIC_FILES . 'groups/' . $id );
-if( is_dir( PRIVATE_FILES . 'groups/' . $id ) )
-	remove_dir( PRIVATE_FILES . 'groups/' . $id );
+Group::removeGroupDirs( $id );
 
 // delete user / group
 query( 'delete from ' . USERS . ' where user_group="' . $id . '"' );

@@ -11,7 +11,10 @@
  * @package    admin_settings
  */
 
-$script=HOME.'update.php';
+if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
+        exit;
+
+$script=HOME.'_inc/update.php';
 
 if(!file_exists($script))
 	die( 'ok' );
@@ -20,10 +23,6 @@ require $script;
 
 cache_clear();
 
-if( is_dir( HOME . 'update' ) )
-	remove_dir(HOME.'update');
-
-unlink(HOME.'update.php');
 unlink(USER_FILES.'update.zip');
 
 die('ok');
