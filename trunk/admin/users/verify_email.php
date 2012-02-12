@@ -24,26 +24,19 @@ if($num==1)
 	die('0');
 else{
 	$hash=md5(mt_rand());
-	mysql_query('update '.USERS.' set reminder="'.$hash.'" where email="'.$email.'"');
-	$url='http://'.$_SERVER["SERVER_NAME"];
+	query('update '.USERS.' set reminder="'.$hash.'" where email="'.$email.'"');
+	$name = single( 'select name from ' . USERS . ' where email="' . $email . '" and hash="' . $hash . '"', 'name' );
 	$subject='Password Reminder | Furasta.Org';
 	$message=
-//        	'.single('select name from '.USERS.' where email="'.$email.'"','name').',
-		'
-		You have requested a new password. Please follow the link below to reset your password:
-
-		'.$url.'/admin/settings/users/reset_password.php?reminder='.$hash.'
-
-		If you have not requested a new password please ignore this email.
-
-	        Thanks
-	        ---
-	        Furasta.Org
-	        http://furasta.org
-	        support@furasta.org
+		$name . ',
+		<br/>
+		<p>You have requested a new password. Please follow the link below to reset your password:</p>
+		<br/>
+		<p>'. SITEURL .'/admin/settings/users/reset_password.php?reminder='.$hash.'</p>
+		<br/>
+		<p>If you have not requested a new password please ignore this email.</p>
 	';
-	$headers='From: support@furasta.org'."\r\n".'Reply-To: support@furasta.org'."\r\n".'X-Mailer: PHP/' .phpversion();
-	mail($email,$subject,$message,$headers);
+	email($email,$subject,$message);
 	die('1');
 }
 ?>

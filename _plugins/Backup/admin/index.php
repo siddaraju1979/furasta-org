@@ -11,7 +11,7 @@
 
 $Template = Template::getInstance( );
 
-if( isset( $_POST[ 'create' ] ) ){
+if( isset( $_POST[ 'create' ] ) ){ // create backup
 	$type = $_POST[ 'backup_type' ];
 	$dir = ( $type == 'all' ) ? HOME : USER_FILES . 'files/';
 
@@ -22,14 +22,20 @@ if( isset( $_POST[ 'create' ] ) ){
 	if( !is_dir( $backup_dir ) )
 		mkdir( $backup_dir );
 
+	// json encode settings
+	global $DB, $SETTINGS, $PLUGINS;	
+	$settings = array( 'SETTINGS' => $SETTINGS );
+	if( $type == 'all' )
+		$settings[ 'PLUGINS' ] = $PLUGINS;
+	$settings = json_encode( $settings );
+
 	// backup database
-	global $DB;	
 	$dump = new MYSQL_DUMP( $DB[ 'host' ], $DB[ 'user' ], $DB[ 'pass' ] );
 	$sql = $dump->dumpDB( $DB[ 'name' ] );
 
 	// backup files
 	$zip=new zipfile();
-	$files=scandir(USER_FILES . 'files/');
+	$files=scandir($dir);
 
 	function zip_files($files,$dir='',$zdir='',$zip){
 		foreach($files as $file){
@@ -46,19 +52,67 @@ if( isset( $_POST[ 'create' ] ) ){
 
 	$zdir = ( $type == 'all' ) ? '' : '_user/files/';
 	zip_files($files,$dir,$zdir,$zip);
+	if( $type == 'all' ){
+		zip_files( $files, USER_FILES, '_user/files', $zip ); 
+	}
+	$zip->addFile( $settings, '.settings.php' );
 	$zip->addFile( $sql, 'database-backup.sql' );
 	$zip->output($backup_dir.'file-backup.zip');
 
 	require HOME . '_inc/function/files.php';
-	download_file( $backup_dir . 'file-backup.zip' );
-
+	download_file( $backup_dir . 'file-backup.zip', $SETTINGS[ 'site_title' ] . '-' . date( 'd-m-y-H:i' ) . '.zip' );
 }
 
-if( isset( $_POST[ 'restore' ] ) ){
-	// move _user/files to USER_FILES/files
-	// delete _user
+if( isset( $_FILES[ 'backup_file' ] ) && $_FILES[ 'backup_file' ][ 'error' ] == 0 ){ // restore from backup
+
+	// move file to home
+	$zip_file = HOME  . $_FILES[ 'backup_file' ][ 'name' ];
+	move_uploaded_file( $_FILES[ 'backup_file' ][ 'tmp_name' ], $zip_file ) 
+		|| error( 'please grant write permission to the / dir to perform a restore' );	
+
+	// unzip file in home
+	$unzip = new dUnzip2( $zip_file );
+	$unzip->unzipAll( HOME );
+
+	// restore settings file
+	global $SETTINGS, $DB, $PLUGINS;
+	$settings = json_decode( file_get_contents( HOME . 'settings.php' ), true );
+	foreach( $settings as $name => $value ){
+		switch( $setting ){
+			case 'SETTINGS': // extract settings
+				foreach( $value as $setting => $v )
+					$SETTINGS[ $setting ] = $v;
+			break;
+			case 'PLUGINS': // extract plugins
+				$PLUGINS = $value;
+			break;
+		}
+	}
+	$constants = array( 'USER_FILES', HOME . '_user' ); 
+	settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants ); 
+
 	// reinstall database from dump
-	// delete database-backup.sql
+	$templine = '';
+	$lines = file( HOME . 'database-backup.sql' );
+
+	foreach( $lines as $line ){ // loop through lines
+		if( substr( $line, 0, 2 ) == '--' || $line == '' ) // skip comments
+			continue;
+
+		$templine .= $line;
+
+		if( substr( trim( $line ), -1, 1 ) == ';' ){ // its a query
+			// run query
+			mysql_query( $templine );
+			$templine = '';
+		}
+	}
+
+	// delete database-backup.sql and zip file
+	unlink( HOME . 'database-backup.sql' );
+	unlink( $zip_file );
+
+	$Template->runtimeError( 'Backup Restored' ); 
 }
 
 $Template->add( 'title', 'Backup' );
@@ -66,7 +120,7 @@ $Template->loadJavascript( '_plugins/Backup/admin/backup.js' );
 
 $content = '
 <h1>Backup</h1>
-<form id="backup-form" method="post">
+<form id="backup-form" method="post" enctype="multipart/form-data">
 <div id="tabs">
 	<ul>
 		<li><a href="#tab-1">Create</a></li>
