@@ -582,6 +582,10 @@ function validate_file( $file ){
  */
 function maintenance_message( ){
 	$message = single( 'select value from ' . OPTIONS . ' where category="configuration_page_options" and name="maintenance_message"', 'value' );
+	if( empty( $message ) ){
+		global $SETTINGS;
+		$message = $SETTINGS[ 'site_title' ] . ' is currently undergoing maintenance. Please try again later.';
+	}
 	error( $message, '' );
 }
 ?>

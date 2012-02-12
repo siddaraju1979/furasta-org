@@ -26,19 +26,12 @@ $user=row('select name,email from '.USERS.' where id='.$id);
 
 $subject='User Suspended | Furasta.Org';
 $message=$user['name'].',
+	<br/>
+	<p>Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITEURL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.</p>
+	<br/>
+	<p>If you are not the person stated above please ignore this email.</p>';
 
-	Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITEURL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.
-
-	If you are not the person stated above please ignore this email.
-
-	Thanks
-	---
-	Furasta.Org
-	http://furasta.org
-	support@furasta.org
-        ';
-        $headers='From: support@furasta.org'."\r\n".'Reply-To: support@furasta.org'."\r\n".'X-Mailer: PHP/' .phpversion();
-        mail($user['email'],$subject,$message,$headers);
+email( $user[ 'email' ], $subject, $message );
 
 // delete user dir
 User::removeUserDirs( $id );

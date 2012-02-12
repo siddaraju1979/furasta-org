@@ -47,9 +47,9 @@ if( @getimagesize( $path ) ){ // image
 	$width = ( empty( $_GET[ 'width' ] ) ) ? false : $_GET[ 'width' ];
 	display_image( $path, $width );
 }
-else{ // download file
+else // download file
 	download_file( $path );
-}
+
 exit;
 
 ?>

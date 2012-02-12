@@ -120,13 +120,15 @@ function resize_dimensions( $width, $height, $old_width, $old_height ){
  *
  * sends a given file to the user
  *
- * @params string $file
+ * @param string $file
+ * @param string $name optional
  * @return void
  */
-function download_file( $file ){
+function download_file( $file, $name = false ){
 
-	$type = mime_content_type( $file );
-	$name = basename( $file );	
+	$type = mime_content_type( $file );	
+	if( !$name )
+		$name = basename( $file );
 
 	header( 'Content-type: ' . $type );
 	header( 'Content-Disposition: attachment; filename="' . $name . '" ');

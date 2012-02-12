@@ -2,12 +2,9 @@
 
 10. Develop a few plugins to test, and adjust, the plugin architecture: File Manager (*), News Plugin (with RSS), something else..
 17. Finish the password reminder!
-31. fix security hole, handling downloaded files _inc/files.php should enable login to download files as well as viewing files
 34. add file validation functions to validation plugin, remove translation for frontend. follow example of connect4 validation
 35. add permissions to file viewing in _inc/files.php
 36. remove language dependencies from _inc/js/system.js
-37. upgrade users section in admin area to using email function instead of mail
-38. add user file perms, group file perms should be added - extra field in groups
 39. simplify the process of plugins adding menu items, maybe leave filter method but add shorthand method through plugin array
 
 # TODO list for Furasta.Org v1.0 - General Release #

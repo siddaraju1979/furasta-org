@@ -28,10 +28,10 @@ foreach( $users as $user ){
 
 	$subject='User Suspended | Furasta.Org';
 	$message=$user['name'].',
-
-        Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITEURL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.
-
-        If you are not the person stated above please ignore this email.';
+	<br/>
+        <p>Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITEURL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.</p>
+	<br/>
+        <p>If you are not the person stated above please ignore this email.</p>';
         email( $user['email'], $subject, $message );
 
 
