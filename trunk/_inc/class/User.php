@@ -21,7 +21,7 @@
  * This class can be used to simply get access to
  * details on a user. Using this code:
  *
- * $User = new User( $id );
+ * $User = User::getInstance( $id );
  *
  * you can gain access to user info. If no $id is
  * provided then the constructor will check for
@@ -103,15 +103,15 @@
 class User{
 
 	/**
-	 * instance 
+	 * instances
 	 *
-	 * holds the User object
+	 * holds User class instances
 	 * 
 	 * @var object
 	 * @static
 	 * @access private
 	 */
-	private static $instance;
+	private static $instances = array( );
 
 	/**
 	 * id 
@@ -193,35 +193,34 @@ class User{
 	 */
 	public $_group = false;
 
-        /**
-         * getInstance 
-         * 
-         * @static
-         * @param string $value , true if new instance should be made
-         * @access public
-         * @return instance
-         */
-        public static function getInstance( $value = false ){
+	/**
+	 * getInstance
+	 *
+	 * gets an instance by id
+	 *
+	 * @param int $id
+	 * @access public
+	 * @static
+	 * @return instance
+	 */
+	public static function getInstance( $id = false ){
 
-                /**
-                 * if value is true a new instance is created
-                 */
-                if( $value == true ){
-                        if( self::$instance )
-                                self::$instance == '';
+		// if no id, use session user id
+		// if logged in else return false
+		if( !$id ){
+			if( self::verify( ) )
+				$id = $_SESSION[ 'user' ][ 'id' ];
+			else
+				return false;
+		}
 
-                        self::$instance = new User( );
-                        return self::$instance;
-                }
+		// if there isn't an instance, create one
+		if( !isset( self::$instances{ $id } ) )		
+			self::$instances{ $id } = new User( $id );
 
-                /**
-                 *  checks if an instance exists
-                 */
-                if( !self::$instance )
-                        self::$instance = new User( );
+		return self::$instances{ $id };
 
-                return self::$instance;
-        }
+	}
 
 	/**
 	 * __construct
@@ -235,15 +234,6 @@ class User{
 	 * @access public
 	 */
 	public function __construct( $id = false ){
-
-		// if no id, use session user id
-		// if logged in else return false
-		if( !$id ){
-			if( self::verify( ) )
-				$id = $_SESSION[ 'user' ][ 'id' ];
-			else
-				return false;
-		}
 
 		$user = row( 'select * from ' . USERS . ' where id=' . $id );
 
@@ -261,9 +251,9 @@ class User{
 
 		// if not superuser check perms
 		if( $this->group != '_superuser' ){
-			$group = row( 'select name,perm from ' . GROUPS . ' where id=' . $user[ 'user_group' ] );
-			$this->perm = self::permToArray( $group[ 'perm' ] );
-			$this->group_name = $group[ 'name' ];
+			$group = Group::getInstance( $this->group );
+			$this->perm = $group->perm( );
+			$this->group_name = $group->name( );
 		}
 		
 		return true;
@@ -467,6 +457,39 @@ class User{
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * hasFilePerm
+	 *
+	 * checks if a user has permission to access a file
+	 * in the user files directory
+	 *
+	 * @param string $path
+	 * @access public
+	 * @return bool
+	 */
+	public function hasFilePerm( $path ){
+
+		// if user is superuser bypass all permissions
+		if( $this->group == '_superuser' )
+			return true;
+
+		// split path into directories
+		$path = explode( '/', $path );
+		while( $path != 'files' )
+			array_shift( $path );
+
+		foreach( $path as $path ){
+			$
+		}
+
+		// check user file perm
+
+		if( !Group::groupsHaveFilePerm( $this->id, $path ) )
+			return false;
+
+		return true;
 	}
 
 	/**

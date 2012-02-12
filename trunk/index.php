@@ -25,7 +25,7 @@ require '_inc/define.php';
  * @todo enable custom mantinence error and option to use
  * mantinence template 
  */
-$User = new User( );
+$User = User::getInstance( );
 $login = User::verify( );
 if( $SETTINGS[ 'maintenance' ] == 1 && !$login )
 	maintenance_message( );
