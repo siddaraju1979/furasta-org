@@ -244,8 +244,10 @@ function cache_js( $name, $file ){
  * @return bool
  */
 function cache_image( $name, $image ){
-	$file = USER_FILES . 'cache/IMAGES/' . $name;
-	return imagepng( $image, $file );
+	$image_dir = USER_FILES . 'cache/IMAGES/';
+	if( !is_dir( $image_dir ) )
+		mkdir( $image_dir );
+	return imagepng( $image, $image_dir . $name );
 }
 
 /**

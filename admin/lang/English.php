@@ -76,6 +76,7 @@ $lang = array(
 	'menu_edit_pages' => 'Edit Pages',
 	'menu_new_page' => 'New Page',
 	'menu_trash' => 'Trash',
+	'menu_files' => 'Files',
 	'menu_users_groups' => 'Users & Groups',
 	'menu_edit_users' => 'Edit Users',
 	'menu_edit_groups' => 'Edit Groups',

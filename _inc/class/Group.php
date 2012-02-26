@@ -176,8 +176,6 @@ class Group{
 
 	}
 
-	}
-
 	/**
 	 * groupsHaveFilePerm
 	 *
@@ -194,7 +192,7 @@ class Group{
 
 		foreach( $ids as $id ){
 
-			$group = Group:getInstance( $id );
+			$group = Group::getInstance( $id );
 
 			if( !$group->hasFilePerm( $path ) )
 				return false;

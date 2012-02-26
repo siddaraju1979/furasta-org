@@ -21,6 +21,7 @@ $perms = array(
                 'c' => 'Create Pages',
                 'd' => 'Delete Pages',
                 't' => 'Manage Trash',
+		'f' => 'Manage Files',
                 's' => 'Edit Settings',
                 'u' => 'Edit Users'
 );

@@ -200,6 +200,9 @@ ul#pages li{ width:100%;padding:0 5px }
 ul#pages li.top_bar{ color:#fff }
 ul#pages li span{ padding:0 10px }
 
+/* Admin Area Files */
+#files
+
 /* Admin Area Settings */
 
 #config-table{ border-width:1px 1px 1px 0;border-color:#999;border-style:solid;padding:0;width:80%;margin:25px 10%;border-spacing:0 }

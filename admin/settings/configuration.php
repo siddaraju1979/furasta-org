@@ -184,7 +184,7 @@ $content='
         <tr>
                 <td>' . $Template->e( 'configuration_diagnostic_mode' ) . ': <a class="help link" id="help-diagnostic">&nbsp;</a></td>
                 <td><input type="checkbox" name="DiagnosticMode" value="1" class="checkbox" '. $diagnostic .'/></td>
-        </tr>
+        </tr>';/*
         <tr>
                 <td>' . $Template->e( 'configuration_language' ) . ': </td>
                 <td><select name="lang">';
@@ -202,7 +202,8 @@ $content='
 
 $content .= '
 		</select></td>
-        </tr>
+        </tr>*/
+$content .= '
 </table>
 <input type="submit" id="config-save" name="settings_general" class="submit right" style="margin-right:10%" value="' . $Template->e( 'save' ) . '"/>
 </form></br style="clear:both"/>

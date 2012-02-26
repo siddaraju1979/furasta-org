@@ -25,7 +25,7 @@ if($name==''||strpos( $name, '..' ) !== false )
 $name = explode( '/', $name );
 $section = ( @$name[ 0 ] == 'users' ) ? 'users' : 'groups'; // users or groups
 $id = ( int ) @$name[ 1 ]; // user/group id
-$status = ( @$name[ 2 ] == 'public' ) ? 'public' : 'private'; // public or private
+$status = ( @$name[ 2 ] == 'public' ) ? 'public' : 'private';
 $filename = @$name[ 3 ];
 
 // if filename or id is 0 then

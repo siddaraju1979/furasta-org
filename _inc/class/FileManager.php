@@ -78,8 +78,13 @@ class FileManager{
 
 		$User = User::getInstance( );
 
+//		if( !$this->hasFilePerm( $path ) )
+//			return false;
+
 		if( !$User->hasFilePerm( $path ) )
 			return false;
+
+		return true;
 
 	}
 

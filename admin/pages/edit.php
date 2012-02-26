@@ -48,7 +48,7 @@ $valid = validate( $conds, "#pages-edit", 'edit-save' );
 /**
  * read post information and edit page if applicable
  */
-if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
+if( isset( $_POST[ 'edit-save' ] ) && $valid ){
 
 	/**
 	 *  set up post variables
@@ -92,7 +92,7 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid == true ){
 		 */
 		query('update '.PAGES.' set
 		name="'.$name.'",content="'.$content.'",slug="'.$slug.'",template="'.$template.'",type="'.$type.'",edited="'.date('Y-m-d
-		G:i:s').'",user="'.$User->name.'",parent='.$parent.',perm="'.$perm.'",home='.@$home.',display='.$navigation.'
+		G:i:s').'",user="'.$User->name( ).'",parent='.$parent.',perm="'.$perm.'",home='.@$home.',display='.$navigation.'
 		where id='.$id,true);
 
 		/**

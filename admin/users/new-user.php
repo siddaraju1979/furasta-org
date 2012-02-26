@@ -57,13 +57,15 @@ User::createUserDirs( $id );
 /**
  * send email to user 
  */
-$message = 'Hi ' . $name . '<br/>
-You have requested a new password. Please follow the link below to reset your password:<br/>
-' . SITEURL . '/admin/settings/users/activate.php?hash=' . $hash . '<br/>
-If you have not requested a new password please ignore this email.<br/>
+$message=$name.',<br/>
+	<br/>
+	Please activate your new user by clicking on the link below:<br/>
+	<br/>
+	<a href="'.SITEURL.'admin/users/activate.php?hash='.$hash.'">'.$url.'/admin/users/activate.php?hash='.$hash.'</a><br/>
+	<br/>
+	If you are not the person stated above please ignore this email.<br/>
 ';
-
-email( $email, 'Activation - Furasta.Org', $message );
+email( $email, 'User Activation - Furasta.Org', $message );
 
 cache_clear( 'USERS' );
 
