@@ -51,10 +51,9 @@ else{
 	/**
 	 * if user is verified, define ajax verified
 	 */
-	if( User::verify( ) ){
+	$User = User::getInstance( );
+	if( $User != false )
 		define( 'AJAX_VERIFIED', true );
-		$User = User::getInstance( );
-	}
 }
 
 

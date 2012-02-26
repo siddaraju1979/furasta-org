@@ -22,7 +22,7 @@ if($hash=='')
 $details=rows('select name from '.USERS.' where hash="'.$hash.'"');
 
 if(count($details)!=1)
-	error('The activation hash provied has not matched any users. Please contact bugs@macaoidh.name for further details.','Activation Failure');
+	error('The activation hash provied has not matched any users.','Activation Failure');
 
 query('update '.USERS.' set hash="activated" where hash="'.$hash.'"');
 

@@ -6,6 +6,8 @@
 35. add permissions to file viewing in _inc/files.php
 36. remove language dependencies from _inc/js/system.js
 39. simplify the process of plugins adding menu items, maybe leave filter method but add shorthand method through plugin array
+43. fix pages permissions thing - seems to be a bit buggy
+44. fix frontend page permissions - doesn't even check permissions if you are not logged in
 
 # TODO list for Furasta.Org v1.0 - General Release #
 
@@ -38,3 +40,6 @@
 19. load select boxes in pages area via ajax
 20. all content, including ajax requests and plugins should run through the Template class for both clarity and compression
 21. enable custom templates for the email function
+22. use growl for notifications http://labs.d-xp.com/growl/
+23. maybe use this http://buildinternet.com/2010/02/animate-panning-slideshow-with-jquery/ for slideshow plugin
+24. maybe use this for the content areas plugin http://masonry.desandro.com/

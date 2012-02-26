@@ -98,7 +98,6 @@
  * @package user_management
  * @author Conor Mac Aoidh <conormacaoidh@gmail.com> 
  * @license http://furasta.org/licence.txt The BSD License
- * @todo change public vars to private
  */
 class User{
 
@@ -117,55 +116,55 @@ class User{
 	 * id 
 	 * 
 	 * @var integer
-	 * @access public
+	 * @access private
 	 */
-	public $id;
+	private $id;
 
 	/**
 	 * name 
 	 * 
 	 * @var string
-	 * @access public
+	 * @access private
 	 */
-	public $name;
+	private $name;
 
 	/**
 	 * email 
 	 * 
 	 * @var string
-	 * @access public
+	 * @access private
 	 */
-	public $email;
+	private $email;
 
 	/**
 	 * password 
 	 * 
 	 * @var integer
-	 * @access public
+	 * @access private
 	 */
-	public $password;
+	private $password;
 
 	/**
 	 * group 
 	 * 
 	 * @var string
-	 * @access public
+	 * @access private
 	 */
-	public $group;
+	private $group;
 
 	/**
 	 * group_name 
 	 * 
 	 * @var string
-	 * @access public
+	 * @access private
 	 */
-	public $group_name;
+	private $group_name;
 
 	/**
 	 * hash
 	 *
 	 * @var string
-	 * @access public
+	 * @access private
 	 */
 	private $hash;
 
@@ -173,9 +172,9 @@ class User{
 	 * perm 
 	 * 
 	 * @var array
-	 * @access public
+	 * @access private
 	 */
-	public $perm = array( );
+	private $perm = array( );
 
 	/**
 	 * data
@@ -191,7 +190,7 @@ class User{
 	 * @var bool/array
 	 * @access private
 	 */
-	public $_group = false;
+	private $_group = false;
 
 	/**
 	 * getInstance
@@ -233,7 +232,7 @@ class User{
 	 * @return bool
 	 * @access public
 	 */
-	public function __construct( $id = false ){
+	public function __construct( $id ){
 
 		$user = row( 'select * from ' . USERS . ' where id=' . $id );
 
@@ -338,9 +337,9 @@ class User{
 
 		// create new instance of user if required
 		if( $instance )
-			self::$instance = new User( );	
+			self::$instances{ $user[ 'id' ] } = new User( $user[ 'id' ] );	
 
-		return true;;
+		return true;
 
 	}
 
@@ -480,9 +479,11 @@ class User{
 		while( $path != 'files' )
 			array_shift( $path );
 
-		foreach( $path as $path ){
-			$
-		}
+		$section = ( @$path[ 0 ] == 'users' ) ? 'users' : 'groups';
+		$id = ( int ) @$path[ 1 ];
+		$filename = @$path[ 2 ];
+
+		die( $section . $id . $filename );
 
 		// check user file perm
 
@@ -642,20 +643,6 @@ class User{
 	}
 
 	/**
-	 * about
-	 * 
-	 * accessor method for class vars
-	 *
-	 * @todo change class vars to private
-	 * @param string $var
-	 * @return void/string
-	 */
-	public function about( $var ){
-		if( isset( $this->$var ) )
-			return $this->$var; 
-	}
-
-	/**
 	 * isInGroup
 	 * 
 	 * checks if a user is in a given group
@@ -781,6 +768,104 @@ class User{
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;
 		return $rmdir;
+	}
+
+	/**
+	 * id
+	 *
+	 * accessor method for user id
+	 *
+	 * @access public
+	 * @return int
+	 */
+	public function id( ){
+		return $this->id;
+	}
+
+
+	/**
+	 * name
+	 *
+	 * accessor method for user name
+	 *
+	 * @access public
+	 * @return string
+	 */
+	public function name( ){
+		return $this->name;
+	}
+
+	/**
+	 * email
+	 *
+	 * accessor method for user email
+	 *
+	 * @access public
+	 * @return int
+	 */
+	public function email( ){
+		return $this->email;
+	}
+
+
+	/**
+	 * password
+	 *
+	 * accessor method for user password
+	 *
+	 * @access public
+	 * @return string md5
+	 */
+	public function password( ){
+		return $this->password;
+	}
+
+	/**
+	 * hash
+	 *
+	 * accessor method for user hash
+	 *
+	 * @access public
+	 * @return int
+	 */
+	public function hash( ){
+		return $this->hash;
+	}
+
+	/**
+	 * perm
+	 *
+	 * accessor method for user permissions
+	 *
+	 * @access public
+	 * @return perm
+	 */
+	public function perm( ){
+		return $this->perm;
+	}
+
+	/**
+	 * groups
+	 *
+	 * accessor method for group ids
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function groups( ){
+		return array( $this->group );
+	}
+
+	/**
+	 * groupName
+	 *
+	 * accessor method for user group name
+	 *
+	 * @access public
+	 * @return int
+	 */
+	public function groupName( ){
+		return $this->group_name;
 	}
 
 	/**

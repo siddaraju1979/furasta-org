@@ -14,7 +14,6 @@
  */
 
 require HOME . '_inc/Smarty/libs/Smarty.class.php';
-require $function_dir . 'frontend.php';
 
 $Smarty = new Smarty( );
 

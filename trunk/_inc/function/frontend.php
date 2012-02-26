@@ -1,6 +1,41 @@
 <?php
 
 /**
+ * frontend_error
+ *
+ * issues an error using the frontend template
+ *
+ * @param string $error
+ * @param string $title
+ * @return void
+ */
+function frontend_error( $error, $title = 'Error' ){
+
+	// setup required vars
+	$User = User::getInstance( );
+	$Plugins = Plugins::getInstance( );
+	global $SETTINGS;
+
+	// create fake page array
+	$Page = array(
+		'id' => 0,
+		'name' => $title,
+		'content' => $error,
+		'slug' => $title,
+		'edited' => '',
+		'user' => '',
+		'parent' => 0,
+		'type' => 'Normal',
+		'template' => 'Default',
+	);
+
+	// run smarty
+	require HOME . '_inc/smarty.php';
+	exit;
+
+}
+
+/**
  * Frontend Functions, Furasta.Org
  *
  * Contains functions which are loaded in
@@ -159,10 +194,10 @@ function frontend_metadata( $params, &$smarty ){
 		$User = User::getInstance( );
 		$metadata .= ',
 		user:{
-			id: ' . $User->about( 'id' ) . ',
-			name: "' . $User->about( 'name' ) . '",
-			group: "' . $User->about( 'group' ) . '",
-			group_name: "' . $User->about( 'group_name' ) . '"	
+			id: ' . $User->id( ) . ',
+			name: "' . $User->name( ) . '",
+			group: "' . implode( '', $User->groups( ) ) . '",
+			group_name: "' . $User->groupName( ) . '"	
 		}';
 	}
 
