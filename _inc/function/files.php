@@ -42,7 +42,7 @@ function display_image( $path, $width = false ){
 	}
 
 	if( $width != false ) // resize WBMP
-		$image = resize_image( $image, $width, false, true );
+		$image = resize_image( $image, $width, false, true, $path );
 
 	// display WBMP as png
 	header( 'Content-Type: image/png' );
@@ -64,12 +64,13 @@ function display_image( $path, $width = false ){
  * @params int $width
  * @params int $height optional
  * @params bool $cache optional
+ * @params string $name optional - name used in cache file
  * @return GDResource
  * @todo add cropping support
  */
-function resize_image( $image, $width, $height = false, $cache = false ){
-	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_' . $image . $width . $height );
-	if( cache_exists( $cache_file, 'IMAGES' ) )
+function resize_image( $image, $width, $height = false, $cache = false, $name = '' ){
+	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_' . $name . $width . $height );
+	if( $cache && cache_exists( $cache_file, 'IMAGES' ) )
 		return cache_get_image( $cache_file, 'IMAGES' );
 
 	$old_width = imagesx( $image );
