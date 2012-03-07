@@ -160,8 +160,9 @@ function frontend_breadcrumbs( $params ){
  * @return string of metadata
  */
 function frontend_metadata( $params, &$smarty ){
-	$keywords = meta_keywords( $Page[ 'content' ] );
-	$description = substr( strip_tags( $Page[ 'content' ] ), 0, 250 ) . '...';
+	$content = strip_html_tags( frontend_page_content( $params, &$smarty, true ) );
+	$keywords = meta_keywords( $content );
+	$description = substr( $content, 0, 250 ) . '...';
 
 	$Template = Template::getInstance( );
 	// @todo add caching for multi-ddm and frontend javascript
@@ -287,15 +288,57 @@ function frontend_javascript_load( $params ){
  * @params array $params
  * @return void
  */
-function frontend_page_content( $params, &$smarty ){
+function frontend_page_content( $params, &$smarty, $silent = false ){
 	$type = $smarty->_tpl_vars{ 'page_type' };
+
+	// capture output to variable
+	ob_start( );
+
 	if( $type == 'Normal' )
-		echo $smarty->_tpl_vars{ '__page_content' };
+		$smarty->_tpl_vars{ '__page_content' };
 	else{
 		$page_id = $smarty->_tpl_vars{ 'page_id' };
 		$Plugins = Plugins::getInstance( );
-		echo $Plugins->frontendPageType( $type, $page_id );
+		$Plugins->frontendPageType( $type, $page_id );
 	}
+
+	$content = ob_get_contents( );
+	ob_end_clean( );
+
+	if( $silent )
+		return $content;
+
+	echo $content;
+	
+}
+
+function strip_html_tags( $text ){
+	$text = preg_replace(
+	array(
+		// Remove invisible content
+		'@<head[^>]*?>.*?</head>@siu',
+		'@<style[^>]*?>.*?</style>@siu',
+		'@<script[^>]*?.*?</script>@siu',
+		'@<object[^>]*?.*?</object>@siu',
+		'@<embed[^>]*?.*?</embed>@siu',
+		'@<applet[^>]*?.*?</applet>@siu',
+		'@<noframes[^>]*?.*?</noframes>@siu',
+		'@<noscript[^>]*?.*?</noscript>@siu',
+		'@<noembed[^>]*?.*?</noembed>@siu',
+		// Add line breaks before and after blocks
+		'@</?((address)|(blockquote)|(center)|(del))@iu',
+		'@</?((div)|(h[1-9])|(ins)|(isindex)|(p)|(pre))@iu',
+		'@</?((dir)|(dl)|(dt)|(dd)|(li)|(menu)|(ol)|(ul))@iu',
+		'@</?((table)|(th)|(td)|(caption))@iu',
+		'@</?((form)|(button)|(fieldset)|(legend)|(input))@iu',
+		'@</?((label)|(select)|(optgroup)|(option)|(textarea))@iu',
+		'@</?((frameset)|(frame)|(iframe))@iu',
+	),
+	array( ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',"$0", "$0", "$0", "$0", "$0", "$0","$0", "$0",), $text );
+
+	$text = strip_tags( $text );
+	$text = str_replace( array( "\n", "\t", "  ", "   ", "    ", "     ", "      ", "       ", "        " ), ' ', $text );
+	return $text;
 }
 
 ?>
