@@ -16,7 +16,7 @@ if( isset( $_POST[ 'create' ] ) ){ // create backup
 	$dir = ( $type == 'all' ) ? HOME : USER_FILES . 'files/';
 
 	// increase memory limit
-	ini_set( 'memory_limit', '32M' );
+	ini_set( 'memory_limit', '64M' );
 
 	$backup_dir = USER_FILES . 'backup/';
 	if( !is_dir( $backup_dir ) )
