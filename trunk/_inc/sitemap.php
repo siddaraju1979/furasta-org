@@ -14,7 +14,7 @@ require 'define.php';
 
 header('Content-type: text/xml');
 
-$pages=rows('select id,slug,edited,parent from '.PAGES);
+$pages=rows( 'select id,slug,edited,parent from '.PAGES . ' where display=1' );
 
 $_url=SITEURL;
 $sitemap="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset>\n";

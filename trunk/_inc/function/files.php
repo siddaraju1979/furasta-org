@@ -23,7 +23,7 @@
  * @params string $path
  * @return bool
  */
-function display_image( $path, $width = false ){
+function display_image( $path, $width = false, $height = false ){
 	$type = mime_content_type( $path );
 
 	// create WBMP
@@ -41,7 +41,9 @@ function display_image( $path, $width = false ){
 			return false;
 	}
 
-	if( $width != false ) // resize WBMP
+	if( $width != false && $height != false ) // crop WBMP
+		$image = crop_image( $image, $width, $height, true, $path );
+	else if( $width != false ) // resize WBMP
 		$image = resize_image( $image, $width, false, true, $path );
 
 	// display WBMP as png
@@ -50,6 +52,65 @@ function display_image( $path, $width = false ){
 	imagedestroy( $image );
 
 	return true;
+}
+
+
+/**
+ * crop_image
+ *
+ * crops an image to a given width and height. first
+ * runs resize_image without height then crops to
+ * the given height
+ *
+ * @param GDResource $image
+ * @param int $width
+ * @param int $height
+ * @param bool $cache
+ * @param string $name
+ */
+function crop_image( $image, $width, $height, $cache = false, $name = '' ){
+
+	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_CROP_' . $name . $width . $height );
+	if( $cache && cache_exists( $cache_file, 'IMAGES' ) )
+		return cache_get_image( $cache_file, 'IMAGES' );
+
+	$orig_width = imagesx( $image );
+	$orig_height = imagesy( $image );
+	$aspect = $orig_width / $orig_height;
+	$desired_aspect = $width / $height;
+
+	// resize dimensions
+	if( $aspect >= $desired_aspect ){
+		// If image is wider than thumbnail (in aspect ratio sense)
+		$new_height = $height;
+		$new_width = $orig_width / ( $orig_height / $height );
+	}
+	else {
+		// If the thumbnail is wider than the image
+		$new_width = $width;
+		$new_height = $orig_height / ( $orig_width / $width );
+	}
+
+	// create new image
+	$new_image = imagecreatetruecolor( $width, $height );
+
+	imagecopyresampled(
+		$new_image,
+		$image,
+		0 - ( $new_width - $width ) / 2, // center horizontally
+		0 - ( $new_height - $height ) / 2, // center vertically
+		0,
+		0,
+		$new_width,
+		$new_height,
+		$orig_width,
+		$orig_height
+	);
+
+	if( $cache ) // cache the image
+		cache_image( $cache_file, $new_image, 'IMAGES' );	
+	
+	return $new_image;
 }
 
 /**
@@ -66,7 +127,6 @@ function display_image( $path, $width = false ){
  * @params bool $cache optional
  * @params string $name optional - name used in cache file
  * @return GDResource
- * @todo add cropping support
  */
 function resize_image( $image, $width, $height = false, $cache = false, $name = '' ){
 	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_' . $name . $width . $height );
