@@ -189,17 +189,18 @@ function frontend_metadata( $params, &$smarty ){
 				name : "' . $smarty->_tpl_vars{ 'page_name' } . '" ,
 				slug : "' . $smarty->_tpl_vars{ 'page_slug' } . '" ,
 				parent_id : "' . $smarty->_tpl_vars{ 'parent_id' } . '"
-			}';
+			},
+			postdata : ' . json_encode( $_POST );
 
 	if( User::verify( ) ){
 		$User = User::getInstance( );
 		$metadata .= ',
-		user:{
-			id: ' . $User->id( ) . ',
-			name: "' . $User->name( ) . '",
-			group: "' . implode( '', $User->groups( ) ) . '",
-			group_name: "' . $User->groupName( ) . '"	
-		}';
+			user:{
+				id: ' . $User->id( ) . ',
+				name: "' . $User->name( ) . '",
+				group: "' . implode( '', $User->groups( ) ) . '",
+				group_name: "' . $User->groupName( ) . '"	
+			}';
 	}
 
 	$metadata .= '

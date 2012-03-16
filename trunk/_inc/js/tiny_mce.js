@@ -34,18 +34,17 @@ window.tinymceConfigs = {
 		template_external_list_url : "lists/template_list.js",
 		external_link_list_url : "lists/link_list.js",
 		external_image_list_url : "lists/image_list.js",
-		media_external_list_url : "lists/media_list.js"
+		media_external_list_url : "lists/media_list.js",
+		mode : "none"
 	},
 	'Simple' : {
 		theme : "advanced",
-		mode: "exact",
+		mode: "none",
  		elements : "content",
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,outdent,indent,separator,undo,redo",
 		theme_advanced_buttons2 : "",
 		theme_advanced_buttons3 : "",
-		height:"170px",
-		width:"300px"
 	}
 };
 
@@ -68,7 +67,7 @@ window.tinymceConfigs = {
 $(function(){
 	tinyMCE.init({
 		mode : "none",
-		theme : "advanced"
+		theme : "simple"
 	});
 });
 
@@ -79,17 +78,27 @@ $(function(){
 function tinymce_changeConfig( element, key ){
 	var id = $( element ).attr( 'id' );
 	tinyMCE.settings = window.tinymceConfigs[ key ];
+
 	tinyMCE.execCommand( 'mceAddControl', false, id );
 	tinyMCE.triggerSave();
+
 	$( element ).bind( 'remove', function( ev ){
-		if( ev.target !== this )
-			return;
-
-		if( tinyMCE.getInstanceById( id ) ){
-			tinyMCE.execCommand( 'mceFocus', false, id );
-			tinyMCE.execCommand( 'mceRemoveControl', false, id );
-		}
-
+		tinyMCE.execCommand( 'mceFocus', false, id );
+		tinyMCE.execCommand( 'mceRemoveControl', false, id );
 		return true;
 	});
+}
+
+/**
+ * tinymce_removeConfig
+ *
+ */
+function tinymce_removeConfig( ){
+
+	if( tinyMCE.activeEditor != null ){
+		var active = tinyMCE.activeEditor.editorId;
+		tinyMCE.execCommand( 'mceFocus', false, active );
+		tinyMCE.execCommand( 'mceRemoveControl', false, active );
+	}
+
 }
