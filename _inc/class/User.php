@@ -246,7 +246,7 @@ class User{
 		$this->password = $user[ 'password' ];
 		$this->group = $user[ 'user_group' ];
 		$this->hash = $user[ 'hash' ];
-		$this->data = json_decode( $user[ 'data' ], true );
+		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );
 
 		// if not superuser check perms
 		if( $this->group != '_superuser' ){
