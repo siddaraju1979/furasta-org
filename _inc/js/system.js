@@ -136,3 +136,7 @@ function queryString( name ){
     		return decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 }
+
+function file_upload( ){
+
+}

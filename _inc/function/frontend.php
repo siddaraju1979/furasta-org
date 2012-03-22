@@ -296,7 +296,7 @@ function frontend_page_content( $params, &$smarty, $silent = false ){
 	ob_start( );
 
 	if( $type == 'Normal' )
-		$smarty->_tpl_vars{ '__page_content' };
+		echo $smarty->_tpl_vars{ '__page_content' };
 	else{
 		$page_id = $smarty->_tpl_vars{ 'page_id' };
 		$Plugins = Plugins::getInstance( );
