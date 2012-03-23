@@ -27,8 +27,12 @@ require HOME . '_inc/function/admin.php';
  */
 $type = @$_GET[ 'type' ];
 $id = (int) @$_GET[ 'id' ];
+$normal = true;
 
-if( $type == 'Normal' ){
+if( $type != 'Normal' ){
+        $normal = $Plugins->adminPageType( $type, $id );
+}
+if( $type == 'Normal' || !$normal ){
 	if( $id != 0 )
 		$content = stripslashes( single( 'select content from ' . PAGES . ' where id= ' . $id, 'content' ) );
 
@@ -50,6 +54,5 @@ if( $type == 'Normal' ){
 
 }
 else{
-        $Plugins->adminPageType( $type, $id );
 }
 ?>
