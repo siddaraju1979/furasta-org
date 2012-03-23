@@ -124,7 +124,9 @@ function toggle_bcc( ){
 	}
 }
 
-function send_emails( emails, email_subject, email_content ){
+function send_emails( emails, email_subject ){
+	var email_content = escape( $( '#contents-mail' ).html( ) );
+	console.log( email_content );
 	var end = emails.length;
 	var count = 0;
 	for( var i = 0; i < end; ++i ){
