@@ -312,6 +312,7 @@ class Plugins{
 
 		foreach( $this->plugins as $plugin ){
 			if( isset( $plugin[ 'admin' ][ 'page_type' ] ) ){
+
 				if( is_array( @$plugin[ 'admin' ][ 'page_type' ] ) ){ // multiple page types support
 					foreach( $plugin[ 'admin' ][ 'page_type' ] as $type )
 						array_push( $types, $type[ 'name' ] );
@@ -342,6 +343,9 @@ class Plugins{
 				foreach( $plugin[ 'admin' ][ 'page_type' ] as $t ){
 					if( $t[ 'name' ] != $type )
 						continue;
+
+					if( !isset( $t[ 'function' ] ) ) // use normal page type for admin area
+						return false;
 
 					if( function_exists( @$t[ 'function' ] ) )
 						return call_user_func( $t[ 'function' ], $id );
