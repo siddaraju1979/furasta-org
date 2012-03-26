@@ -66,13 +66,13 @@ function display_image( $path, $width = false, $height = false ){
  * @param int $width
  * @param int $height
  * @param bool $cache
- * @param string $name
+ * @param string $path
  */
-function crop_image( $image, $width, $height, $cache = false, $name = '' ){
+function crop_image( $image, $width, $height, $cache = false, $path = false ){
 
-	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_CROP_' . $name . $width . $height );
-	if( $cache && cache_exists( $cache_file, 'IMAGES' ) )
-		return cache_get_image( $cache_file, 'IMAGES' );
+	$name = md5( 'CROP_' . $width . $height );
+	if( $cache && cache_exists_image( $name, $path ) )
+		return cache_get_image( $name, $path );
 
 	$orig_width = imagesx( $image );
 	$orig_height = imagesy( $image );
@@ -108,7 +108,7 @@ function crop_image( $image, $width, $height, $cache = false, $name = '' ){
 	);
 
 	if( $cache ) // cache the image
-		cache_image( $cache_file, $new_image, 'IMAGES' );	
+		cache_image( $name, $new_image, $path );	
 	
 	return $new_image;
 }
@@ -125,13 +125,13 @@ function crop_image( $image, $width, $height, $cache = false, $name = '' ){
  * @params int $width
  * @params int $height optional
  * @params bool $cache optional
- * @params string $name optional - name used in cache file
+ * @params string $path
  * @return GDResource
  */
-function resize_image( $image, $width, $height = false, $cache = false, $name = '' ){
-	$cache_file = md5( 'FURASTA_FILES_IMAGES_CACHE_' . $name . $width . $height );
-	if( $cache && cache_exists( $cache_file, 'IMAGES' ) )
-		return cache_get_image( $cache_file, 'IMAGES' );
+function resize_image( $image, $width, $height = false, $cache = false, $path = false ){
+	$name = 'RESIZE' . $width . $height;
+	if( $cache && cache_exists_image( $name, $path ) )
+		return cache_get_image( $name, $path );
 
 	$old_width = imagesx( $image );
 	$old_height = imagesy( $image );
@@ -144,7 +144,7 @@ function resize_image( $image, $width, $height = false, $cache = false, $name = 
 	imagecopyresampled( $new_image, $image, 0, 0, 0, 0, $width, $height, $old_width, $old_height );
 
 	if( $cache ) // cache the image
-		cache_image( $cache_file, $new_image, 'IMAGES' );	
+		cache_image( $name, $new_image, $path );	
 
 	return $new_image;
 }
