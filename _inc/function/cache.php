@@ -240,14 +240,18 @@ function cache_js( $name, $file ){
  *
  * @param mixed $name of cache file 
  * @param mixed $image to be cached
+ * @param string $path
  * @access public
  * @return bool
  */
-function cache_image( $name, $image ){
+function cache_image( $name, $image, $path ){
 	$image_dir = USER_FILES . 'cache/IMAGES/';
 	if( !is_dir( $image_dir ) )
 		mkdir( $image_dir );
-	return imagepng( $image, $image_dir . $name );
+	$image_dir = $image_dir . md5( $path ) . '/';
+	if( !is_dir( $image_dir ) )
+		mkdir( $image_dir );
+	return imagepng( $image, $image_dir . md5( $name ) );
 }
 
 /**
@@ -255,11 +259,38 @@ function cache_image( $name, $image ){
  *
  * Used to retrieve cached images
  *  
- * @param mixed $name of cache file
+ * @param string $name
+ * @param string $path
  * @access public
  * @return bool
  */
-function cache_get_image( $name ){
-	$file = USER_FILES . 'cache/IMAGES/' . $name;
+function cache_get_image( $name, $path ){
+	$file = USER_FILES . 'cache/IMAGES/' . md5( $path ) . '/' . md5( $name );
 	return imagecreatefrompng( $file );
+}
+
+/**
+ * cache_clear_image
+ *
+ * destroys the cache of an image
+ *
+ * @param string $path
+ * @param string $name
+ * @return bool
+ */
+function cache_clear_image( $name, $path ){
+	return cache_clear( 'IMAGES' . '/' . md5( $path ) . '/' . md5( $name ) );
+}
+
+/**
+ * cache_exists_image
+ *
+ * checks if an image cache exists
+ *
+ * @param string $name
+ * @param string $path
+ * @return bool
+ */
+function cache_exists_image( $name, $path ){
+	return cache_exists( md5( $name ), 'IMAGES' . '/' . md5( $path ) );
 }
