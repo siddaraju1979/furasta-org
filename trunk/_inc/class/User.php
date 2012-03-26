@@ -339,6 +339,10 @@ class User{
 		if( $instance )
 			self::$instances{ $user[ 'id' ] } = new User( $user[ 'id' ] );	
 
+		// trigger onlogin event
+		$Plugins = Plugins::getInstance( );
+		$Plugins->hook( 'general', 'on_login' );
+
 		return true;
 
 	}
@@ -394,6 +398,10 @@ class User{
 	 * @return void
 	 */
 	public static function logout( ){
+
+		// trigger onlogout event
+		$Plugins = Plugins::getInstance( );
+		$Plugins->hook( 'general', 'on_logout' );
 
 		session_start( );
 		session_destroy( );

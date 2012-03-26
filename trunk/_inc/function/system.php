@@ -291,8 +291,19 @@ $PLUGINS = array(';
 
 $SETTINGS = array(' . "\n";
 
-	foreach( $SETTINGS as $setting => $value )
+	/**
+	 * print settings array, two layer deep array
+	 */
+	foreach( $SETTINGS as $setting => $value ){
+		if( is_array( $value ) ){
+			$filecontents .= '	\'' . $setting . '\' => array(' . "\n";
+			foreach( $value as $s => $v )
+				$filecontents .= '		\'' . $s . '\' => \'' . $v . '\',' . "\n";
+			$filecontents .= '	),' . "\n";
+			continue;
+		}
 		$filecontents .= '	\'' . $setting . '\' => \'' . addslashes( $value ) . '\',' . "\n";
+	}
 
 	$filecontents .= '
 );

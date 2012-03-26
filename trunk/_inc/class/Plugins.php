@@ -127,6 +127,12 @@
  *               # $sitemap
  *               'filter_sitemap' => 'function_name',
  *
+ * 		 # jobs
+ * 		 'jobs' => array(
+ * 			array( '+1 minute', 'function_name' ),	// executes close to every minute
+ *			array( '+1 year', 'function_name' )	// executes close to every year
+ *		 )
+ *
  *       ),
  *
  * );
@@ -155,6 +161,21 @@
  * should have a high importance so that it is
  * loaded before plugins which extend it.
  *
+ * JOBS
+ * 
+ * Jobs are supposed to emulate the cron program on linux systems.
+ * Cron allows you to set tasks which should be executed at given
+ * times. Jobs work in much the same way, the key difference is that
+ * you need a steady stream of vistors to make sure the jobs get run
+ * on time. IE, the jobs are only run when someone loads the website
+ * and the job program determines that they are due to be performed.
+ * There is no guarantee that the jobs will, in fact, be run on time,
+ * but merely at the next available opportunity.
+ *
+ * The first parameter for a job is the rate at which the job should
+ * be executed. This is calculated using strtotime so look at the
+ * strtotime for documentation: http://php.net/manual/en/function.strtotime.php
+ * 
  * @todo add support for $importance var, add the importance as array key in $this->plugins, and order foreaches by key 
  */
 class Plugins{
@@ -723,6 +744,80 @@ class Plugins{
 			}
 		}
 		return $this->plugins;
+	}
+
+	/**
+	 * jobs
+	 *
+	 * this function runs through registered jobs and checks
+	 * if they are due to be run. if they are it runs them and
+	 * records the time in the $SETTINGS array so that it can
+	 * determine later when the job needs to be run again
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function jobs( ){
+
+		global $SETTINGS;
+		$functions = array( ); // used to delete old jobs from the settings array
+		$change = false; // should the config be updated
+
+		foreach( $this->plugins as $plugin ){
+
+			if( is_array( @$plugin[ 'general' ][ 'jobs' ] ) ){
+
+				foreach( $plugin[ 'general' ][ 'jobs' ] as $job ){
+					$rate = @$job[ 0 ];
+					$function = @$job[ 1 ];
+					$time = time( );
+
+					if( !function_exists( $function ) ) // function does not exist
+						continue;
+
+					array_push( $functions, $function );
+					$change = true;
+
+					/**
+					 * if in settings array, check if it should be run now
+					 * or not
+					 */
+					if( isset( $SETTINGS[ 'jobs' ][ $function ] ) ){
+						$last = $SETTINGS[ 'jobs' ][ $function ];
+						$next = strtotime( $rate, $last );
+
+						if( $time < $next ) // program has been run already, within range
+							continue;
+					}
+
+					$SETTINGS[ 'jobs' ][ $function ] = $time;
+					call_user_func( $function );
+				}
+
+			}
+
+		}
+
+		/**
+		 * remove old jobs from settings array
+		 */
+		if( is_array( @$SETTINGS[ 'jobs' ] ) ){
+			foreach( $SETTINGS[ 'jobs' ] as $job ){
+				if( !in_array( $job, $functions ) ){
+					unset( $SETTINGS[ 'jobs' ][ $job ] );
+					$change = true;
+				}
+			}
+		}
+
+		/**
+		 * if settings_rewrite is required, do it!
+		 */
+		if( $change ){
+			global $DB, $PLUGINS;
+			settings_rewrite( $SETTINGS, $DB, $PLUGINS );
+		}
+
 	}
 
 }
