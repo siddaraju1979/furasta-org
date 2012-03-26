@@ -272,14 +272,13 @@ function cache_get_image( $name, $path ){
 /**
  * cache_clear_image
  *
- * destroys the cache of an image
+ * destroys all caches of a single image
  *
  * @param string $path
- * @param string $name
  * @return bool
  */
-function cache_clear_image( $name, $path ){
-	return cache_clear( 'IMAGES' . '/' . md5( $path ) . '/' . md5( $name ) );
+function cache_clear_image( $path ){
+	return cache_clear( 'IMAGES' . '/' . md5( $path ) );
 }
 
 /**
