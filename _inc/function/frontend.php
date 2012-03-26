@@ -165,13 +165,12 @@ function frontend_metadata( $params, &$smarty ){
 	$description = substr( $content, 0, 250 ) . '...';
 
 	$Template = Template::getInstance( );
-	// @todo add caching for multi-ddm and frontend javascript
 	$metadata='
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="' . SITEURL . '_inc/js/jquery/multi-ddm.min.js"></script>
-	<script type="text/javascript" src="' . SITEURL . '_inc/js/frontend.js"></script>
-	<link rel="stylesheet" type="text/css" href="' . SITEURL . '_inc/css/frontend.css"/>
+	<script type="text/javascript" src="' . cache_js( 'FURASTA_FRONTEND_MULTIDDM', '_inc/js/jquery/multi-ddm.min.js' ) . '"></script>
+	<script type="text/javascript" src="' . cache_js( 'FURASTA_FRONTEND_FRONTENDJS', '_inc/js/frontend.js' ) . '"></script>
+	<link rel="stylesheet" type="text/css" href="' . cache_css( 'FURASTA_FRONTEND_FRONTENDCSS', '_inc/css/frontend.css' ) .'"/>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="generator" content="Furasta.Org ' . VERSION . '" />
 	<meta name="description" content="' . $description . '" />

@@ -73,6 +73,9 @@ ignore_user_abort( true );
 ob_end_flush();
 flush();
 
+// check for jobs that should be run now
+$Plugins->jobs( );
+
 // execute plugin on_finish stuff
 $Plugins->hook( 'frontend', 'on_finish' );
 ?>
