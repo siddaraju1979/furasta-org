@@ -776,7 +776,6 @@ class Plugins{
 						continue;
 
 					array_push( $functions, $function );
-					$change = true;
 
 					/**
 					 * if in settings array, check if it should be run now
@@ -790,8 +789,15 @@ class Plugins{
 							continue;
 					}
 
-					$SETTINGS[ 'jobs' ][ $function ] = $time;
-					call_user_func( $function );
+					/**
+					 * call function, if it returns true then
+					 * update time in settings file
+					 */
+					$success = call_user_func( $function );
+					if( $success ){
+						$change = true;
+						$SETTINGS[ 'jobs' ][ $function ] = $time;
+					}
 				}
 
 			}
@@ -802,9 +808,9 @@ class Plugins{
 		 * remove old jobs from settings array
 		 */
 		if( is_array( @$SETTINGS[ 'jobs' ] ) ){
-			foreach( $SETTINGS[ 'jobs' ] as $job ){
-				if( !in_array( $job, $functions ) ){
-					unset( $SETTINGS[ 'jobs' ][ $job ] );
+			foreach( $SETTINGS[ 'jobs' ] as $name => $job ){
+				if( !in_array( $name, $functions ) ){
+					unset( $SETTINGS[ 'jobs' ][ $name ] );
 					$change = true;
 				}
 			}
