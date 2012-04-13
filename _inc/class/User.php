@@ -249,12 +249,15 @@ class User{
 		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );
 
 		// if not superuser check perms
-		if( $this->group != '_superuser' ){
+		if( $this->group == '_superuser' ){
+			$this->group_name = '_superuser';
+		}
+		else{
 			$group = Group::getInstance( $this->group );
 			$this->perm = $group->perm( );
 			$this->group_name = $group->name( );
-		}
-		
+		}	
+	
 		return true;
 	}
 
@@ -264,6 +267,58 @@ class User{
 	 * attempts to login the user, returns
 	 * false on failure
 	 *
+	 * uses the performLogin method, for more detail
+	 * on parameters see that method
+	 *
+	 * @param string $email
+	 * @param string $password
+	 * @param array $permissions ( groups in array )
+	 * @param bool $instance, create new instance of user after successful login
+	 * @access public
+	 * @return bool
+	 */
+	public static function login( $email, $password, $permissions = array( ), $instance = false ){
+
+		$user = row(
+			'select id,email,password,hash,user_group from ' . USERS
+			. ' where email="' . $email . '" and password="' . $password . '"'
+		);
+
+		return self::performLogin( $user, $permissions, $instance );
+
+	}
+
+	/**
+	 * loginHash
+	 *
+	 * allows users to login using a hash key, works
+	 * much the same as the login function
+	 * 
+	 * @param int $userid
+	 * @param int $hash
+	 * @param array $permissions
+	 * @param bool $instance
+	 * @access public
+	 * @return bool
+	 * @static
+	 */
+	public static function loginHash( $userid, $hash, $permissions = array( ), $instance = false ){
+
+		$user = row(
+			'select id,email,password,hash,user_group from ' . USERS
+			. ' where id="' . $userid . '" and password="' . $hash . '"'
+		);
+
+		return self::performLogin( $user, $permissions, $instance );
+
+	}
+
+	/**
+	 * performLogin
+	 *
+	 * does the bulk of the login work, called
+	 * by the login and loginHash functions
+	 *
 	 * NOTE : If $instance is set to true, creates
 	 * instance of user after login, stores it
 	 * in instance var, use User::getInstance( ) to 
@@ -272,20 +327,18 @@ class User{
 	 * $permissions should be in the form of an array
 	 * of group names such as array( 'users' )
 	 *
-	 * @param string $email
-	 * @param md5 string $password
-	 * @param array $permissions ( groups in array )
-	 * @param bool $instance, create new instance of user after successful login
-	 * @access public
+	 * @param
+	 * @access private
 	 * @return bool
+	 * @static
 	 */
-	public static function login( $email, $password, $permissions = array( ), $instance = false ){
+	private static function performLogin( $user, $permissions, $instance ){
 
 		// already logged in, so destroy old login
-		if( User::verify( ) )
-			User::logout( );
-
-		$user = row( 'select id,hash,user_group from ' . USERS . ' where email="' . $email . '" and password="' . $password . '"' );
+		if( User::verify( ) ){
+			unset( $_SESSION[ 'user' ] );
+			self::destroyCookie( );
+		}
 
 		// user not in db
 		if( !$user ){
@@ -330,8 +383,8 @@ class User{
 		}
 
 		$_SESSION[ 'user' ][ 'id' ] = $user[ 'id' ];
-		$_SESSION[ 'user' ][ 'email' ] = $email;
-		$_SESSION[ 'user' ][ 'password' ] = $password;
+		$_SESSION[ 'user' ][ 'email' ] = $user[ 'email' ];
+		$_SESSION[ 'user' ][ 'password' ] = $user[ 'password' ];
 		$_SESSION[ 'user' ][ 'perm' ] = @$perm;
 		$_SESSION[ 'user' ][ 'login' ] = true;
 
@@ -344,8 +397,9 @@ class User{
 		$Plugins->hook( 'general', 'on_login' );
 
 		return true;
-
 	}
+
+
 
 	/**
 	 * verify
@@ -403,7 +457,7 @@ class User{
 		$Plugins = Plugins::getInstance( );
 		$Plugins->hook( 'general', 'on_logout' );
 
-		session_start( );
+		@session_start( );
 		session_destroy( );
 
 		self::destroyCookie( );
@@ -431,6 +485,8 @@ class User{
 		if( isset( $_COOKIE[ 'furasta' ][ 'email' ] ) && isset( $_COOKIE[ 'furasta' ][ 'password' ] ) ){
 		        setcookie( 'furasta[email]', '', $expire_time );
 		        setcookie( 'furasta[password]', '', $expire_time );
+			unset( $_COOKIE[ 'furasta' ][ 'email' ] );
+			unset( $_COOKIE[ 'furasta' ][ 'password' ] );
 		}
 
 		return true;

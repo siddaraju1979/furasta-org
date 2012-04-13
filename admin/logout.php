@@ -10,7 +10,7 @@
  * @version    1.0
  */
 
-require '../_inc/class/User.php';
+require '../_inc/define.php';
 
 User::logout( );
 

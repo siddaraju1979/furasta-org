@@ -183,4 +183,20 @@ $(document).ready(function(){
 
 	});
 
+	$( '.loginas' ).click( loginas );
+
 });
+
+function loginas( ){
+	id = $( this ).attr( 'user_id' );
+	hash = $( this ).attr( 'hashstr' );
+	$( 'body' ).append( 
+		'<form id="loginhash" method="post" action="'
+			+ window.furasta.site.url + '_inc/ajax.php?file=admin/users/switch.php" style="display:none">'
+			+ '<input type="hidden" name="userid" value="' + id + '"/>'
+			+ '<input type="hidden" name="hash" value="' + hash + '"/>'
+			+ '<input type="hidden" name="loginhash" value="true"/>'
+		+ '</form>'
+	);
+	$( '#loginhash' ).submit( );
+}
