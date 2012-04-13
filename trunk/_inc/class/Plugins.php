@@ -201,6 +201,23 @@ class Plugins{
 	 */
 	public $plugins = array();
 
+	/**
+	 * daysofmonth
+	 *
+	 * an array of values accepted by the jobs function
+	 * outside of the normal strtotime values
+	 *
+	 * @var array
+	 * @access private
+	 * @static
+	 */
+	static private $daysofmonth = array(
+		'01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
+		'11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+		'21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
+		'31', 'last'
+	);
+
         /**
          * getInstance 
          * 
@@ -783,7 +800,19 @@ class Plugins{
 					 */
 					if( isset( $SETTINGS[ 'jobs' ][ $function ] ) ){
 						$last = $SETTINGS[ 'jobs' ][ $function ];
-						$next = strtotime( $rate, $last );
+
+						/**
+						 * get next execution date
+						 */
+						if( in_array( $rate, self::$daysofmonth ) ){
+							$day = date( 'dd' );
+							if( $rate == 'last' ) // get last day of month
+								$rate = date( 't', strtotime( 'today' ) );
+							if( $day == $rate ) // this is the dayofmonth
+								$next = $time - 1;
+						}
+						else
+							$next = strtotime( $rate, $last );
 
 						if( $time < $next ) // program has been run already, within range
 							continue;

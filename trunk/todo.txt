@@ -1,7 +1,7 @@
 # TODO list for Furasta.Org v1.0 Beta 2 #
 
 10. Develop a few plugins to test, and adjust, the plugin architecture: File Manager (*), News Plugin (with RSS), something else..
-17. Finish the password reminder!
+17. Finish the password reminder! fix reset password in admin area
 34. add file validation functions to validation plugin, remove translation for frontend. follow example of connect4 validation
 35. add permissions to file viewing in _inc/files.php
 36. remove language dependencies from _inc/js/system.js

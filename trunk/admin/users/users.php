@@ -55,22 +55,38 @@ $content.='
 
 <span style="float:right" id="new-user"><span id="header-New-User" class="header-img">&nbsp;</span><h1 class="image-left link">New User</h1></span>
 <span><span id="header-Users" class="header-img">&nbsp;</span> <h1 class="image-left">Users</h1></span>
-<br/>
+<br/>';
+
+$super = ( $User->groupName( ) == '_superuser' );
+
+$content .= '
 <table id="users" class="row-color">
-	<tr class="top_bar"><th>Name</th><th>Email</th><th>Group</th><th>Delete</th></tr>
+	<tr class="top_bar">
+		<th>Name</th>
+		<th>Email</th>
+		<th>Group</th>';
+if( $super )
+	$content .= '<th>Login</th>';
+
+$content .= '
+		<th>Delete</th>
+	</tr>
 ';
 
-$query=query('select id,name,email,user_group from '.USERS.' order by id');
+$query=query('select id,name,email,password,user_group,hash from '.USERS.' order by id');
 while($row=mysql_fetch_array($query)){
 	$id=$row['id'];
 	$group_id=$row['user_group'];
 	$group = ( $group_id == '_superuser' ) ? '_superuser' : single( 'select name from ' . GROUPS . ' where id=' . $group_id, 'name' );
-	$href='<a href="users.php?page=edit-users&id='.$id.'" class="list-link">';
         $delete = ( $group_id == '_superuser' ) ? '&nbsp;' : '<a id="'.$id.'" class="delete link"><span class="admin-menu-img" id="delete-img" title="Delete User" alt="Delete User"/></a>';
+	$href = '<a href="users.php?page=edit-users&id='.$id.'" class="list-link">';
 	$content.='<tr>
 			<td class="first">'.$href.$row['name'].'</a></td>
 			<td>'.$href.$row['email'].'</a></td>
-			<td>'.$href.$group.'</a></td>
+			<td>'.$href.$group.'</a></td>';
+	if( $super && $row[ 'hash' ] == 'activated' )
+		$content .= '<td><a class="link loginas" user_id="' . $id . '" hashstr="' . $row[ 'password' ] . '">Login</a></td>';
+	$content .= '
 			<td>' . $delete . '</td>
 		</tr>';
 }
