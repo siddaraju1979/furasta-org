@@ -55,6 +55,10 @@ function num( $query, $alert = false ){
 
 	$result = query( $query );
 
+	// no rows
+	if( !$result )
+		return 0;
+
 	$num = mysql_num_rows( $result );
 
 	/**

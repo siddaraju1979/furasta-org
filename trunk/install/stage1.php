@@ -45,7 +45,11 @@ $( document ).ready( function( ){
 			"name" : "username",
 			"required" : true
 		}
-	});
+	},
+		function( error ){
+			fAlert( error );
+		}
+	);
 	$( "#install" ).submit( function( ){
 		$("#check_connection").html("<img src=\"/_inc/img/loading.gif\"/> Checking Details...");
 		var connection=checkConnection(["Hostname","Username","DatabaseName","Password"]);
@@ -53,19 +57,17 @@ $( document ).ready( function( ){
 		$("input[name=Hostname]").removeClass("error");
 		$("input[name=Username]").removeClass("error");
 		$("input[name=Password]").removeClass("error");
-		if(connection!="ok"){
-			if(connection=="database")
-				$("input[name=DatabaseName]").addClass("error");
-			else{
-				$("input[name=Hostname]").addClass("error");
-				$("input[name=Username]").addClass("error");
-				$("input[name=Password]").addClass("error");
-			}
-			fAlert("The details that you have supplied are invalid. Please correct them to continue.");
-			$("#check_connection").html("&nbsp;");
-		}
-		else
+		if(connection=="ok")
 			return true;
+		if(connection=="database")
+			$("input[name=DatabaseName]").addClass("error");
+		else{
+			$("input[name=Hostname]").addClass("error");
+			$("input[name=Username]").addClass("error");
+			$("input[name=Password]").addClass("error");
+		}
+		fAlert("The details that you have supplied are invalid. Please correct them to continue.");
+		$("#check_connection").html("&nbsp;");
 
 		return false;
 	} );

@@ -28,6 +28,7 @@ $users=$prefix.'users';
 $trash=$prefix.'trash';
 $groups=$prefix.'groups';
 $options= $prefix . 'options';
+$files = $prefix . 'files';
 $hash=md5(mt_rand());
 $site_url=$_SESSION['settings']['site_url'];
 $user_files=$_SESSION['settings']['user_files'];
@@ -38,26 +39,44 @@ $pagecontent='
 <p>To log in to your CP <a href=\'/admin\'>Click Here</a></p>
 ';
 
+// pages
 mysql_query('drop table if exists '.$pages);
 mysql_query('create table '.$pages.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text, home int,display int)');
 mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
 
 // user
 mysql_query('drop table if exists '.$users);
-mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,user_group text,hash text,reminder text, data text)');
+mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,groups text,hash text,reminder text, data text)');
 mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","_superuser","'.$hash.'","","")');
 $user_id = mysql_insert_id( );
 
-mysql_query( 'drop table if exists ' . $groups );
-mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text )' );
-mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "e,c,d,t,o,s,u" )' );
 
+// groups
+mysql_query( 'drop table if exists ' . $groups );
+mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text, file_perm text )' );
+mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "a,e,c,d,t,o,s,u", "|" )' );
+
+// trash
 mysql_query('drop table if exists '.$trash);
 mysql_query('create table '.$trash.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text,home int,display int)');
 mysql_query('insert into '.$trash.' values(0,"Example Page","Sample page content.","Example-Page","Default","Normal","'.date('Y-m-d').'","Installer",1,"","|",1,1)');
 
+// options
 mysql_query( 'drop table if exists ' . $options );
 mysql_query( 'create table ' . $options . ' (name text,value text)' );
+
+// file manager
+mysql_query( 'drop table if exists ' . $files );
+mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, owner int, perm text, type text, public int, hash text )' );
+// file manager add initial directory structure
+mysql_query( 'insert into ' . $files . ' values( "", "users", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
+$fm_users_id = mysql_insert_id( );
+mysql_query( 'insert into ' . $files . ' values( "", "1", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+$fm_users_su_id = mysql_insert_id( );
+mysql_query( 'insert into ' . $files . ' values( "", "groups", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+$fm_groups_id = mysql_insert_id( );
+mysql_query( 'insert into ' . $files . ' values( "", "_superuser", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+$fm_groups_su_id = mysql_insert_id( );
 
 $filecontents='<?php
 define(\'PAGES\',\''.$pages.'\');
@@ -65,6 +84,7 @@ define(\'USERS\',\''.$users.'\');
 define(\'TRASH\',\''.$trash.'\');
 define(\'GROUPS\',\''.$groups.'\');
 define(\'OPTIONS\',\''.$options.'\');
+define(\'FILES\',\'' . $files . '\');
 define(\'TEMPLATE_DIR\',\''.HOME.'_www/\');
 define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
@@ -104,16 +124,25 @@ $dirs = array(
 	$user_files . 'smarty/templates',
 	$user_files . 'smarty/template_c',
 	
-	// files dirs
+	// file manager dirs
 	$user_files . 'files',
 	$user_files . 'files/users',
 	$user_files . 'files/users/' . $user_id,
-	$user_files . 'files/users/' . $user_id . '/public',
-	$user_files . 'files/users/' . $user_id . '/private',
 	$user_files . 'files/groups',
 	$user_files . 'files/groups/_superuser',
-	$user_files . 'files/groups/_superuser/public',
-	$user_files . 'files/groups/_superuser/private'
+	$user_files . 'db',
+	$user_files . 'db/' . $fm_users_id,
+	$user_files . 'db/' . $fm_users_id . '/' . $fm_users_su_id,
+	$user_files . 'db/' . $fm_groups_id,
+	$user_files . 'db/' . $fm_groups_id . '/' . $fm_groups_su_id
+);
+
+// symlinks to create for the file manager 
+$symlinks = array(
+	$user_files . 'files/.users.lnk' => $user_files . 'db/' . $fm_users_id . '/',
+	$user_files . 'files/users/.' . $user_id . '.lnk' => $user_files . 'db/' . $fm_users_id . '/' . $fm_users_su_id . '/',
+	$user_files . 'files/.groups.lnk' => $user_files . 'db/' . $fm_groups_id . '/',
+	$user_files . 'files/groups/._superuser.lnk' =>  $user_files . 'db/' . $fm_groups_id . '/' . $fm_groups_su_id . '/'
 );
 
 // create dirs
@@ -124,6 +153,12 @@ foreach( $dirs as $dir ){
 }
 if( $match == false )
 	die( 'could not create some of the required directories in the user dir. make sure your user dir is writable' );
+
+// create symlinks
+foreach( $symlinks as $link => $target ){
+	if( !file_exists( $link ) )
+		symlink( $target, $link );
+}
 
 $htaccess=
 	"# .htaccess - Furasta.Org\n".

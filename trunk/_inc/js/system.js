@@ -62,27 +62,6 @@ function fHelp(message){
 		.dialog("open");
 }
 
-function checkConnection(details){
-	var hostname=$("input[name="+details[0]+"]").val();
-	var username=$("input[name="+details[1]+"]").val();
-        var database=$("input[name="+details[2]+"]").val();
-        var password=$("input[name="+details[3]+"]").val();
-
-        var hash=Math.floor(Math.random()*1001);
-	var dataString='hostname='+hostname+'&username='+username+'&database='+database+'&password='+password;
-
-	$.ajax({
-		type: "POST",
-		data: dataString,
-		url:'/install/connection.php?hash='+hash,
-		async: false,
-                success:function(html){
-			window.html=html;
-                }
-	});			
-	return window.html;
-}
-
 /**
  * fetch 
  * 

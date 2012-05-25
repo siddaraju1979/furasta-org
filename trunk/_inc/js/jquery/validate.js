@@ -1,5 +1,5 @@
 /**
- * jQuery Form Validation Plugin - Modified for Furasta.Org Multi-Lingual Support
+ * jQuery Form Validation Plugin
  *
  * A jquery plugin which may be used to validate forms.
  * This function accepts an array of fields to be processed.
@@ -22,7 +22,7 @@
  *      'name' : 'Password',
  *      'required' : true,
  *      'minlength' : 10,
- *      'match' : 'Repeat-Password'
+ *      'match' : 'input[name="repeat-password-input"]'
  *   },
  *   'repeat-password-input' : {
  *      'name' : 'Repeat Password',
@@ -39,9 +39,9 @@
  * input being validated, so the corresponding html for
  * the above array should be:
  *
- * <input name="Name" type="text" />
- * <input name="Password" type="password" />
- * <input name="Repeat-Password" type="password" />
+ * <input name="name-input" type="text" />
+ * <input name="password-input" type="password" />
+ * <input name="repeat-password-input" type="password" />
  *
  * The key should contain an array value of conditions which
  * apply to that input. A list of all the possible conditions
@@ -118,6 +118,7 @@
 		maxlength_f : [ ],
         	match_f : [ ],
 	        url_f : [ ],
+		file_f : [ ],
 
 		/**
 		 * addConds
@@ -125,47 +126,72 @@
 		 * adds the given conditions to the Validate object
 		 */
 	        addConds : function( pieces ){
-
         	        for( var i in pieces ){
+				selector = this.getSelector( i );
+				if( selector == false )
+					continue;
                 	        for( var n in pieces[ i ] ){
 	                                switch( n ){
         	                                case "name":
-                	                                if( $( "input[name=" + i + "]").length != 0 )
-                        	                                this.name_f.push( i );
+							this.name_f[ selector ] = pieces[ i ][ n ];
                                 	        break;
         	                                case "required":
-                	                                if( pieces[ i ][ n ] == true && $( "input[name=" + i + "]").length != 0 )
-                        	                                this.required_f.push( i );
+                	                                if( pieces[ i ][ n ] == true )
+                        	                                this.required_f.push( selector );
                                 	        break;
                                         	case "pattern":
-	                                                if( $( "input[name=" + i + "]" ).length != 0 )
-        	                                                this.pattern_f[ i ] = pieces[ i ][ n ];
+							this.pattern_f[ selector ] = pieces[ i ][ n ];
                 	                        break;
                         	                case "email":
-                                	                if( pieces[ i ][ n ] == true && $( "input[name=" + i + "]" ).length != 0 )
-                                        	                this.email_f.push( i );
+                                	                if( pieces[ i ][ n ] == true )
+                                        	                this.email_f.push( selector );
 	                                        break;
         	                                case "minlength":
-                	                                if( $( "input[name=" + i + "]" ).length != 0 )
-                        	                                this.minlength_f[ i ] = pieces[ i ][ n ];
+							this.minlength_f[ selector ] = pieces[ i ][ n ];
                                 	        break;
 						case 'maxlength':
-                                                        if( $( "input[name=" + i + "]" ).length != 0 )
-                                                                this.maxlength_f[ i ] = pieces[ i ][ n ];
+							this.maxlength_f[ selector ] = pieces[ i ][ n ];
                                                 break;
                                         	case "match":
-	                                                if( $( "input[name=" + i + "]" ).length != 0 )
-        	                                                this.match_f[ i ] = pieces[ i ][ n ];
+							this.match_f[ selector ] = pieces[ i ][ n ];
                 	                        break;
                         	                case 'url':
                                 	                if( pieces[ i ][ n ] == true )
-                                        	                this.url_f.push( i );
+                                        	                this.url_f.push( selector );
 	                                        break;
+						case 'file':
+							this.file_f[ i ] = pieces[ i ][ n ];
+						break;
         	                        }
                 	        }
 	                }
 
         	},
+
+		/**
+		 * getSelector
+		 * 
+		 * returns a selector for the name
+		 */
+		getSelector : function( selector ){
+			input = 'input[name="' + selector + '"]';
+			if( $( input ).length != 0 )
+				return input;
+
+			select = 'select[name="' + selector + '"]';
+			if( $( select ).length != 0 )
+				return select;
+
+			textarea = 'textarea[name="' + selector + '")';
+			if( $( textarea ).length != 0 )
+				return textarea;
+
+			checkbox = 'checkbox[name="' + selector + '"]';
+			if( $( checkbox ).length != 0 )
+				return checkbox;
+
+			return false;
+		},
 
 		/**
 		 * customErrorHandler
@@ -203,11 +229,11 @@
         	required : function( ){
 
                 	for( var i = 0; i < this.required_f.length; i++ ){
-                        	var loc = $( "input[name=" + this.required_f[ i ] + "]" );
+                        	var loc = $( this.required_f[ i ] );
 	                        loc.removeClass( 'error' );
 
         	                if( loc.val( ) == '' ){
-					this.errors = trans_error( 5, this.name_f[ i ] );
+					this.errors = 'The ' + this.name_f[ this.required_f[ i ] ] + ' field is required';
                         	        loc.addClass( 'error' );
 
                                 	this.errorHandler( );
@@ -229,12 +255,11 @@
         	        var filter=/^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
 	                for( var i = 0; i < this.email_f.length; i++ ){
-        	                var loc = $( "input[name=" + this.email_f[ i ] + "]" );
+        	                var loc = $( this.email_f[ i ] );
                 	        loc.removeClass( 'error' );
 
                         	if( filter.test( loc.val( ) ) == false ){
-					this.errors = trans_error( 6, this.name_f[ i ] );
-	                                this.errors = 'Please enter a valid email address';
+	                                this.errors = 'Please enter a valid email address in the ' + this.name_f[ this.email_f[ i ] ] + ' field';
         	                        loc.addClass( 'error' );
 
                 	                this.errorHandler( );
@@ -253,14 +278,13 @@
 		 */
 	        minlength : function( ){
 
-			var count = 0;
         	        for( var i in this.minlength_f ){
-				++count;
-                	        var loc = $( "input[name=" + i + "]" );
+
+                	        var loc = $( i );
                         	loc.removeClass( 'error' );
 
 	                        if( loc.val( ).length < this.minlength_f[ i ] ){
-					this.errors = trans_error( 8, [ this.name_f[ count ], this.minlength_f[ i ] ] );
+					this.errors = 'The ' + this.name_f[ i ] + ' field must be at least ' + this.minlength_f[ i ] + ' characters long';
                 	                loc.addClass( 'error' );
                         	        this.errorHandler( );
                                 	return false;
@@ -278,14 +302,13 @@
                  */
                 maxlength : function( ){
 
-			var count = 0;
                         for( var i in this.maxlength_f ){
-				++count;
-                                var loc = $( "input[name=" + i + "]" );
+
+                                var loc = $( i );
                                 loc.removeClass( 'error' );
 
                                 if( loc.val( ).length > this.maxlength_f[ i ] ){
-					this.errors = trans_error( 18, [ this.name_f[ count ], this.minlength_f[ i ] ] );
+					this.errors = 'The ' + this.name_f[ i ] + ' field must be at most ' + this.minlength_f[ i ] + ' characters long';
                                         loc.addClass( 'error' );
                                         this.errorHandler( );
                                         return false;
@@ -302,16 +325,14 @@
 		 */
 	        match : function( ){
 	
-			var count = 0;
         	        for( var i in this.match_f ){
-				++count;
-                	        var locone = $("input[name=" + i + "]");
-                        	var loctwo = $("input[name=" + this.match_f[ i ] + "]");
+                	        var locone = $( i );
+                        	var loctwo = $( this.getSelector( this.match_f[ i ] ) );
 	                        locone.removeClass( 'error' );
         	                loctwo.removeClass( 'error' );
 	
         	                if( locone.val( ) != loctwo.val( ) ){
-					this.errors = trans_error( 9, [ this.name_f[ count ], this.match_f[ i ] ] );
+					this.errors = 'The ' + this.name_f[ i ] + ' must match the ' + loctwo.attr( 'name' ) + ' field';
                         	        locone.addClass( 'error' );
                                 	loctwo.addClass( 'error' );
 	                                this.errorHandler( );
@@ -335,11 +356,11 @@
 			var filter = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
                         for( var i = 0; i < this.url_f.length; i++ ){
-		                var loc = $( "input[name=" + this.url_f[ i ] + "]" );
+		                var loc = $( this.url_f[ i ] );
 		                loc.removeClass( 'error' );
 
 	                        if( filter.test( loc.val( ) ) == false && loc.val( ) != "" ){
-					this.errors = trans_error( 10, this.name_f[ i ] );
+					this.errors = 'Please enter a valid URL in the ' + this.name_f[ this.url_f[ i ] ] + ' field';
                                 	loc.addClass( 'error' );
 					this.errorHandler( );
 					return false;
@@ -358,9 +379,7 @@
 		 */
 		pattern : function( ){
 
-			var count = 0;
 			for( var i in this.pattern_f ){
-				++count;
 
 				/**
 				 * check if array, or standard notaion is being used
@@ -371,7 +390,7 @@
 				}
 				else{
 					var regex = this.pattern_f[ i ];
-					var message = trans_error( 7, this.name_f[ count ] );
+					var message = 'The ' + this.name_f[ i ] + ' field is invalid';
 				}
 
 				/**
@@ -380,7 +399,7 @@
 			        if( typeof( regex ) != 'object' )
 			                regex = new RegExp( regex );
 
-				var loc = $( "input[name=" + i + "]" );
+				var loc = $( i );
 				loc.removeClass( 'error' );
 
 				if( regex.test( loc.val( ) ) == false ){
@@ -395,6 +414,42 @@
 
 		},
 
+
+		/**
+		 * file
+		 * 
+		 * checks file extension
+		 */
+		file : function( ){
+
+			for( var i in this.file_f ){
+				var loc = $( i );
+				loc.removeClass( 'error' );
+
+				if( typeof( this.file_f[ i ].extensions ) != 'undefined' ){
+				
+					extension = loc.val( ).split( '.' );
+					extension = extension[ extension.length - 1 ];
+					allowed_extensions = this.file_f[ i ].extensions.split( ',' );
+					match = false;
+					$( allowed_extensions ).each( function( e ){
+						if( allowed_extensions[ e ] == extension )
+							match = true;
+					});
+					if( !match ){
+						this.errors = 'The ' + this.name_f[ i ] + ' field only accepts files of type: ' 
+							+ this.file_f[ i ].extensions;
+				                loc.addClass( 'error' );
+						this.errorHandler( );
+						return false;
+					}
+
+				}
+				
+			}
+
+			return true;
+		},
 
 		/**
 		 * execute
@@ -426,7 +481,10 @@
                 	if( this.match( ) == false )
                         	return false;
 
-                	if( this.url_f.lenth != 0 && this.url( ) == false )
+                	if( this.url_f.length != 0 && this.url( ) == false )
+                        	return false;
+
+                	if( !this.file( ) )
                         	return false;
 
                 	this.validated = 1;
@@ -447,6 +505,9 @@
 		switch( conds ){
 			case 'execute':
 				return Validate.execute( );
+			break;
+			case 'errorHandler':
+				return Validate.customErrorHandler = errorHandler;
 			break;
 			case 'refresh':
 				return Validate.validated = 0;

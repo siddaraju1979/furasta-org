@@ -95,6 +95,26 @@
  * permissions as well internally, so there is no need
  * to run hasPerm if pagePerm is run.
  *
+ * === DATA & OPTIONS ===
+ * 
+ * Not all required data on users can be stored in the users table.
+ * This class provides two alternatives to storing data for users:
+ * 
+ * Data can be stored in the data column in the users table -
+ * a JSON encoded string of user data, so it's sufficient for data
+ * that does not need to be indexed.
+ *
+ * It can also be stored using the options methods which use the
+ * options table (for general CMS options/settings) to store data.
+ * This table takes the form of name, value and stores data very simply.
+ * Note: It is advisable to take a look at the database structure.
+ * Using this method extra data can be stored and indexed. For example,
+ * assuming you have stored user rating data using the options methods in
+ * this class you could retrieve all user ratings with the following query:
+ *
+ * select users.id,options.value from users,options where options.name=concat("user_",users.id,"_rating");
+ * 
+ * 
  * @package user_management
  * @author Conor Mac Aoidh <conormacaoidh@gmail.com> 
  * @license http://furasta.org/licence.txt The BSD License
@@ -145,20 +165,12 @@ class User{
 	private $password;
 
 	/**
-	 * group 
+	 * groups 
 	 * 
-	 * @var string
+	 * @var array
 	 * @access private
 	 */
-	private $group;
-
-	/**
-	 * group_name 
-	 * 
-	 * @var string
-	 * @access private
-	 */
-	private $group_name;
+	private $groups;
 
 	/**
 	 * hash
@@ -185,12 +197,137 @@ class User{
 	private $data = array( );
 
 	/**
-	 * _group
+	 * options
 	 *
-	 * @var bool/array
+	 * holds user options which are stored in the
+	 * options table
+	 *
+	 * @var array
 	 * @access private
 	 */
-	private $_group = false;
+	private $options;
+
+	/**
+	 * _superuser
+	 *
+	 * true if the user is the superuser. this means
+	 * that all permission checks are bypassed
+	 *
+	 * @var bool
+	 * @access private
+	 */
+	private $_superuser = false;
+
+	/**
+	 * performLogin
+	 *
+	 * does the bulk of the login work, called
+	 * by the login and loginHash functions
+	 *
+	 * NOTE : If $instance is set to true, creates
+	 * instance of user after login, stores it
+	 * in instance var, use User::getInstance( ) to 
+	 * access the now logged in user
+	 * 
+	 * $permissions should be in the form of an array
+	 * of group names such as array( 'users' )
+	 *
+	 * @todo consider creating second constructor to save a database query
+	 * on login
+	 * @param
+	 * @access private
+	 * @return bool
+	 * @static
+	 */
+	private static function performLogin( $user, $permissions, $instance ){
+
+		// already logged in, so destroy old login
+		if( User::verify( ) ){
+			unset( $_SESSION[ 'user' ] );
+			self::destroyCookie( );
+		}
+
+		// user not in db
+		if( !$user ){
+			$Template = Template::getInstance( );
+			$Template->runtimeError( '12' );
+			return false;
+		}
+
+		/**
+		 * get instance of template class and show error
+		 * from lang files
+		 */
+		if( $user[ 'hash' ] != 'activated' ){
+			$Template = Template::getInstance( );
+			$Template->runtimeError( '11' );
+			return false;
+		}
+
+		/**
+	 	 * check permissions if not super user and permissions
+		 * check is required
+		 */
+		if( $user[ 'groups' ] != '_superuser' && !empty( $permissions ) ){
+			$groups = self::permToArray( $user[ 'groups' ] );
+			$perm = array( );
+	
+			foreach( $groups as $group ){
+				$Group = Group::getInstance( $group );
+				$perm = User::mergePerm( $perm, $Group->perms( ) );
+			} 
+
+			// make sure user has login perms
+			if( !is_array( $permissions ) )
+				$permissions = array( $permissions );
+
+			$match = false;
+			foreach( $permissions as $p ){
+				if( in_array( $p, $perm ) )
+					$match = true;
+			}
+
+			if( !$match ){
+				$Template = Template::getInstance( );
+				$Template->runtimeerror( '19' );
+				return false;
+			}
+		}
+
+		$_SESSION[ 'user' ][ 'id' ] = $user[ 'id' ];
+		$_SESSION[ 'user' ][ 'email' ] = $user[ 'email' ];
+		$_SESSION[ 'user' ][ 'password' ] = $user[ 'password' ];
+		$_SESSION[ 'user' ][ 'perm' ] = @$perm;
+		$_SESSION[ 'user' ][ 'login' ] = true;
+
+		// create new instance of user if required
+		if( $instance )
+			self::$instances{ $user[ 'id' ] } = new User( $user[ 'id' ] );	
+
+		// trigger onlogin event
+		$Plugins = Plugins::getInstance( );
+		$Plugins->hook( 'general', 'on_login' );
+
+		return true;
+	}
+
+	/**
+	 * mergePerm
+	 *
+	 * merges two arrays of perms
+	 *
+	 * @param array $perms
+	 * @access private
+	 * @return void
+	 * @static
+	 */
+	private static function mergePerm( $perm1, $perm2 ){
+		foreach( $perm2 as $p ){
+			if( !in_array( $p, $perm1 ) )
+				array_push( $perm1, $p );
+		}
+		return $perm1;
+	}
 
 	/**
 	 * getInstance
@@ -244,18 +381,25 @@ class User{
 		$this->name = $user[ 'name' ];
 		$this->email = $user[ 'email' ];
 		$this->password = $user[ 'password' ];
-		$this->group = $user[ 'user_group' ];
+		$groups = $user[ 'groups' ];
+		$this->groups = array( );
 		$this->hash = $user[ 'hash' ];
 		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );
 
 		// if not superuser check perms
-		if( $this->group == '_superuser' ){
-			$this->group_name = '_superuser';
+		if( $groups == '_superuser' ){
+			$this->_superuser = true;
 		}
 		else{
-			$group = Group::getInstance( $this->group );
-			$this->perm = $group->perm( );
-			$this->group_name = $group->name( );
+			/**
+			 * create an instance of each group this user is in
+			 * to inherit permissions
+			 */
+			$groups = self::permToArray( $groups );
+			foreach( $groups as $group ){
+				$this->groups{ $group } = Group::getInstance( $group );
+				$this->perm = $this->mergePerm( $this->perm, $groups{ $group }->perm( ) );
+			}
 		}	
 	
 		return true;
@@ -280,7 +424,7 @@ class User{
 	public static function login( $email, $password, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select id,email,password,hash,user_group from ' . USERS
+			'select id,email,password,hash,groups from ' . USERS
 			. ' where email="' . $email . '" and password="' . $password . '"'
 		);
 
@@ -305,101 +449,13 @@ class User{
 	public static function loginHash( $userid, $hash, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select id,email,password,hash,user_group from ' . USERS
+			'select id,email,password,hash,groups from ' . USERS
 			. ' where id="' . $userid . '" and password="' . $hash . '"'
 		);
 
 		return self::performLogin( $user, $permissions, $instance );
 
 	}
-
-	/**
-	 * performLogin
-	 *
-	 * does the bulk of the login work, called
-	 * by the login and loginHash functions
-	 *
-	 * NOTE : If $instance is set to true, creates
-	 * instance of user after login, stores it
-	 * in instance var, use User::getInstance( ) to 
-	 * access the now logged in user
-	 * 
-	 * $permissions should be in the form of an array
-	 * of group names such as array( 'users' )
-	 *
-	 * @param
-	 * @access private
-	 * @return bool
-	 * @static
-	 */
-	private static function performLogin( $user, $permissions, $instance ){
-
-		// already logged in, so destroy old login
-		if( User::verify( ) ){
-			unset( $_SESSION[ 'user' ] );
-			self::destroyCookie( );
-		}
-
-		// user not in db
-		if( !$user ){
-			$Template = Template::getInstance( );
-			$Template->runtimeError( '12' );
-			return false;
-		}
-
-		/**
-		 * get instance of template class and show error
-		 * from lang files
-		 */
-		if( $user[ 'hash' ] != 'activated' ){
-			$Template = Template::getInstance( );
-			$Template->runtimeError( '11' );
-			return false;
-		}
-
-		/**
-	 	 * check permissions if not super user and permissions
-		 * check is required
-		 */
-		if( $user[ 'user_group' ] != '_superuser' && !empty( $permissions ) ){
-			$perm = single( 'select perm from ' . GROUPS . ' where id=' . $user[ 'user_group' ], 'perm' );
-			$perm = self::permToArray( $perm );
-
-			// make sure user has login perms
-			if( !is_array( $permissions ) )
-				$permissions = array( $permissions );
-
-			$match = false;
-			foreach( $permissions as $p ){
-				if( in_array( $p, $perm ) )
-					$match = true;
-			}
-
-			if( !$match ){
-				$Template = Template::getInstance( );
-				$Template->runtimeerror( '19' );
-				return false;
-			}
-		}
-
-		$_SESSION[ 'user' ][ 'id' ] = $user[ 'id' ];
-		$_SESSION[ 'user' ][ 'email' ] = $user[ 'email' ];
-		$_SESSION[ 'user' ][ 'password' ] = $user[ 'password' ];
-		$_SESSION[ 'user' ][ 'perm' ] = @$perm;
-		$_SESSION[ 'user' ][ 'login' ] = true;
-
-		// create new instance of user if required
-		if( $instance )
-			self::$instances{ $user[ 'id' ] } = new User( $user[ 'id' ] );	
-
-		// trigger onlogin event
-		$Plugins = Plugins::getInstance( );
-		$Plugins->hook( 'general', 'on_login' );
-
-		return true;
-	}
-
-
 
 	/**
 	 * verify
@@ -508,7 +564,7 @@ class User{
 		/**
 		 * if user is super user bypass all permissions 
 		 */
-		if( $this->group == '_superuser' )
+		if( $this->_superuser )
 			return true;
 
 		/**
@@ -528,33 +584,40 @@ class User{
 	 * checks if a user has permission to access a file
 	 * in the user files directory
 	 *
-	 * @param string $path
+	 * @param string $id
 	 * @access public
 	 * @return bool
 	 */
-	public function hasFilePerm( $path ){
+	public function hasFilePerm( $id ){
 
 		// if user is superuser bypass all permissions
-		if( $this->group == '_superuser' )
+		if( $this->_superuser )
 			return true;
 
-		// split path into directories
-		$path = explode( '/', $path );
-		while( $path != 'files' )
-			array_shift( $path );
+		// the user is trying to access his own file
+		if( $this->id == $id )
+			return true;
 
-		$section = ( @$path[ 0 ] == 'users' ) ? 'users' : 'groups';
-		$id = ( int ) @$path[ 1 ];
-		$filename = @$path[ 2 ];
+		/**
+		 * if user has admin permissions over the owner
+		 * of the file, return true
+		 */
+		if( in_array( $id, $this->file_perm{ 'users' } ) )
+			return true;
 
-		die( $section . $id . $filename );
+		/**
+		 * if groups are set, they must be checked
+		 */
+		if( !empty( $this->file_perm{ 'groups' } ) ){
+			$User = User::getInstance( $id );
+			foreach( $User->groups( ) as $Group ){
+				if( in_array( $Group->id( ), $this->file_perm{ 'groups' } ) )
+					return true;
+			}
+		}
 
-		// check user file perm
-
-		if( !Group::groupsHaveFilePerm( $this->id, $path ) )
-			return false;
-
-		return true;
+		// nothing left to check, permission not granted
+		return false;
 	}
 
 	/**
@@ -573,7 +636,7 @@ class User{
 		/**
 		 *  if user is super user bypass all permissions
 		 */
-		if( $this->group == '_superuser' )
+		if( $this->_superuser )
 			return true;
 
                 /**
@@ -606,7 +669,7 @@ class User{
 				 * if user is in group, then he has
 				 * permission
 				 */
-				if( $this->group == $group )
+				if( isset( $this->groups{ $group } ) )
 					return true;
 		
 			}
@@ -645,7 +708,7 @@ class User{
 		/**
 		 *  if user is super user bypass all permissions
 		 */
-		if( $this->group == '_superuser' )
+		if( $this->_superuser )
 			return true;
 
                 /**
@@ -662,11 +725,10 @@ class User{
 		 */
 		if( strpos( $perm, "#" ) !== false ){
 
-
 			/**
 			 * user is not logged in
 			 */
-			if( empty( $this->group ) )
+			if( !User::verify( $this->id ) )
 				return false;
 
 			$perm = explode( '#', $perm );
@@ -684,7 +746,7 @@ class User{
 				 * if user is in group, then he has
 				 * permission
 				 */
-				if( $this->group == $group )
+				if( isset( $this->groups{ $group } ) )
 					return true;
 		
 			}
@@ -703,73 +765,6 @@ class User{
 		/**
 		 * user cannot edit page
 		 */
-		return false;
-	}
-
-	/**
-	 * isInGroup
-	 * 
-	 * checks if a user is in a given group
-	 *
-	 * @todo add multiple groups per person
-	 * @params name
-	 * @return public
-	 */
-	public function isInGroup( $name ){
-		$id = $this->getGroupId( $name );
-		if( $this->group == $id )
-			return true;
-		return false;
-	}
-
-	/**
-	 * getGroupId
-	 *
-	 * returns a group id if given a group
-	 * name
-	 *
-	 * @params string $name optional
-	 * @return int
-	 * @access public
-	 */
-	public function getGroupId( $name = 'false' ){
-		if( !$name )
-			return $this->group;
-
-		if( !$this->_groups )
-			$this->_groups = rows( 'select id,name from ' . GROUPS );
-
-		foreach( $this->_groups as $group ){ // find group id
-			if( $group[ 'name' ] == $name )
-				return $group[ 'id' ];
-		}
-		// no matches
-		return false;
-	}
-
-	/**
-	 * getGroupName
-	 *
-	 * returns a group name if given a group
-	 * id
-	 *
-	 * @params int $id optional
-	 * @return string
-	 * @access public
-	 */
-	public function getGroupName( $id = 'false' ){
-
-		if( !$id )
-			return $this->group_name;
-
-		if( !$this->_groups )
-			$this->_groups = rows( 'select id,name from ' . GROUPS );
-
-		foreach( $this->_groups as $group ){ // find group name
-			if( $group[ 'id' ] == $id )
-				return $group[ 'name' ];
-		}
-		// no matches
 		return false;
 	}
 
@@ -797,6 +792,7 @@ class User{
 	 * 
 	 * creates the directory structure for users
 	 *
+	 * @todo update to file manager
 	 * @params int $id
 	 * @return bool
 	 * @access public
@@ -825,6 +821,7 @@ class User{
 	 * @params int $id
 	 * @return bool
 	 * @access public
+	 * @todo update to file manager
 	 */
 	public static function removeUserDirs( $id ){
 		$dir = USER_FILES . 'files/users/' . $id;
@@ -911,25 +908,18 @@ class User{
 	/**
 	 * groups
 	 *
-	 * accessor method for group ids
+	 * accessor method for groups, returns an array in format:
+	 *
+	 * group_id => group_class_instance
 	 *
 	 * @access public
 	 * @return array
 	 */
 	public function groups( ){
-		return array( $this->group );
-	}
+		if( $this->_superuser )
+			return '_superuser';
 
-	/**
-	 * groupName
-	 *
-	 * accessor method for user group name
-	 *
-	 * @access public
-	 * @return int
-	 */
-	public function groupName( ){
-		return $this->group_name;
+		return $this->groups;
 	}
 
 	/**
@@ -942,6 +932,75 @@ class User{
 	 */
 	public function getData( ){
 		return $this->data;
+	}
+
+	/**
+	 * getOptions
+	 *
+	 * this function gets options for this user from the
+	 * options table and stores them in the options array
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function getOptions( ){
+
+		$options = rows( 'select * from ' . OPTIONS . ' where name like "%user_' . $this->id( ) . '_%"' );
+
+		$this->options = array( );		
+		foreach( $options as $name => $value ){
+			$name = end( explode( '_', $name ) );
+			$this->options{ $name } = $value;
+		}
+
+		return $this->options;
+
+	}
+
+	/**
+	 * getOption
+	 *
+	 * gets the value of a specified user option. these methods
+	 * manages the storage of the options so a simple option name
+	 * is required like "user_rating" or "address"
+	 *
+	 * @param string $name
+	 * @access public
+	 * @return string
+	 */
+	public function getOption( $name ){
+		if( !is_array( $this->options ) )
+			$this->getOptions( );
+
+		return @$this->options{ $name };
+	}
+
+	/**
+	 * setOption
+	 *
+	 * sets an option to a specified value. updates the database
+	 * and the class's record of the options
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @access public
+	 * @return bool
+	 */
+	public function setOption( $name, $value ){
+		if( !is_array( $this->options ) )
+			$this->getOptions( );
+
+		$name = addslashes( $name );
+		$value = addslashes( $value );
+
+		if( isset( $this->options{ $name } ) ) // if isset, update db
+			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="user_' . $this->id( ) . '_' . $name . '"' );
+		else // else create db entry
+			query( 'insert into ' . OPTIONS . ' values( "user_' . $this->id( ) . '_' . $name . '", "' . $value . '")' );
+
+		$this->options{ $name } = $value;
+
+		return true;
 	}
 }
 ?>
