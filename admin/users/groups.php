@@ -30,7 +30,11 @@ $content='
 			<tr>
 				<td><h3>Group Permissions</h3></td>
 			</tr>
-			<tr>';
+			<tr>
+				<td colspan="3"><p><i>Members of this group can do the following:</i></p></td>
+			</tr>
+			<tr>
+			';
 
 			/**
 			 * iterate through perms array and print checkboxes 
@@ -47,6 +51,16 @@ $content='
 			}
 
 $content .= '
+			</tr>
+			<tr>
+				<td><h3>File Permissions</h3></td>
+			</tr>
+			<tr>
+				<td colspan="3"><p><i>Members of this group can view/edit files from the following groups/users:</i></p></td>
+			</tr>
+
+			<tr>
+				<td colspan="3"><p><i>Note: All users own their own files and can always edit them.</i></p>
 			</tr>
 		</table>
 	</form>

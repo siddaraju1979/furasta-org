@@ -1,0 +1,12 @@
+/**
+ * Blog Plugin, Furasta.Org
+ *
+ * @author	Conor Mac Aoidh <conormacaoidh@gmail.com>
+ * @licence	http://furasta.org/licence.txt The BSD Licence
+ * @version	1
+ */
+
+#tags-in{ width: 20% }
+#tags-add{ margin: 0 10px } 
+.tag{ padding:4px 0 4px 8px; background: #ff9; border:1px solid #bb5; margin: 3px 5px; border-radius: 3px }
+.blog-delete{ padding:2px 4px 3px 12px }

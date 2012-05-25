@@ -1,0 +1,8 @@
+1. blog posts table: id,title,body,tags,date
+2. add ht_access filter to have urls in form http://site.com/blogpagename/year/month/day/title
+3. add sitemap filter add urls for blog posts
+4. admin page to edit/create blog posts
+5. in admin pages where blog is page type, list blog posts for edit/delete
+6. add rss feeds for blog posts
+7. overview item for recent blog posts
+8. develop comments plugin which interacts with blog plugin

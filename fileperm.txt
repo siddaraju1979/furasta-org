@@ -1,0 +1,9 @@
+_user/
+_user/files
+_user/files/groups
+_user/files/users
+_user/db
+_user/db/groups
+_user/db/users
+
+users own all files

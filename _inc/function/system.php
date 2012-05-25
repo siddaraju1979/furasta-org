@@ -599,4 +599,58 @@ function maintenance_message( ){
 	}
 	error( $message, '' );
 }
+
+/**
+ * split_perm
+ *
+ * this function splits permission strings in the
+ * form: 1,2,3#4|1,2,3#4,5 to an array of form:
+ *
+ * array(
+ * 	0 => array(
+ *		'users' => array( 1, 2, 3 ),
+ *		'groups' => array( 4 )	
+ *	),
+ *	1 => array(
+ *		'users' => array( 1, 2, 3 ),
+ *		'groups' => array( 4, 5 )
+ *	),
+ * )
+ *
+ * @params string $perms
+ * @access public
+ * @return array
+ */
+function split_perm( $perms ){
+	// setup array format
+	$result = array(
+		0 => array(
+			'users' => array( ),
+			'groups' => array( )
+		),
+		1 => array(
+			'users' => array( ),
+			'groups' => array( )
+		)
+	);
+
+	// if no "|" symbol, can't process
+	if( strpos( '|', $perms ) === false )
+		return $result;
+
+	$perms = explode( '|', $perms );
+
+	foreach( $perms as $i => $perm ){
+		if( strpos( '#', $perm ) === false ){
+			$result[ $i ][ 'users' ] = ( strpos( ',', $perm ) === false ) ? array( $perm ) : explode( ',', $perm );
+		}
+		else{
+			$permissions = explode( '#', $perm );
+			$result[ $i ][ 'users' ] = ( strpos( ',', $perm[ 0 ] ) === false ) ? array( $perm[ 0 ] ) : explode( ',', $perm[ 0 ] );
+			$result[ $i ][ 'groups' ] = ( strpos( ',', $perm[ 1 ] ) === false ) ? array( $perm[ 1 ] ) : explode( ',', $perm[ 1 ] );
+		}
+	}
+
+	return $result;
+}
 ?>
