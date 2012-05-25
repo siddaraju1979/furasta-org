@@ -77,22 +77,7 @@ echo '
 		</div>
 		<div id="bottom">
                         <p class="right"><a href="settings.php?page=edit-users&id=' . $User->id( ) . '">'. $User->name( ) .'</a> - ' 
-			. $Template->e( 'group' ) . ': ';
-
-// print user groups
-$gs = array( );
-$Groups = $User->groups( );
-if( $Groups == '_superuser' )
-	echo '_superuser';
-else{
-	foreach( $User->groups( ) as $Group ){
-		array_push( $gs, '<a href="settings.php?page=edit-groups&id=' . $Group->id( ) .'">'. $Group->name( ) . '</a>' );
-	}
-	echo implode( ',', $gs );
-}
-
-echo '
-			</p>
+			. $Template->e( 'group' ) . ': <a href="settings.php?page=edit-groups&id=' . implode( '', $User->groups( ) ) .'">'. $User->groupName( ) . '</a></p>
 			<p class="left">&copy; <a href="http://furasta.org">Furasta.Org</a> | <a href="http://forum.furasta.org">' .
 			$Template->e( 'forum' ) . '</a> | <a href="http://bugs.furasta.org">
 			' . $Template->e( 'bug_tracker' ) . '</a></p>

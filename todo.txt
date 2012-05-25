@@ -9,11 +9,6 @@
 43. fix pages permissions thing - seems to be a bit buggy
 44. fix frontend page permissions - doesn't even check permissions if you are not logged in
 45. add user data fields - basically a text input for every field in userdata for quick editing, detect if theres some html and make it a textarea in that case
-46. file permissions, file management class etc.. this will be a big, new, part of the CMS
-47. study the html5 boilerplate for ideas
-50. fix problems with login
-51. combine new users and new groups with edit users and edit groups
-52. 
 
 # TODO list for Furasta.Org v1.0 - General Release #
 

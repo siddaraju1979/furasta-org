@@ -38,7 +38,7 @@ body{ text-align:center;background:#eee }
 #top #title a{ font-size:22px;color:#eee }
 #title #subtitle{ font-size:12px;float:left;color:#eee;font-style:italic }
 #system-error{ margin:0 auto 15px;text-align:left;padding:5px;width:50%;border:1px solid #900;color:#900;background:#ffc }
-#system-error img{ width:30px;height:30px }
+#system-error img{ width:30px;height 30px }
 #system-error .runtime-errors{ font-weight:bold;font-size:14px;color:#a33 }
 #top #right{ width:100%;height:80px;margin:0 auto;background:url(../img/top-right.png) no-repeat right }
 #top #right-error{ width:95%;height:80px;margin:0 auto;background:url(../img/top-right.png) no-repeat right }
@@ -62,7 +62,7 @@ body{ text-align:center;background:#eee }
 .red{ color:red }
 .green { color:green }
 .top_bar{ height:30px;background:url(../img/top_bar.png) repeat-x }
-.list-link{ display:inline-block;text-decoration:none;color:#333 }
+.list-link{ display:block-inline;text-decoration:none;color:#333 }
 .image-left{ display:inline;margin-left:8px;font-size:23px }
 .error{ border:1px solid #600;background:#f99 }
 .help{ width:18px;height:18px;display:inline-block;background:url( ../img/icons.png ) no-repeat -46px -155px }
@@ -74,8 +74,10 @@ h2{ color:#050;font-size:18px;margin:0.5% }
 h3{ color:#050;font-size:16px }
 p{ margin:.5% }
 a{ text-decoration:none }
-b, strong{ font-weight:bold }
-i, em{ font-style:italic }
+b{ font-weight:bold }
+i{ font-style:italic }
+em{ font-weight:italic }
+strong{ font-weight:bold }
 
 #install-center{ text-align:center;width:65%;margin:0pt auto }
 
@@ -141,13 +143,13 @@ i, em{ font-style:italic }
 .overview-preview table{ margin-top:0  }
 .overview-preview p.th{ padding:0 6px;cursor:move }
 .overview-preview p a{ color:#fff;font-size:13px;padding:8px 4px 0 0;cursor:pointer;float:right }
-.overview-preview table td span{ float:right;font-style:italic;font-size:12px }
+.overview-preview table td span{ float:right;font-weight:italic;font-size:12px }
 .overview-preview table td p{ font-size:13px }
 .ui-draggable-dragging{ opacity: .7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter:alpha(opacity=70)  }
 #drag-container{ width:600px;height:300px;border:1px solid #000 }
 .ui-state-highlight{ height:100px;background:#ddeedd;border:1px dashed #aaa }
 .column{ width: 170px; float: left; padding-bottom: 100px; }
-.th{ margin:0;height:30px;text-align:left;color:#fff;font-size:13px;background:url(../img/th.png) repeat-x;border-width:1px 1px 0 1px;border-style:solid;border-color:#666 }
+.th{ margin:0;height:30px;text-align:left;color:#fff;font-size:13px;background:url(../img/th.png) repeat-x;border-width:1px 1px 0 1px;border-style:solid:border-color:#666 }
 p.th span{ float:left;color:#fff;font-size:13px;padding:8px 0 0 4px }
 .closed, .hidden{ display:none }
 

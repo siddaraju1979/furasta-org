@@ -40,8 +40,13 @@ echo '
 <title>Furasta.Org Installation</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-<script type="text/javascript" src="../_inc/js/jquery/validate.js"></script>
-<script type="text/javascript" src="install.js"></script>
+<script type="text/javascript" src="/_inc/js/system.js"></script>
+<script type="text/javascript" src="/_inc/js/jquery/validate.js"></script>
+<script type="text/javascript">
+$(function(){
+	rowColor( );
+});
+</script>
 <link rel="stylesheet" href="../_inc/css/admin.css" type="text/css"/>
 </head>
 <body>
@@ -76,7 +81,7 @@ echo '
 function calculate_url( ){
         $url = 'http';
 
-        if( @$_SERVER[ 'HTTPS' ] == 'on' )
+        if( $_SERVER[ 'HTTPS' ] == 'on' )
                 $url .= 's';
 
         $url .= '://' . $_SERVER[ 'SERVER_NAME' ];

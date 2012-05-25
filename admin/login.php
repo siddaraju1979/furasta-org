@@ -63,7 +63,7 @@ if( @$check == 1 ){
 			$User->setCookie( );
 		}
 
-                header( 'location: ' . SITEURL . $_SERVER[ 'REQUEST_URI' ] );
+                header( 'location: ' . calculate_url( ) );
 		exit;
 	}
 

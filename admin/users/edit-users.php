@@ -49,8 +49,6 @@ $user = row( 'select name,user_group,email,password from ' . USERS . ' where id=
 $javascript='
 $( document ).ready( function( ){
 
-	$( "#tabs" ).tabs( );
-
 	$( "#change-password" ).click( function( ){
 
 		fConfirm( "To reset the password an email will be sent to ' . $user[ 'email' ] . ' with reset details. Press \'Yes\' to confirm.", function( ){
@@ -72,25 +70,23 @@ $content='
 
 <br/>
 	<form method="post" id="users-edit">
-		<div id="tabs">
-			<ul>
-				<li><a href="#Options">General</a></li>
-				<li><a href="#Data">Data</a></li>
-			</ul>
-			<div id="#Options">
-				<table class="row-color" id="config-table">
-					<col width="50%"/>
-					<col width="50%"/>
-						<td>Name:</td>
-						<td><input type="text" name="Name" value="'.$user['name'].'"/></td>
-					</tr>
-					<tr>
-						<td>Email:</td>
-						<td><input type="text" name="Email" value="'.$user['email'].'"/></td>
-					</tr>
-					<tr>
-						<td>Group:</td>
-						<td><select name="Group" id="group">';
+		<table id="config-table" class="row-color">
+			<col width="50%"/>
+			<col width="50%"/>
+			<tr>
+				<th colspan="2">User Options</th>
+			</tr>
+			<tr>
+				<td>Name:</td>
+				<td><input type="text" name="Name" value="'.$user['name'].'"/></td>
+			</tr>
+                	<tr>
+				<td>Email:</td>
+				<td><input type="text" name="Email" value="'.$user['email'].'"/></td>
+			</tr>
+			<tr>
+				<td>Group:</td>
+				<td><select name="Group" id="group">';
 
 if( $user[ 'user_group' ] == '_superuser' )
 	$content .= '<option value="_superuser" selected="selected">_superuser</option>';
@@ -105,14 +101,9 @@ else{
 }
 
 $content.='
-						</select></td>
-					</tr>
-				</table>
-			</div>
-			<div id="#Data">
-				<p>test</p>
-			</div>
-</div>
+				</select></td>
+			</tr>
+		</table>
 <input type="submit" name="Edit-User" id="User" class="submit right" value="Save" style="margin-right:10%"/>
 </form>
 <br style="clear:both"/>

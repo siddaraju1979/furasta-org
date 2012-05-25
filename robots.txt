@@ -1,5 +1,0 @@
-# robots.txt - Furasta.Org
-User-agent: *
-Disallow: /admin
-Disallow: /install
-Disallow: /_user

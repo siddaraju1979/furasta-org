@@ -1,7 +1,0 @@
-#stats_container{ margin:10px }
-.stats_item{ width:47.5%;margin:5px 1%;border-width:0 1px 1px;border-style:solid;border-color:#999;float:left }
-.stats_item table{ margin:0 }
-.stats_item p span{ margin:1px 6px }
-#today-browser{ width:22.5%;height:200px }
-#today-total{ width:98%;height:175px;margin:15px 1% }
-text tspan[x=1247]{ display:none }
