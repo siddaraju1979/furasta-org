@@ -35,6 +35,22 @@
  * which contains the file name, id, permissions and location among other things.
  * 
  *
+ * ==== ERRORS ====
+ *
+ * The following map numbers to errors:
+ * 
+ * +--------+--------------------------------+
+ * | Number | Error Description              ||
+ * +--------+--------------------------------+
+ * |  0     | unknown error                  |
+ * |  1     | read permission failure        |
+ * |  2     | write permission failure       |
+ * |  3     | view permission failure        |
+ * |  4     | invalid path                   |
+ * +--------+--------------------------------+
+ *
+ * The error function can also be used to get further information on the
+ * last error to occur.
  * 
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -115,36 +131,31 @@ class FileManager{
 	private $db;
 
 	/**
-	 * errors
+	 * error
 	 *
-	 * holds all errors executed in
-	 * this session
-	 *
-	 * @todo
+	 * holds information on the last error. what this contains
+   * is an array of items which caused errors and the reason
+   * for the error in the form
+   *
+   * array(
+   *    0 => array(
+   *      'id' => 2,
+   *      'desc' => 'The path %1 is invalid'
+   *    ),
+   *    ...
+   *    n => array(
+   *      'id' => 1,
+   *      'desc' => 'You have insufficient privileges to write %2'
+   *    )
+   * )
+   *
+   * Multiple elements account for reccursive functions, in
+   * most cases there will be only one element of the array
+   *
 	 * @access private
 	 * @var array
 	 */
 	private $errors = array( );
-
-	/**
-	 * getInstance
-	 *
-	 * if an instance exists, it returns it,
-	 * if not, it creates a new one and returns
-	 * it
-	 *
-	 * @access public
-	 * @static
-	 * @return instance
-	 */
-	public static function getInstance( ){
-
-		if( !self::$instance )
-			self::$instance = new FileManager( );
-
-		return self::$instance; 
-
-	}
 
 	/**
 	 * construct
@@ -222,6 +233,22 @@ class FileManager{
 
 		return readlink( $this->fp . $path );
 	}
+
+  /**
+   * getId
+   *
+   * returns the id of the item which a
+   * path points to
+   *
+   * @param string $path
+   * @access public
+   * @return string
+   */
+  public getId( $path ){
+    $link = readLink( $path );
+    $id = end( array_filter( explode( '/', $link ) ) );
+    return $id;
+  }
 
 	/**
 	 * updateInfo
@@ -355,8 +382,7 @@ class FileManager{
 			if( !self::checkPath( $path ) )
 				return false;
 
-			$link = $this->readLink( $path );
-			$id = end( array_filter( explode( '/', $link ) ) );
+			$id = $this->getId( $path );
 		}
 		$file = $this->getFile( $id );
 
@@ -448,6 +474,79 @@ class FileManager{
 
 	}
 
+  /**
+   * setError
+   *
+   * logs an error by id. The error description is 
+   * calculated and logged
+   *
+   * $params  -   array of arguments to the error
+   *              description, will replace %1 - %n
+   *              in the form array( %1, %2 .. %n )
+   *
+   * @param int $id optional
+   * @param array $params optional
+   * @access private
+   * @return void
+   */
+  private setError( $id = 0, $params = false ){
+
+    // do not rely on this, a temporary array to
+    // hold error descriptions pending language
+    // support additions
+    $errors = array(
+      0 => 'An unknown error occured',
+      1 => 'You have insufficient privilege to read %1',
+      2 => 'You have insufficient privilege to write %1',
+      3 => 'You have insufficient privilege to view %1',
+      4 => 'The path %1 is invalid',
+    );
+
+    $this->errpr{ 'id' } = $id;
+
+		/**
+		 * if params var is present replace occurances
+		 * of %i with var. can take an array of vars 
+		 */
+		if( $params != false ){
+
+			if( is_array( $params ) ){
+				/**
+				 * reindex array to start with 1 instead of 0
+				 */
+				$params = array_combine( range( 1, count( $params ) ), array_values( $params ) );
+
+				for( $i = 1; $i <= count( $params ); $i++ )
+					$error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
+
+			}
+			else
+				$error{ 'desc' } = str_replace( '%1', $params, $error );
+			
+    }
+
+  }
+
+	/**
+	 * getInstance
+	 *
+	 * if an instance exists, it returns it,
+	 * if not, it creates a new one and returns
+	 * it
+	 *
+	 * @access public
+	 * @static
+	 * @return instance
+	 */
+	public static function getInstance( ){
+
+		if( !self::$instance )
+			self::$instance = new FileManager( );
+
+		return self::$instance; 
+
+	}
+
 	/**
 	 * addDir
 	 *
@@ -513,7 +612,7 @@ class FileManager{
 	 * non-empty. must have permission to remove all files in
 	 * directory
 	 *
-	 * @params string $path
+	 * @params string/int $path
 	 * @access public
 	 * @return void
 	 */
@@ -525,26 +624,32 @@ class FileManager{
 		if( !$this->hasPerm( $path, 'w' ) )
 			return false;
 
-		$link = $this->readLink( $path );
-		$id = end( array_filter( explode( '/', $path ) ) ); // get item id
-		
+    /**
+     *  figure out id
+     */
+    if( is_int( $path ) )
+      $id = $path;
+    else
+		  $id = $this->getId( $path );
+
 		/**
 		 * attempt to recursively read all files in
-		 * the directory. if count is 0 or all files
-		 * can be deleted (permissions check), deletion
-		 * will be attempted
+		 * the directory
 		 */
-		$files = $this->readDir( $link );
+		$files = $this->readDir( $id );
 
-		if( count( $files ) == 0 ){ // remove dir
+		if( !$files ) // cannot read all files
+      return false; 
 
-		}
-		else{
-			foreach( $files as $file => $data ){
-				if( !$this->checkFilePerm( $file ) )
-					return false;
-			}
-		}
+    // can read, check for write permission
+		foreach( $files as $file ){
+      if( !$this->hasPerm( $file[ 'id' ], 'w' ) ){
+        $this->setError( 3, $file[ 'name' ] );
+        return false;
+      }
+    }
+
+    // @todo delete files
 
 	}
 
@@ -568,8 +673,12 @@ class FileManager{
 		if( !$this->hasPerm( $path, 'r' ) )
 			return false;
 
-		
+    // get real path
+    $link = $this->readLink( $path );
 
+
+    // ##################### @TODO remove getId function and replace with using standard paths for all functions
+    $it = new DirectoruIterator( $path );
 	}
 
 	/**
@@ -590,10 +699,7 @@ class FileManager{
 		 */
 		if( !$this->hasPerm( $path, 'w' ) )
 			return false;
-
-		// @todo check if file exists and if user has
-		// permission to replace it
-
+                
 		/**
 		 * build data
 		 */
@@ -694,6 +800,20 @@ class FileManager{
 		// @todo	
 
 	}
+
+  /**
+   * error
+   *
+   * returns information on the last recorded error.
+   * for the form of the array, see the private error
+   * variable
+   *
+   * @access public
+   * @return array
+   */
+  public function error( ){
+    return $this->error( );
+  }
 
 }
 
