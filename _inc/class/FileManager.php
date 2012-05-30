@@ -47,6 +47,7 @@
  * |  2     | write permission failure       |
  * |  3     | view permission failure        |
  * |  4     | invalid path                   |
+ * |  5     | system permission failure      |
  * +--------+--------------------------------+
  *
  * The error function can also be used to get further information on the
@@ -133,29 +134,13 @@ class FileManager{
 	/**
 	 * error
 	 *
-	 * holds information on the last error. what this contains
-   * is an array of items which caused errors and the reason
-   * for the error in the form
-   *
-   * array(
-   *    0 => array(
-   *      'id' => 2,
-   *      'desc' => 'The path %1 is invalid'
-   *    ),
-   *    ...
-   *    n => array(
-   *      'id' => 1,
-   *      'desc' => 'You have insufficient privileges to write %2'
-   *    )
-   * )
-   *
-   * Multiple elements account for reccursive functions, in
-   * most cases there will be only one element of the array
+	 * holds information on the last error. ie
+   * error number and description
    *
 	 * @access private
 	 * @var array
 	 */
-	private $errors = array( );
+	private $error = array( );
 
 	/**
 	 * construct
@@ -315,14 +300,14 @@ class FileManager{
 	 */
 	private function getFile( $id ){
 
-		if( !isset( $this->{ $id } ) ){
+		if( !isset( $this->files{ $id } ) ){
 			$file = row( 'select * from ' . FILES . ' where id="' . $id );
 			if( !$file ) // file is not in db
 				return false;
-			$this->{ $id } = $file;
+			$this->files{ $id } = $file;
 		}
 		
-		return $this->{ $id };
+		return $this->files{ $id };
 
 	}
 
@@ -487,7 +472,7 @@ class FileManager{
       4 => 'The path %1 is invalid',
     );
 
-    $this->errpr{ 'id' } = $id;
+    $this->error{ 'id' } = $id;
 
 		/**
 		 * if params var is present replace occurances
@@ -502,11 +487,11 @@ class FileManager{
 				$params = array_combine( range( 1, count( $params ) ), array_values( $params ) );
 
 				for( $i = 1; $i <= count( $params ); $i++ )
-					$error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
+					$this->error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
 
 			}
 			else
-				$error{ 'desc' } = str_replace( '%1', $params, $error );
+				$this->error{ 'desc' } = str_replace( '%1', $params, $error );
 			
     }
 
@@ -606,8 +591,10 @@ class FileManager{
 		/**
 		 * permission failure
 		 */
-		if( !$this->hasPerm( $path, 'w' ) )
-			return false;
+    if( !$this->hasPerm( $path, 'w' ) ){
+      $this->setError( 2, $path );
+      return false;
+    }
 
 		/**
 		 * attempt to recursively read all files in
@@ -617,20 +604,30 @@ class FileManager{
      * permission  later as reading builds
      * up array of files in class efficiently
 		 */
-		$files = $this->readDir( $path );
+		$files = $this->readDir( $path, true, true );
 
 		if( !$files ) // cannot read all files
-      return false; 
+      return false;
 
     // can read, check for write permission
 		foreach( $files as $file ){
       if( !$this->hasPerm( $file[ 'id' ], 'w' ) ){
-        $this->setError( 3, $file[ 'name' ] );
+        $this->setError( 2, $file[ 'name' ] );
         return false;
       }
     }
 
+    /**
+     * get real path, loop through directory and
+     * delete files
+     */
+    $link = $this->symLink( $path );
+
     // @todo delete files
+    //
+
+
+    return true;
 
 	}
 
@@ -639,20 +636,24 @@ class FileManager{
 	 *
 	 * reads a directory and returns it's contents. if $all
 	 * is true then all directory and sub directory contents
-	 * are returned
+   * are returned. if strict is true then will return false
+   * if permission is denied to read any file
 	 *
 	 * @param string $path
-	 * @param bool $all
+   * @param bool $all
+   * @param bool $strict
 	 * @access public
 	 * @return array
 	 */
-	public function readDir( $path, $all = false ){
+	public function readDir( $path, $all = false, $strict = false ){
 
 		/**
 		 * permission failure
 		 */
-		if( !$this->hasPerm( $path, 'r' ) )
-			return false;
+    if( !$this->hasPerm( $path, 'r' ) ){
+      $this->setError( 1, $path ); 
+      return false;
+    }
 
     // get real path
     $link = $this->readLink( $path );
@@ -664,6 +665,8 @@ class FileManager{
      */
     $query = 'select * from ' . FILES . ' where';
     $it = new RecursiveDirectoryIterator( $path );
+    $file_ids = array( );
+    $count = 0;
 
     foreach( new RecursiveIteratorIterator( $it ) as $file ){
 
@@ -675,18 +678,48 @@ class FileManager{
       $path = $file->getPathname( );
       $link = $this->symLink( $path ); 
       $id = end( array_filter( explode( '/', $link ) ) );
-      $query .= ' id=' . $id . ' or';
+
+      // if file isn't in files array, add to query
+      if( !isset( $this->files{ $id } ) ){
+        $query .= ' id=' . $id . ' or';
+        $count++;
+      }
+
+      // add id to file_ids array
+      array_push( $file_ids, $id );
 
     }
+
     $query = substr( $query, 0, -3 );
-    die( $query );
 
-    // fetch all info from database at once
-    // and add to files array
+    /**
+     * if required, fetch all files from db,
+     * add to files array
+     */
+    if( $count != 0 ){
+      $files = rows( $query );
 
-    // exclude files without read permission
+      foreach( $files as $file ){
+        $this->files{ $file[ 'id' ] } = $file;
+      }
+    }
 
+    /**
+     * loop through files and filter out ones
+     * that user does not have permission to
+     * view
+     */
+    $files = array( );
+    foreach( $file_ids as $id ){
+      if( $this->hasPerm( $id, 'r' ) )
+        array_push( $files, $this->files{ $id } );
+      elseif( $strict ){ // strict is enabled, so return false on permission failure
+        $this->setError( 1, $this->files{ $id }{ 'name' } ); 
+        return false;
+      }
+    }
 
+    return $files;
 
 	}
 
@@ -706,8 +739,10 @@ class FileManager{
 		/**
 		 * permission failure
 		 */
-		if( !$this->hasPerm( $path, 'w' ) )
-			return false;
+    if( !$this->hasPerm( $path, 'w' ) ){
+      $this->setError( 1, $path );
+      return false;
+    }
                 
 		/**
 		 * build data
@@ -758,10 +793,18 @@ class FileManager{
 	public function moveFile( $file, $path ){
 
 		/**
-		 * one of the locations is invalid
-		 */
-		if( !$this->hasPerm( $file, 'w' ) || !$this->hasPerm( $path, 'w' ) )
-			return false;
+     * check permissions
+     */
+    if( !$this->hasPerm( $file, 'w' ) ){
+      $this->setError( 2, $file );
+      return false;
+    }      
+    if( !$this->hasPerm( $path, 'w' ) ){
+      $this->setError( 2, $path );
+      return false;
+    }
+
+
 
 		// @todo move file and symlink
 
@@ -782,10 +825,16 @@ class FileManager{
 	public function copyFile( $file, $path ){
 
 		/**
-		 * one of the locations is invalid
-		 */
-		if( !$this->hasPerm( $file, 'r' ) || !$this->hasPerm( $path, 'w' ) )
-			return false;
+     * check permissions
+     */
+    if( !$this->hasPerm( $file, 'r' ) ){
+      $this->setError( 1, $file );
+      return false;
+    }      
+    if( !$this->hasPerm( $path, 'w' ) ){
+      $this->setError( 2, $path );
+      return false;
+    }
 
 		// @todo copy file, add new file to db & create symlink
 
