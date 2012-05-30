@@ -232,23 +232,7 @@ class FileManager{
 		}
 
 		return readlink( $this->fp . $path );
-	}
-
-  /**
-   * getId
-   *
-   * returns the id of the item which a
-   * path points to
-   *
-   * @param string $path
-   * @access public
-   * @return string
-   */
-  public getId( $path ){
-    $link = readLink( $path );
-    $id = end( array_filter( explode( '/', $link ) ) );
-    return $id;
-  }
+	}}
 
 	/**
 	 * updateInfo
@@ -382,7 +366,8 @@ class FileManager{
 			if( !self::checkPath( $path ) )
 				return false;
 
-			$id = $this->getId( $path );
+      $link = $this->symLink( $path );
+      $id = end( array_filter( explode( '/', $link ) ) );
 		}
 		$file = $this->getFile( $id );
 
@@ -612,7 +597,7 @@ class FileManager{
 	 * non-empty. must have permission to remove all files in
 	 * directory
 	 *
-	 * @params string/int $path
+	 * @params string $path
 	 * @access public
 	 * @return void
 	 */
@@ -624,19 +609,15 @@ class FileManager{
 		if( !$this->hasPerm( $path, 'w' ) )
 			return false;
 
-    /**
-     *  figure out id
-     */
-    if( is_int( $path ) )
-      $id = $path;
-    else
-		  $id = $this->getId( $path );
-
 		/**
 		 * attempt to recursively read all files in
-		 * the directory
+     * the directory
+     *
+     * note: reads files first then checks write
+     * permission  later as reading builds
+     * up array of files in class efficiently
 		 */
-		$files = $this->readDir( $id );
+		$files = $this->readDir( $path );
 
 		if( !$files ) // cannot read all files
       return false; 
@@ -676,9 +657,37 @@ class FileManager{
     // get real path
     $link = $this->readLink( $path );
 
+    /**
+     * loop through elements in directory,
+     * follow symlinks, get item ids, build
+     * query
+     */
+    $query = 'select * from ' . FILES . ' where';
+    $it = new RecursiveDirectoryIterator( $path );
 
-    // ##################### @TODO remove getId function and replace with using standard paths for all functions
-    $it = new DirectoruIterator( $path );
+    foreach( new RecursiveIteratorIterator( $it ) as $file ){
+
+      // skip dots and dirs, (dir symlinks are processed
+      // by .dirname.lnk so will still be traversed)
+      if( $file->isDot( ) || $file->isDir( ) )
+        continue;
+
+      $path = $file->getPathname( );
+      $link = $this->symLink( $path ); 
+      $id = end( array_filter( explode( '/', $link ) ) );
+      $query .= ' id=' . $id . ' or';
+
+    }
+    $query = substr( $query, 0, -3 );
+    die( $query );
+
+    // fetch all info from database at once
+    // and add to files array
+
+    // exclude files without read permission
+
+
+
 	}
 
 	/**
@@ -754,7 +763,7 @@ class FileManager{
 		if( !$this->hasPerm( $file, 'w' ) || !$this->hasPerm( $path, 'w' ) )
 			return false;
 
-		// @todo update database, move file
+		// @todo move file and symlink
 
 		return true;
 	}
@@ -778,7 +787,7 @@ class FileManager{
 		if( !$this->hasPerm( $file, 'r' ) || !$this->hasPerm( $path, 'w' ) )
 			return false;
 
-		// @todo copy file, update db
+		// @todo copy file, add new file to db & create symlink
 
 		return true;
 	}
@@ -797,7 +806,8 @@ class FileManager{
 		if( !$this->hasPerm( $path, 'r' ) )
 			return false;
 
-		// @todo	
+    // @todo get file from db, check permission
+    // get file contents
 
 	}
 
