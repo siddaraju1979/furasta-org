@@ -16,6 +16,7 @@
  */
 define( 'START_TIME', microtime( true ) );
 define( 'HOME', substr( dirname( __FILE__ ), 0, -4) );
+define( 'REVISION', 100 );
 
 date_default_timezone_set( 'UTC' );
 
@@ -66,6 +67,16 @@ $SETTINGS = stripslashes_array( $SETTINGS );
 session_start( );
 
 /**
+ * if revision is not defined or is smaller than revision
+ * number in ,settings.php, run upgrade script
+ */
+$update = false;
+if( !defined( 'SET_REVISION' ) || SET_REVISION < REVISION ){
+  require HOME . '_inc/upgrade.php';
+  $update = true;
+}
+
+/**
  * if no htaccess create one
  */
 if( !file_exists( HOME . '.htaccess' ) )
@@ -76,7 +87,6 @@ if( !file_exists( HOME . '.htaccess' ) )
  * and register plugins, check if they need upgrading
  */
 $Plugins = Plugins::getInstance( );
-$update = false;
 
 foreach( $PLUGINS as $p_name => $version ){
 	require HOME . '_plugins/' . $p_name . '/plugin.php';

@@ -6,6 +6,9 @@
  * When an upgrade is run, this file will be automatically run
  * and it will run upgrade scripts
  *
+ * This file is for major updates, for svn revision updates see
+ * _inc/upgrade.php
+ *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
