@@ -258,7 +258,8 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'SITEURL' => SITEURL,
 		'USER_FILES' => USER_FILES,
 		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,
-		'LANG' => LANG,
+    'LANG' => LANG,
+    'SET_REVISION' => REVISION,
 	);
 
 	$constants = array_merge( $default_constants, $constants );
