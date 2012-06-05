@@ -1,0 +1,133 @@
+<html>
+<head>
+	[metadata]
+	<title>[$page_name] - [$site_title]</title>
+	<link rel="stylesheet" type="text/css" href="[cache_css file="/_www/Furasta.Org-Website/style.css"]"/>
+	<script type="text/javascript">
+		function change( ){
+			var current = $( ".ui-tabs-selected" );
+
+			if( $( "a", current ).attr( "id" ) == $( "#slideshow li" ).length )
+				var next_id = "1";
+			else
+				var next_id = $( "a", current.next( ) ).attr( "id" );
+
+			$( "#slideshow" ).tabs( { "selected": next_id } );
+
+		}
+		$( document ).ready( function() {
+                	$("#slideshow").tabs({
+				fx: { "opacity": "toggle" },
+			        select: function(event, ui) {
+			                $(this).css('height', jQuery(this).height());
+			                $(this).css('overflow', 'hidden');
+			        },
+			        show: function(event, ui) {
+			                $(this).css('height', 'auto');
+			                $(this).css('overflow', 'visible');
+			        }
+			});
+			$("#slideshow ul li a").click( function(){
+				clearInterval( window.timeout );
+				window.timeout = setInterval( "change()", 9000 );
+			});
+	                window.timeout = setInterval( "change()", 9000 ); 
+		});
+	</script>
+</head>
+<body>
+<div id="dialog">&nbsp;</div>
+	<div id="wrapper">
+		<div id="top">
+			<div id="top-wrapper">
+				<div id="title">&nbsp;</div>
+				<h2>Open Source Content Management System</h2>
+			</div>
+		</div>
+		<div id="header">
+			<div id="menu">
+				[menu]
+			</div>
+		</div>
+		<div id="slideshow">
+			<div id="slide-1">
+				<div class="slide-content">
+					<h1 class="title">Page Editing made easy</h1>
+					<p class="description">
+					A clear and precise User Interface makes it easy to create, edit and manipulate content. Furasta.Org uses TinyMCE - a software similar to Microsoft Word which means that you probably already know how to use it!
+					</p>
+					<a href="[$site_url]Download">
+						<span class="download-link" style="float:left">
+							<span style="color:#fff">Download<br/><span style="font-size:10px;color:#fff;text-decoration:underline">Furasta.Org v1.0 Beta 2.zip</span></span>
+						</span>
+					</a>
+				</div>
+			</div>
+                        <div id="slide-2">
+				<img src="[$site_url]_www/Furasta.Org-Website/img/slide-2.jpg" style="float:right;margin:0 10% 0"/>
+                                <div class="slide-content">
+                                        <h1 class="title">Trash - never lose a page again</h1>
+                                        <p class="description">
+					The CMS has a built in Trash function which works much the same as the Recycling Bin on Windows, or Trash on Mac. Once a page is removed it is placed in the Trash and from there it can be deleted. Pages can be restored from the Trash at anytime and re-instated in your website.
+                                        </p>
+                                        <a href="[$site_url]Download">
+                                                <span class="download-link" style="float:left">
+                                                        <span style="color:#fff">Download<br/><span style="font-size:10px;color:#fff;text-decoration:underline">Furasta.Org v1.0 Beta 2.zip</span></span>
+                                                </span>
+                                        </a>
+                                </div>
+                        </div>
+                        <div id="slide-3">
+                                <img src="[$site_url]_www/Furasta.Org-Website/img/slide-3.jpg" style="float:right;margin:30px 10% 0"/>
+                                <div class="slide-content">
+                                        <h1 class="title">Advanced Users, Groups and Permissions</h1>
+                                        <p class="description">
+					Furasta.Org features advanced Permission management so you can ensure that only who you want to access a certain page can access it. Users have their own unique view in the admin area according to the permissions you have assigned them. However, the administrator always has complete control.
+                                        </p>
+                                        <a href="[$site_url]Download">
+                                                <span class="download-link" style="float:left">
+                                                        <span style="color:#fff">Download<br/><span style="font-size:10px;color:#fff;text-decoration:underline">Furasta.Org v1.0 Beta 2.zip</span></span>
+                                                </span>
+                                        </a>
+                                </div>
+                        </div>
+			<ul>
+				<li><a href="#slide-1" id="1">1</a></li>
+                                <li><a href="#slide-2" id="2">2</a></li>
+                                <li><a href="#slide-3" id="3">3</a></li>
+			</ul>
+		</div>
+		<div id="container">
+			<div id="container-right">
+				<div id="main">
+					<div id="left-sidebar">
+						[content_area name="sidebar"]
+					</div>
+					<div id="right">
+						[breadcrumbs]
+						[page_content]
+					</div>
+					<br style="clear:both"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="bottom-wrapper">
+		<div id="bottom">
+			<div>
+				<img src="[$site_url]_www/Furasta.Org-Website/img/footer-bugs.jpg" style="float:left"/>
+				<h2><a href="http://bugs.furasta.org">Bug Tracker</a></h2>
+				<p>If you happen to find any bugs, you can report them using the bug tracker which keeps track of all the bugs and feature requests.</p>
+				<p><a href="http://bugs.furasta.org">http://bugs.furasta.org</a></p>
+			</div>
+                        <div style="margin-left:10px">
+                                <img src="[$site_url]_www/Furasta.Org-Website/img/footer-forum.jpg" style="float:left"/>
+                                <h2><a href="http://forum.furasta.org">Forum</a></h2>
+                                <p>The forum can be used to discuss problems, request features or to get any kind of help regarding the CMS.</p>
+                                <p><a href="http://forum.furasta.org">http://forum.furasta.org</a></p>
+                        </div>
+			<br style="clear:both"/>
+		</div>
+	</div>
+</body>
+</html>
