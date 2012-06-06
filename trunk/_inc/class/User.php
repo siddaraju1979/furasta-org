@@ -1002,5 +1002,18 @@ class User{
 
 		return true;
 	}
+
+  /**
+   * isSuperUser
+   *
+   * returns true if the users is the
+   * _superuser
+   *
+   * @access public
+   * @return bool
+   */
+  public function isSuperUser( ){
+    return $this->_superuser;
+  }
 }
 ?>
