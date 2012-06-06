@@ -156,15 +156,18 @@ class FileManager{
 	 * updates info on a file keeping the database
 	 * and file manager in sync
 	 *
-   * @param array $data
-   * @param bool $new
+	 * $data	-	the only required memeber of this array
+	 *			is "path"
+	 *
+	 * @param array $data
+	 * @param bool $new
 	 * @access private
 	 * @return void
 	 */
 	private function updateInfo( $data, $new = false ){
 
 		if( $new ){ // insert db and files array
-			query( 'insert into ' . FILES . ' values ( '
+			$query = 'insert into ' . FILES . ' values ( '
 				. '"",'
         . '"' . $data[ 'name' ] . '",'
         . '"' . $data[ 'path' ] . '",'
@@ -173,7 +176,11 @@ class FileManager{
 				. '"' . $data[ 'type' ] . '",'
 				. '"' . $data[ 'public' ] . '",'
 				. '"' . $data[ 'hash' ] . '"'
-			. ')' );
+			. ')';
+				query( $query ) or {
+					$this->setError( 7, $query );
+					return false;
+				};
 			$data[ 'id' ] = $id;
 			$this->files{ $data[ 'path' ] } = $data;
 		}
@@ -184,7 +191,10 @@ class FileManager{
 				$this->files{ $data[ 'path' ] }{ $name } = $value;
 			}
 			$query = substr( $query, 0, 1 ) . ' where path="' . $data[ 'path' ] . '"';
-			query( $query );
+			query( $query ) or{
+				$this->setError( 7, $query );
+				return false;
+			};
 		}
 
 	} 
@@ -275,14 +285,13 @@ class FileManager{
 		 */
 		$User = User::getInstance( $id );
 
-    /**
-     * if super user, bypass all permissions
-     */
-    if( $User->isSuperUser( ) )
-      return true;
+		/**
+		 * if super user, bypass all permissions
+		 */
+		if( $User->isSuperUser( ) )
+			return true;
 
-
-    $file = $this->getFile( $path );
+		$file = $this->getFile( $path );
 
 		/**
 		 * file is not in db
@@ -400,6 +409,7 @@ class FileManager{
       4 => 'The path %1 is invalid',
       5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . 'files directory',
       6 => 'The %1 at %2 cannot be created as it already exists',
+	7 => 'There was a problem querying the database. The following query caused the error: %1',
     );
 
     $this->error{ 'id' } = $id;
@@ -500,9 +510,7 @@ class FileManager{
 		/**
 		 * add to database
 		 */
-		$this->updateInfo( $data, true );
-	
-		return true;
+		return $this->updateInfo( $data, true );
 	}
 
 	/**
@@ -527,9 +535,7 @@ class FileManager{
     }
 
     /**
-     * loop through elements in directory,
-     * follow symlinks, get item ids, build
-     * query
+     * loop through elements in directory
      */
     $query = 'select * from ' . FILES . ' where';
     $it = new RecursiveDirectoryIterator( $path );
@@ -554,13 +560,21 @@ class FileManager{
    * are returned. if strict is true then will return false
    * if permission is denied to read any file
 	 *
+	 * $level	-	can be an integer of how many levels
+	 *			of directories to read or true to read
+	 *			all levels. reads one level by default
+	 * $strict	-	if strict is true and any files fail to
+	 *			be read the method will generate an error
+	 *			and return false, otherwise those files
+	 *			will just be excluded from the list
+	 *
 	 * @param string $path
-   * @param bool $all
+   * @param int/bool $level
    * @param bool $strict
 	 * @access public
    * @return array
 	 */
-	public function readDir( $path, $all = false, $strict = false ){
+	public function readDir( $path, $level = 1, $strict = false ){
 
 		/**
 		 * permission failure
@@ -570,13 +584,8 @@ class FileManager{
       return false;
     }
 
-    // get real path
-    $link = $this->readLink( $path );
-
     /**
      * loop through elements in directory,
-     * follow symlinks, get item ids, build
-     * query
      */
     $query = 'select * from ' . FILES . ' where';
     $it = new RecursiveDirectoryIterator( $path );
@@ -604,9 +613,6 @@ class FileManager{
       array_push( $file_ids, $id );
 
     }
-
-    $query = substr( $query, 0, -3 );
-
     /**
      * if required, fetch all files from db,
      * add to files array
@@ -665,6 +671,7 @@ class FileManager{
 		$User = User::getInstance( );
 		$data = array(
 			'name' => end( explode( '/', $path ) ),
+			'path' => $path,
 			'owner' => $User->id( ),
 			'type' => 'file',
 			'perm' => ( empty( $perm ) ) ? '' : implode( ',', $perm ),
@@ -673,24 +680,17 @@ class FileManager{
 		);
 
 		/**
-		 * add file to database
-		 */
-		$id = $this->updateInfo( 0, $data );
-
-		/**
-		 * add symlink
-		 */
-		$link = explode( '/', $path );
-		array_pop( $link );
-		die( $this->readLink( implode( '/', $link ) ) . $id );
-		$this->addLink( USER_FILES . 'files/' . $path, $link );
-	
-		/**
 		 * add file
 		 */
-		file_put_contents( $link, $contents );
+		file_put_contents( $link, $contents ) or {
+			$this->setError( 5, $path );
+			return false;
+		};
 
-		return true;
+		/**
+		 * add file to database
+		 */
+		return $this->updateInfo( 0, $data );
 
 	}
 
@@ -719,11 +719,19 @@ class FileManager{
       return false;
     }
 
+		/**
+		 * move file
+		 */
+		rename( $file, $path ) or {
+			$this->setError( 5, $path );
+			return false;
+		}; 
 
+		/**
+		 * update database
+		 */
+		return $this->updateInfo( array( 'path', $path ) );
 
-		// @todo move file and symlink
-
-		return true;
 	}
 
 	/**
@@ -740,20 +748,27 @@ class FileManager{
 	public function copyFile( $file, $path ){
 
 		/**
-     * check permissions
-     */
-    if( !$this->hasPerm( $file, 'r' ) ){
-      $this->setError( 1, $file );
-      return false;
-    }      
-    if( !$this->hasPerm( $path, 'w' ) ){
-      $this->setError( 2, $path );
-      return false;
-    }
+		 * note: permissions checks are done by the
+		 * readFile and addFile methods
+	 	 */
 
-		// @todo copy file, add new file to db & create symlink
+		/**
+		 * get files db details
+		 */
+		$file = $this->getFile( $file );
 
-		return true;
+		/**
+		 * read file to be copied
+		 */	
+		$contents = $this->readFile( $file );
+
+		if( !$contents )
+			return false;
+
+		/**
+		 * add new file with same contents
+		 */
+		return $this->addFile( $path, $contents, $file[ 'perm' ], $file[ 'public' ] );
 	}
 
 	/**
@@ -767,12 +782,37 @@ class FileManager{
 	 */
 	public function readFile( $path ){
 
-		if( !$this->hasPerm( $path, 'r' ) )
+		if( !$this->hasPerm( $path, 'r' ) ){
+			$this->setError( 2, $path );
 			return false;
+		}
 
-    // @todo get file from db, check permission
-    // get file contents
+		$contents = file_get_contents( $file );
 
+		if( !$contents ){
+			$this->setError( 5, $path );
+			return false;
+		}
+
+		return $contents;
+
+	}			
+
+	public function moveDir( $path, $dest ){
+		// @todo
+	}
+
+	public function moveUploadedFile( $file, $path ){
+		// @todo
+	}
+
+	// path is directory or array of filenames
+	public function zip( $zip, $path ){
+		// @todo
+	}
+
+	public function unzip( $zip, $path ){
+		// @todo
 	}
 
   /**
@@ -788,6 +828,21 @@ class FileManager{
   public function error( ){
     return $this->error( );
   }
+
+	/**
+	 * cleanUp
+	 *
+	 * scans the files directory for files which are not in
+	 * the database and removes them. it is rare for any files
+	 * to be in this directory without being in the database,
+	 * with the exception of when a database query fails.
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function cleanUp( ){
+		// @todo
+	}
 
 }
 
