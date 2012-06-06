@@ -40,7 +40,7 @@
  * The following map numbers to errors:
  * 
  * +--------+--------------------------------+
- * | Number | Error Description              ||
+ * | Number | Error Description              |
  * +--------+--------------------------------+
  * |  0     | unknown error                  |
  * |  1     | read permission failure        |
@@ -48,6 +48,7 @@
  * |  3     | view permission failure        |
  * |  4     | invalid path                   |
  * |  5     | system permission failure      |
+ * |  6     | file/dir already exists        |
  * +--------+--------------------------------+
  *
  * The error function can also be used to get further information on the
@@ -116,22 +117,6 @@ class FileManager{
 	private $files = array( );
 
 	/**
-	 * fp
-	 *
-	 * @access private
-	 * @var string
-	 */
-	private $fp;
-
-	/**
-	 * db
-	 *
-	 * @access private
-	 * @var string
-	 */
-	private $db;
-
-	/**
 	 * error
 	 *
 	 * holds information on the last error. ie
@@ -141,14 +126,6 @@ class FileManager{
 	 * @var array
 	 */
 	private $error = array( );
-
-	/**
-	 * construct
-	 */
-	public function __construct( ){
-		$this->fp = USER_FILES . 'files/';
-		$this->db = USER_FILES . 'db/';
-	}
 
 	/**
 	 * checkPath
@@ -174,90 +151,40 @@ class FileManager{
 	}
 
 	/**
-	 * addLink
-	 *
-	 * adds a symlink
-	 *
-	 * @param string $target
-	 * @param string $link
-	 * @access private
-	 * @return bool
-	 */
-	private function addLink( $target, $link ){
-		// delete file if exists
-		if( file_exists( $link ) )
-			unlink( $link );
-
-		return symlink( $this->db . $link, $this->fp . $target );
-	}
-
-	/**
-	 * readLink
-	 *
-	 * returns the location the symlink points
-	 * to
-	 * 
-	 * @param string $path
-	 * @access private
-	 * @return string
-	 */
-	private function readLink( $path ){
-
-		/**
-		 * if is dir, find the link for that dir
-		 * and return it. Note: directory links are
-		 * stored as .dirname.lnk
-		 */
-		if( is_dir( $this->fp . $path ) ){
-			$path = array_filter( explode( '/', $path ) );
-			$end = array_pop( $path );
-			$path = implode( '/', $path ) . '/';
-			error_log( $this->fp . $path . '.' . $end . '.lnk   ' . readlink( $this->fp . $path . '.' . $end . '.lnk' ));
-			return readlink( $this->fp . $path . '.' . $end . '.lnk' );
-		}
-
-		return readlink( $this->fp . $path );
-	}}
-
-	/**
 	 * updateInfo
 	 *
 	 * updates info on a file keeping the database
 	 * and file manager in sync
 	 *
-	 * @param int $id
-	 * @param array $data
+   * @param array $data
+   * @param bool $new
 	 * @access private
-	 * @return int/bool
+	 * @return void
 	 */
-	private function updateInfo( $id, $data ){
+	private function updateInfo( $data, $new = false ){
 
-		if( $id == 0 ){ // insert db and files array
+		if( $new ){ // insert db and files array
 			query( 'insert into ' . FILES . ' values ( '
 				. '"",'
-				. '"' . $data[ 'name' ] . '",'
+        . '"' . $data[ 'name' ] . '",'
+        . '"' . $data[ 'path' ] . '",'
 				. $data[ 'owner' ] . ','
 				. '"' . @$data[ 'perm' ] . '",'
 				. '"' . $data[ 'type' ] . '",'
 				. '"' . $data[ 'public' ] . '",'
 				. '"' . $data[ 'hash' ] . '"'
 			. ')' );
-			$id = mysql_insert_id( );
 			$data[ 'id' ] = $id;
-			$this->files{ $id } = $data;
-
-			return $id;
+			$this->files{ $data[ 'path' ] } = $data;
 		}
 		else{ // update db and files array
 			$query = 'update ' . FILES . ' set ';
 			foreach( $data as $name => $value ){
 				$query .= $name . '="' . $value . '",';
-				$this->files{ $id }{ $name } = $value;
+				$this->files{ $data[ 'path' ] }{ $name } = $value;
 			}
-			$query = substr( $query, 0, 1 ) . ' where id=' . $id;
+			$query = substr( $query, 0, 1 ) . ' where path="' . $data[ 'path' ] . '"';
 			query( $query );
-
-			return true;
 		}
 
 	} 
@@ -265,25 +192,25 @@ class FileManager{
 	/**
 	 * deletInfo
 	 *
-	 * removes a file by the given id from the
+	 * removes a file by the given path from the
 	 * database and the files array
 	 *
-	 * @param int $id
+	 * @param string $path
 	 * @access private
 	 * @return void
 	 */
-	private function deleteInfo( $id ){
+	private function deleteInfo( $path ){
 
 		/**
 		 * delete from db
 		 */		
-		query( 'delete from ' . FILES . ' where id=' . addslashes( $id ) );
+		query( 'delete from ' . FILES . ' where path=' . addslashes( $path ) );
 
 		/**
 		 * remove from files array
 		 */
-		if( isset( $this->files{ $id } ) )
-			unset( $this->files{ $id } );
+		if( isset( $this->files{ $path } ) )
+			unset( $this->files{ $path } );
 
 	}
 
@@ -294,20 +221,20 @@ class FileManager{
 	 * if the file is not present it is fetched
 	 * from the db and added to the array
 	 *
-	 * @param int $id
+	 * @param string $path
 	 * @access private
 	 * @return array $file
 	 */
-	private function getFile( $id ){
+	private function getFile( $path ){
 
-		if( !isset( $this->files{ $id } ) ){
-			$file = row( 'select * from ' . FILES . ' where id="' . $id );
+		if( !isset( $this->files{ $path } ) ){
+			$file = row( 'select * from ' . FILES . ' where path="' . addslashes( $path ) . '"' );
 			if( !$file ) // file is not in db
 				return false;
-			$this->files{ $id } = $file;
+			$this->files{ $path } = $file;
 		}
 		
-		return $this->files{ $id };
+		return $this->files{ $path };
 
 	}
 
@@ -337,24 +264,25 @@ class FileManager{
 	public static function hasPerm( $path, $rw = 'r', $id = false ){
 		
 		/**
-		 * get user instance and real link to file
+		 * get file details
+		 */
+
+		if( !self::checkPath( $path ) )
+			return false;
+
+		/**
+		 * get user instance
 		 */
 		$User = User::getInstance( $id );
 
-		/**
-		 * get file details
-		 */
-		if( is_int( $path ) ) // id given
-			$id = $path;
-		else{ // path given, check path, find id
+    /**
+     * if super user, bypass all permissions
+     */
+    if( $User->isSuperUser( ) )
+      return true;
 
-			if( !self::checkPath( $path ) )
-				return false;
 
-      $link = $this->symLink( $path );
-      $id = end( array_filter( explode( '/', $link ) ) );
-		}
-		$file = $this->getFile( $id );
+    $file = $this->getFile( $path );
 
 		/**
 		 * file is not in db
@@ -470,6 +398,8 @@ class FileManager{
       2 => 'You have insufficient privilege to write %1',
       3 => 'You have insufficient privilege to view %1',
       4 => 'The path %1 is invalid',
+      5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . 'files directory',
+      6 => 'The %1 at %2 cannot be created as it already exists',
     );
 
     $this->error{ 'id' } = $id;
@@ -530,23 +460,28 @@ class FileManager{
 	 */
 	public function addDir( $path, $perm = array( ), $public = false ){
 
+
 		// file exists, return false
-		if( file_exists( $this->fp . $path ) )
-			return false;
+    if( file_exists( USER_FILES . 'files/' . $path ) ){
+      $this->setError( 6, array( 'dir', $path ) );
+      return false;
+    }
 
 		/**
-		 * check if user has permission
-		 * to create the directory
+		 * permission failure
 		 */
-		if( !$this->hasPerm( $path, 'w' ) )
-			return false;
+    if( !$this->hasPerm( $path, 'w' ) ){
+      $this->setError( 2, $path );
+      return false;
+    }
 
 		/**
 		 * build data
 		 */
 		$User = User::getInstance( );
 		$data = array(
-			'name' => end( explode( '/', $path ) ),
+      'name' => end( explode( '/', $path ) ),
+      'path' => $path,
 			'owner' => $User->id( ),
 			'type' => 'dir',
 			'perm' => ( empty( $perm ) ) ? '' : implode( ',', $perm ),
@@ -555,23 +490,18 @@ class FileManager{
 		);
 
 		/**
-		 * add to database
-		 */
-		$id = $this->updateInfo( 0, $data );
-
-		/**
-		 * add symlink
-		 */
-		$link = explode( '/', $path );
-		array_pop( $link );
-		$link = $this->readLink( implode( '/', $link ) ) . $id;
-		$this->addLink( $path, $link );
-	
-		/**
 		 * create directory
 		 */
-		mkdir( $link );
+    mkdir( $path ) or {
+      $this->setError( 5, $path );
+      return false; 
+    };
 
+		/**
+		 * add to database
+		 */
+		$this->updateInfo( $data, true );
+	
 		return true;
 	}
 
@@ -596,39 +526,24 @@ class FileManager{
       return false;
     }
 
-		/**
-		 * attempt to recursively read all files in
-     * the directory
-     *
-     * note: reads files first then checks write
-     * permission  later as reading builds
-     * up array of files in class efficiently
-		 */
-		$files = $this->readDir( $path, true, true );
-
-		if( !$files ) // cannot read all files
-      return false;
-
-    // can read, check for write permission
-		foreach( $files as $file ){
-      if( !$this->hasPerm( $file[ 'id' ], 'w' ) ){
-        $this->setError( 2, $file[ 'name' ] );
-        return false;
-      }
-    }
-
     /**
-     * get real path, loop through directory and
-     * delete files
+     * loop through elements in directory,
+     * follow symlinks, get item ids, build
+     * query
      */
-    $link = $this->symLink( $path );
+    $query = 'select * from ' . FILES . ' where';
+    $it = new RecursiveDirectoryIterator( $path );
+    $file_ids = array( );
+    $count = 0;
 
-    // @todo delete files
-    //
+    foreach( new RecursiveIteratorIterator( $it ) as $file ){
 
+      // skip dots and dirs, (dir symlinks are processed
+      // by .dirname.lnk so will still be traversed)
+      if( $file->isDot( ) || $file->isDir( ) )
+        continue;
 
-    return true;
-
+    }
 	}
 
 	/**
@@ -643,7 +558,7 @@ class FileManager{
    * @param bool $all
    * @param bool $strict
 	 * @access public
-	 * @return array
+   * @return array
 	 */
 	public function readDir( $path, $all = false, $strict = false ){
 
@@ -768,7 +683,7 @@ class FileManager{
 		$link = explode( '/', $path );
 		array_pop( $link );
 		die( $this->readLink( implode( '/', $link ) ) . $id );
-		$this->addLink( $this->fp . $path, $link );
+		$this->addLink( USER_FILES . 'files/' . $path, $link );
 	
 		/**
 		 * add file
