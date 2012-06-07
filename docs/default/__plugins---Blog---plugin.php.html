@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs for page plugin.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name">/_plugins/Blog/plugin.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-functions">Functions</a>
+			</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Blog Plugin, Furasta.Org</p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Conor Mac Aoidh &lt;<a href="mailto:conormacaoidh@gmail.com">conormacaoidh@gmail.com</a>&gt;</li>
+				<li><span class="field">version:</span> 1</li>
+			</ul>
+		
+			</div>
+</div>
+		
+
+	
+	
+	
+	<a name="sec-functions"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Functions</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<span class="disabled">Functions</span>
+		</div>
+		<div class="info-box-body">	
+			<a name="functionblog_admin" id="functionblog_admin"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">blog_admin</span> (line <span class="line-number">121</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog admin</p>
+<p class="description"><p>admin page for the blog plugin, allows creation of blog posts</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			blog_admin
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+<a name="functionblog_admin_menu" id="functionblog_admin_menu"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">blog_admin_menu</span> (line <span class="line-number">52</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_admin_menu</p>
+<p class="description"><p>adds the blog page to the admin menu</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			blog_admin_menu
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$items</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$items</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$url</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_admin_page_type" id="functionblog_admin_page_type"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">blog_admin_page_type</span> (line <span class="line-number">98</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_admin_page_type</p>
+<p class="description"><p>loads the admin page type for the blog plugin</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			blog_admin_page_type
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_filter_breadcrumbs" id="functionblog_filter_breadcrumbs"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">blog_filter_breadcrumbs</span> (line <span class="line-number">173</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_filter_breadcrumbs</p>
+<p class="description"><p>adds date to breadcrumbs for blog pages</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			blog_filter_breadcrumbs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$breadcrumbs</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$breadcrumbs</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_filter_htaccess" id="functionblog_filter_htaccess"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">blog_filter_htaccess</span> (line <span class="line-number">146</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_filter_htaccess</p>
+<p class="description"><p>filters the htaccess_rewrite function to add rules  for blogs</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			blog_filter_htaccess
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$old_rules</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$old_rules</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_filter_page_vars" id="functionblog_filter_page_vars"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">blog_filter_page_vars</span> (line <span class="line-number">201</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_filter_page_vars</p>
+<p class="description"><p>changes the page name to the blog name if its  a blog page</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			blog_filter_page_vars
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$Page</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$Page</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_frontend_page_type" id="functionblog_frontend_page_type"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">blog_frontend_page_type</span> (line <span class="line-number">110</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_frontend_page_type</p>
+<p class="description"><p>load the frontend page type for the blog plugin</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			blog_frontend_page_type
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_lang" id="functionblog_lang"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">blog_lang</span> (line <span class="line-number">79</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_lang</p>
+<p class="description"><p>handles languages for the blog plugin</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			blog_lang
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$old_lang</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$old_lang</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionblog_overview_item" id="functionblog_overview_item"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">blog_overview_item</span> (line <span class="line-number">133</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">blog_overview_item</p>
+<p class="description"><p>adds an overview item to the overview page in the  admin area</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			blog_overview_item
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 07 Jun 2012 09:52:54 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

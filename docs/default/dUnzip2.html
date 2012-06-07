@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class dUnzip2</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class dUnzip2</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="__inc---class---dUnzip2.php.html">/_inc/class/dUnzip2.php</a> (line <span class="field">12</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																																																																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$centralDirList" title="details" class="var-name">$centralDirList</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$compressedList" title="details" class="var-name">$compressedList</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$debug" title="details" class="var-name">$debug</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$dirSignature" title="details" class="var-name">$dirSignature</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$dirSignatureE" title="details" class="var-name">$dirSignatureE</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$endOfCentral" title="details" class="var-name">$endOfCentral</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$fh" title="details" class="var-name">$fh</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$fileName" title="details" class="var-name">$fileName</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$lastError" title="details" class="var-name">$lastError</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$zipSignature" title="details" class="var-name">$zipSignature</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">dUnzip2</span>
+										<a href="#dUnzip2" title="details" class="method-name">dUnzip2</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$fileName</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#close" title="details" class="method-name">close</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#debugMsg" title="details" class="method-name">debugMsg</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$level</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$string</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getExtraInfo" title="details" class="method-name">getExtraInfo</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$compressedFileName</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getLastError" title="details" class="method-name">getLastError</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getList" title="details" class="method-name">getList</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getVersion" title="details" class="method-name">getVersion</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getZipInfo" title="details" class="method-name">getZipInfo</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$detail</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#uncompress" title="details" class="method-name">uncompress</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mode</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$uncompressedSize</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$targetFileName</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#unzip" title="details" class="method-name">unzip</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$compressedFileName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$targetFileName</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$applyChmod</span> = <span class="var-default">0777</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#unzipAll" title="details" class="method-name">unzipAll</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$targetDir</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$baseDir</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$maintainStructure</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$applyChmod</span> = <span class="var-default">0777</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_decodeFilename" title="details" class="method-name">_decodeFilename</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$filename</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_getFileHeaderInformation" title="details" class="method-name">_getFileHeaderInformation</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startOffset</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_loadFileListByEOF" title="details" class="method-name">_loadFileListByEOF</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_loadFileListBySignatures" title="details" class="method-name">_loadFileListBySignatures</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_protect" title="details" class="method-name">_protect</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$fullPath</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__destroy" title="details" class="method-name">__destroy</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$centralDirList" id="$centralDirList"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$centralDirList</span>
+						(line <span class="line-number">20</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$compressedList" id="$compressedList"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$compressedList</span>
+						(line <span class="line-number">19</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$debug" id="$debug"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$debug</span>
+						(line <span class="line-number">22</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$dirSignature" id="$dirSignature"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$dirSignature</span>
+			 = <span class="var-default"> &quot;\x50\x4b\x01\x02&quot;</span>			(line <span class="line-number">27</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$dirSignatureE" id="$dirSignatureE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$dirSignatureE</span>
+			 = <span class="var-default"> &quot;\x50\x4b\x05\x06&quot;</span>			(line <span class="line-number">28</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$endOfCentral" id="$endOfCentral"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$endOfCentral</span>
+						(line <span class="line-number">21</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$fh" id="$fh"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$fh</span>
+						(line <span class="line-number">25</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$fileName" id="$fileName"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$fileName</span>
+						(line <span class="line-number">17</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$lastError" id="$lastError"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$lastError</span>
+						(line <span class="line-number">18</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+<a name="var$zipSignature" id="$zipSignature"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$zipSignature</span>
+			 = <span class="var-default"> &quot;\x50\x4b\x03\x04&quot;</span>			(line <span class="line-number">26</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methoddUnzip2" id="dUnzip2"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor dUnzip2</span> (line <span class="line-number">31</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">dUnzip2</span>
+		<span class="method-name">
+			dUnzip2
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$fileName</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fileName</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodclose" id="close"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">close</span> (line <span class="line-number">204</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			close
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddebugMsg" id="debugMsg"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">debugMsg</span> (line <span class="line-number">259</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			debugMsg
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$level</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$string</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$level</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$string</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetExtraInfo" id="getExtraInfo"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getExtraInfo</span> (line <span class="line-number">124</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getExtraInfo
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$compressedFileName</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$compressedFileName</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLastError" id="getLastError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLastError</span> (line <span class="line-number">269</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getLastError
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetList" id="getList"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getList</span> (line <span class="line-number">38</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getList
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$stopOnFile</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetVersion" id="getVersion"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getVersion</span> (line <span class="line-number">13</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getVersion
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetZipInfo" id="getZipInfo"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getZipInfo</span> (line <span class="line-number">130</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getZipInfo
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$detail</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$detail</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoduncompress" id="uncompress"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">uncompress</span> (line <span class="line-number">213</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			uncompress
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$content</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$mode</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$uncompressedSize</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$targetFileName</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$content</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$mode</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$uncompressedSize</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$targetFileName</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodunzip" id="unzip"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">unzip</span> (line <span class="line-number">136</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			unzip
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$compressedFileName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$targetFileName</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$applyChmod</span> = <span class="var-default">0777</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$compressedFileName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$targetFileName</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$applyChmod</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodunzipAll" id="unzipAll"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">unzipAll</span> (line <span class="line-number">170</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			unzipAll
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$targetDir</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$baseDir</span> = <span class="var-default">&quot;&quot;</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$maintainStructure</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$applyChmod</span> = <span class="var-default">0777</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$targetDir</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$baseDir</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$maintainStructure</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$applyChmod</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_decodeFilename" id="_decodeFilename"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_decodeFilename</span> (line <span class="line-number">474</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_decodeFilename
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$filename</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$filename</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getFileHeaderInformation" id="_getFileHeaderInformation"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getFileHeaderInformation</span> (line <span class="line-number">412</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_getFileHeaderInformation
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$startOffset</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$fh</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$startOffset</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_loadFileListByEOF" id="_loadFileListByEOF"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_loadFileListByEOF</span> (line <span class="line-number">273</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_loadFileListByEOF
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$fh</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$stopOnFile</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_loadFileListBySignatures" id="_loadFileListBySignatures"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_loadFileListBySignatures</span> (line <span class="line-number">388</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_loadFileListBySignatures
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$fh</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$stopOnFile</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$fh</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$stopOnFile</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_protect" id="_protect"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_protect</span> (line <span class="line-number">483</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_protect
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$fullPath</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$fullPath</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__destroy" id="__destroy"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">__destroy</span> (line <span class="line-number">208</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__destroy
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 07 Jun 2012 09:52:53 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

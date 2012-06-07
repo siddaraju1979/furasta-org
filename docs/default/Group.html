@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Group</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Group</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+		<p class="notes">
+			Located in <a class="field" href="__inc---class---Group.php.html">/_inc/class/Group.php</a> (line <span class="field">30</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+												<div class="method-definition">
+					static 						<span class="method-result">bool</span>
+										<a href="#createGroupDirs" title="details" class="method-name">createGroupDirs</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+																								<div class="method-definition">
+					static 						<span class="method-result">instance</span>
+										<a href="#getInstance" title="details" class="method-name">getInstance</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+																<div class="method-definition">
+					static 						<span class="method-result">bool</span>
+										<a href="#groupsHaveFilePerm" title="details" class="method-name">groupsHaveFilePerm</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$ids</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+																																																<div class="method-definition">
+					static 						<span class="method-result">bool</span>
+										<a href="#removeGroupDirs" title="details" class="method-name">removeGroupDirs</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+								
+																				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#filePerm" title="details" class="method-name">filePerm</a>
+										()
+									</div>
+																																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#hasFilePerm" title="details" class="method-name">hasFilePerm</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#id" title="details" class="method-name">id</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#name" title="details" class="method-name">name</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#perm" title="details" class="method-name">perm</a>
+										()
+									</div>
+																</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodcreateGroupDirs" id="createGroupDirs"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method createGroupDirs</span> (line <span class="line-number">216</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">createGroupDirs</p>
+<p class="description"><p>create the group directory structure for a  given group</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			createGroupDirs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetInstance" id="getInstance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method getInstance</span> (line <span class="line-number">83</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getInstance</p>
+<p class="description"><p>gets an instance by id</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">instance</span>
+		<span class="method-name">
+			getInstance
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgroupsHaveFilePerm" id="groupsHaveFilePerm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method groupsHaveFilePerm</span> (line <span class="line-number">191</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">groupsHaveFilePerm</p>
+<p class="description"><p>checks if an array of groups have file permissions  to access a file in the user files directory</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			groupsHaveFilePerm
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$ids</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$ids</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$path</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveGroupDirs" id="removeGroupDirs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method removeGroupDirs</span> (line <span class="line-number">241</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removeGroupDirs</p>
+<p class="description"><p>removes the directory structure for a given group</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			removeGroupDirs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+			
+	</div>
+
+<a name="methodfilePerm" id="filePerm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">filePerm</span> (line <span class="line-number">160</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">filePerm</p>
+<p class="description"><p>accessor method for the file_perm  variable</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			filePerm
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodhasFilePerm" id="hasFilePerm"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">hasFilePerm</span> (line <span class="line-number">174</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">hasFilePerm</p>
+<p class="description"><p>checks if the group has permission to access a  file in the user files directory</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			hasFilePerm
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$path</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodid" id="id"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">id</span> (line <span class="line-number">120</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">id</p>
+<p class="description"><p>accessor method for the group id</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			id
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodname" id="name"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">name</span> (line <span class="line-number">133</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">name</p>
+<p class="description"><p>accessor method for the group  name</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			name
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodperm" id="perm"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">perm</span> (line <span class="line-number">147</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">perm</p>
+<p class="description"><p>accessor method for the group  perm, note: returns perm in array  form</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			perm
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 07 Jun 2012 09:52:54 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

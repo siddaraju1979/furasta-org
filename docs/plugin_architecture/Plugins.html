@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Plugins</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Plugins</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Plugins</p>
+<p class="description"><p>This class manages the retrieval of plugin data  from active plugin files. Each active plugin.php file  is loaded and each plugin registers itself. Then when  the plugin hooks are loaded the functions return the  appropriate information.</p><p>There are various different hooks and filters in the  plugin architecture. A hook is a slot to execute a  piece of code during the runtime of the CMS, a filter is  a slot to change some of the output of the CMS.</p><p>PLUGIN FILE</p><p>Below are all the supported variables and functions  which should be contained in the plugin file. Note that  where ever functions are used methods can also be used. To use  methods use the format: array( 'classname', 'methodname' )</p><p><ul><li>array keys</li></ul> $plugin = array(        'name' =&gt; '', # required        'description' =&gt; '',        'version' =&gt; '', # required        'email' =&gt; '',        'href' =&gt; '',        'importance' =&gt; '',</p><p><ul><li>admin functions</li></ul>       'admin'=&gt; array( <ul><li>$menu_array, $url</li></ul>               'filter_menu' =&gt; 'function_name'</p><p>'page_type' =&gt; array(                        'name' =&gt; '',</p><p><ul><li>$page_array</li></ul>                       'function' =&gt; 'function_name',                ),</p><p>'page' =&gt; 'function_name',</p><p><ul><li>exectues just as the page starts loading
+               'on_load' =&gt; 'function_name',</li></ul> <ul><li>executes when the page is finished loading</li></ul>		 'on_finish' =&gt; 'function_name',</p><p>'filter_lang' =&gt; 'function_name',</p><p>'filter_lang_errors' =&gt; 'function_name',</p><p>'filter_page_content' =&gt; 'function_name',</p><p>'filter_group_permissions' =&gt; 'function_name',</p><p>'overview_item' =&gt; array(                        'name' =&gt; '',</p><p><ul><li>$page_array</li></ul>                       'function' =&gt; 'function_name',                ),</p><p><ul><li>allows plugins to have custom templates in the</li><li>admin area for their specific plugin page only</li></ul>		 'template_override' =&gt; 'file_name',</p><p>),</p><p><ul><li>frontend functions</li></ul>       'frontend' =&gt; array( <ul><li>$page_array</li></ul>               'page_type' =&gt; 'function_name',</p><p><ul><li>exectues just as the page starts loading
+               'on_load' =&gt; 'function_name',</li></ul> <ul><li>executes when the page is finished loading</li></ul>		 'on_finish' =&gt; 'function_name',</p><p>'template_function' =&gt; array(                        'name' =&gt; '',</p><p><ul></ul><ul><li>@todo add support for objects here
+                       'function' =&gt; 'function_name',
+               ),</li></ul> <ul><li>$Page
+               'filter_page_vars' =&gt; 'function_name',</li></ul>                'filter_metadata' =&gt; 'function_name',</p><p><ul><li>$breadcrumbs</li></ul>		 'filter_breadcrumbs' =&gt; 'function_name',</p><p>),</p><p><ul><li>sitewide functions</li></ul>       'general' =&gt; array(</p><p><ul><li>$htaccess</li></ul>               'filter_htaccess' =&gt; 'function_name',</p><p><ul><li>$robots</li></ul>               'filter_robots' =&gt; 'function_name',</p><p><ul><li>$settings</li></ul>               'filter_settings_rewrite' =&gt; 'function_name',</p><p><ul><li>$sitemap</li></ul>               'filter_sitemap' =&gt; 'function_name',</p><p><ul><li>jobs</li></ul> 		 'jobs' =&gt; array(  			array( '+1 minute', 'function_name' ),	// executes close to every minute 			array( '+1 year', 'function_name' )	// executes close to every year 		 )</p><p>),</p><p>);</p><p>Note that there are two required fields for  writing a plugin - name and version. Filters  are prefixed with 'filter'. It is advisable to  prefix all plugin functions with the name of the  plugin to avoid conflicts.</p><p>Please look at specific functions below for more  details.</p><p>CREATING A PLUGIN HOOK / FILTER</p><p>Hooks and filters can be created within a plugin  so that other plugins can extend their functionality.  To do so there are two dedicated functions in the  plugin class.</p><p>$Plugin-&gt;hook( &quot;hookarea&quot;, &quot;hookname&quot; );  $Plugin-&gt;filter( &quot;filterarea&quot;, &quot;filtername&quot;, $to_be_filtered );</p><p>If a plugin contains hooks, it is important  to consider the $importance var. The plugin  should have a high importance so that it is  loaded before plugins which extend it.</p><p>JOBS</p><p>Jobs are supposed to emulate the cron program on linux systems.  Cron allows you to set tasks which should be executed at given  times. Jobs work in much the same way, the key difference is that  you need a steady stream of vistors to make sure the jobs get run  on time. IE, the jobs are only run when someone loads the website  and the job program determines that they are due to be performed.  There is no guarantee that the jobs will, in fact, be run on time,  but merely at the next available opportunity.</p><p>The first parameter for a job is the rate at which the job should  be executed. This is calculated using strtotime so look at the  strtotime for documentation: http://php.net/manual/en/function.strtotime.php</p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> add support for $importance var, add the importance as array key in $this-&gt;plugins, and order foreaches by key</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="__inc---class---Plugins.php.html">/_inc/class/Plugins.php</a> (line <span class="field">181</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$plugins" title="details" class="var-name">$plugins</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																				<div class="method-definition">
+					static 						<span class="method-result">instance</span>
+										<a href="#getInstance" title="details" class="method-name">getInstance</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span> = <span class="var-default">false</span>])
+									</div>
+																																																								
+												<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#adminMenu" title="details" class="method-name">adminMenu</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$menu_items</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#adminOverviewItemContent" title="details" class="method-name">adminOverviewItemContent</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$item_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#adminOverviewItems" title="details" class="method-name">adminOverviewItems</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#adminPage" title="details" class="method-name">adminPage</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$p_name</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#adminPageType" title="details" class="method-name">adminPageType</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$page_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#adminPageTypes" title="details" class="method-name">adminPageTypes</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#filter" title="details" class="method-name">filter</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$area</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$to_be_filtered</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$is_array</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">unknown</span>
+										<a href="#frontendPageType" title="details" class="method-name">frontendPageType</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$page_id</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#frontendTemplateFunctions" title="details" class="method-name">frontendTemplateFunctions</a>
+										()
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#hook" title="details" class="method-name">hook</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$area</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#jobs" title="details" class="method-name">jobs</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#plugins" title="details" class="method-name">plugins</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#refactor" title="details" class="method-name">refactor</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#register" title="details" class="method-name">register</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$plugin</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#registeredPlugins" title="details" class="method-name">registeredPlugins</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$plugins" id="$plugins"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$plugins</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">202</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">plugins</p>
+<p class="description"><p>An array of all plugins registered during runtime.</p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> make this private</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodgetInstance" id="getInstance"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method getInstance</span> (line <span class="line-number">229</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">getInstance</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">instance</span>
+		<span class="method-name">
+			getInstance
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span><span class="var-description">: , true if new instance should be made</span>			</li>
+				</ul>
+		
+			
+	</div>
+
+<a name="methodadminMenu" id="adminMenu"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminMenu</span> (line <span class="line-number">313</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminMenu</p>
+<p class="description"><p>Returns a filtered version of the original $menu_items array.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			adminMenu
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$menu_items</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$menu_items</span><span class="var-description">: , items currently on the menu</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadminOverviewItemContent" id="adminOverviewItemContent"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminOverviewItemContent</span> (line <span class="line-number">608</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminOverviewItemContent</p>
+<p class="description"><p>returns the content of a specific  overview item</p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> use $Template class lang files for error report below</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			adminOverviewItemContent
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$item_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$item_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadminOverviewItems" id="adminOverviewItems"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminOverviewItems</span> (line <span class="line-number">568</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminOverviewItems</p>
+<p class="description"><p>returns an array of the registered  overview items</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			adminOverviewItems
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodadminPage" id="adminPage"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminPage</span> (line <span class="line-number">435</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminPage</p>
+<p class="description"><p>cycles through installed plugins and executes  the correct one for the current page</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			adminPage
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$p_name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$p_name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadminPageType" id="adminPageType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminPageType</span> (line <span class="line-number">376</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminPageType</p>
+<p class="description"><p>executes a specific page type</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			adminPageType
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$id</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$page_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$page_id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadminPageTypes" id="adminPageTypes"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">adminPageTypes</span> (line <span class="line-number">348</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adminPageTypes</p>
+<p class="description"><p>returns an array of all the page types</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			adminPageTypes
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodfilter" id="filter"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">filter</span> (line <span class="line-number">705</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">filter</p>
+<p class="description"><p>Allows access to plugin filters.</p><p>set is_array to true if you want to pass an array of params rather  than one parameter which is an array</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			filter
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$area</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$to_be_filtered</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$is_array</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$area</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$to_be_filtered</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$is_array</span><span class="var-description">: optional</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfrontendPageType" id="frontendPageType"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">frontendPageType</span> (line <span class="line-number">517</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontendPageType</p>
+<p class="description"><p>executes the corresponding plugin function  to the frontend page type accessed</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">unknown</span>
+		<span class="method-name">
+			frontendPageType
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$page_id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$page_id</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodfrontendTemplateFunctions" id="frontendTemplateFunctions"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">frontendTemplateFunctions</span> (line <span class="line-number">494</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontendTemplateFunctions</p>
+<p class="description"><p>returns an array of the names  of plugins which have registered  frontend template functions</p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> order by $importance var</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			frontendTemplateFunctions
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodhook" id="hook"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">hook</span> (line <span class="line-number">653</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">hook</p>
+<p class="description"><p>Allows access to plugin hooks.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			hook
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$area</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$area</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$params</span><span class="var-description">: or array $params, optional</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodjobs" id="jobs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">jobs</span> (line <span class="line-number">777</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">jobs</p>
+<p class="description"><p>this function runs through registered jobs and checks  if they are due to be run. if they are it runs them and  records the time in the $SETTINGS array so that it can  determine later when the job needs to be run again</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			jobs
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodplugins" id="plugins"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">plugins</span> (line <span class="line-number">756</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">plugins</p>
+<p class="description"><p>returns the plugins array, or if $name is  provided returns details on a particular  plugin</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			plugins
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$name</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodrefactor" id="refactor"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">refactor</span> (line <span class="line-number">288</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">refactor</p>
+<p class="description"><p>re-order the plugins array by order  of the $importance var</p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> finish this</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			refactor
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodregister" id="register"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">register</span> (line <span class="line-number">261</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">register</p>
+<p class="description"><p>Function through which plugins are registered. Plugins  must be registered for the CMS to even recognise them.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true or void</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			register
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$plugin</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$plugin</span><span class="var-description">: , the name of the plugin</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodregisteredPlugins" id="registeredPlugins"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">registeredPlugins</span> (line <span class="line-number">477</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">registeredPlugins</p>
+<p class="description"><p>This function allows access to the  array of registered plugins</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			registeredPlugins
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 07 Jun 2012 09:52:55 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs for page frontend.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name">/_inc/function/frontend.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-functions">Functions</a>
+			</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+		
+			</div>
+</div>
+		
+
+	
+	
+	
+	<a name="sec-functions"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Functions</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<span class="disabled">Functions</span>
+		</div>
+		<div class="info-box-body">	
+			<a name="functionfrontend_breadcrumbs" id="functionfrontend_breadcrumbs"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">frontend_breadcrumbs</span> (line <span class="line-number">92</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_breadcrumbs</p>
+<p class="description"><p>returns a page tree with default css formatting</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			frontend_breadcrumbs
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$params</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_css_load" id="functionfrontend_css_load"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">frontend_css_load</span> (line <span class="line-number">245</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_css_load</p>
+<p class="description"><p>returns a url to the compressed css  passed in the file parameter</p><p>smarty parameters:  string file</p><p>example: {cache_css file=&quot;path/to/file&quot;}</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> or bool</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">url</span>
+		<span class="method-name">
+			frontend_css_load
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_error" id="functionfrontend_error"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">frontend_error</span> (line <span class="line-number">12</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_error</p>
+<p class="description"><p>issues an error using the frontend template</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			frontend_error
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$error</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$title</span> = <span class="var-default">&#039;Error&#039;</span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$error</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$title</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_javascript_load" id="functionfrontend_javascript_load"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">frontend_javascript_load</span> (line <span class="line-number">271</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_javascript_load</p>
+<p class="description"><p>returns a url to the comprssed javascript  passed in the file parmeter</p><p>smarty parameters:  string file</p><p>example: {cache_js file=&quot;path/to/file&quot;}</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> or string</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			frontend_javascript_load
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_list_pages" id="functionfrontend_list_pages"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">frontend_list_pages</span> (line <span class="line-number">69</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			frontend_list_pages
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$pages</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$level</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$url</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$id</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$pages</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$level</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$url</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_menu" id="functionfrontend_menu"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">frontend_menu</span> (line <span class="line-number">50</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Frontend Functions, Furasta.Org</p>
+<p class="description"><p>Contains functions which are loaded in  the frontend of the CMS only.</p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Conor Mac Aoidh &lt;<a href="mailto:conormacaoidh@gmail.com">conormacaoidh@gmail.com</a>&gt;</li>
+				<li><span class="field">version:</span> 1.0</li>
+				<li><span class="field">license:</span> <a href="http://furasta.org/licence.txt">The BSD License</a></li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			frontend_menu
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+<a name="functionfrontend_metadata" id="functionfrontend_metadata"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">frontend_metadata</span> (line <span class="line-number">162</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_metadata</p>
+<p class="description"><p>generates page metadata such as meta tags,  and javascript/css links that should be contained  in the header. This function also has a plugin  filter.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of metadata</li>
+				<li><span class="field">todo:</span> manually cache css/js files added here</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			frontend_metadata
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$smarty</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$params</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$smarty</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_page_content" id="functionfrontend_page_content"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">frontend_page_content</span> (line <span class="line-number">291</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_page_content</p>
+<p class="description"><p>gets the page content for the frontend</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			frontend_page_content
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$smarty</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$silent</span> = <span class="var-default">false</span>])
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$params</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$smarty</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$silent</span>			</li>
+				</ul>
+		
+	
+</div>
+<a name="functionfrontend_page_load_time" id="functionfrontend_page_load_time"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="method-title">frontend_page_load_time</span> (line <span class="line-number">224</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">frontend_page_load_time</p>
+<p class="description"><p>simple function which returns the amount of time  it has taken for the page to load until  this point. This can be assumed to be a reasonably  accurate page load time.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			frontend_page_load_time
+		</span>
+				()
+			</div>
+
+		
+	
+</div>
+<a name="functionstrip_html_tags" id="functionstrip_html_tags"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="method-title">strip_html_tags</span> (line <span class="line-number">315</span>)
+	</div> 
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			strip_html_tags
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$text</span>)
+			</div>
+
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$text</span>			</li>
+				</ul>
+		
+	
+</div>
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 07 Jun 2012 09:52:53 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>
