@@ -13,7 +13,7 @@
  */
 
 /**
- * spl_autoload_register 
+ * furasta_autoload
  * 
  * Autoloads classes stored in the _inc/class directory
  *
@@ -21,7 +21,7 @@
  * @access protected
  * @return bool
  */
-spl_autoload_register( function( $class_name ){
+function furasta_autoload( $class_name ){
 
 	$file = HOME . '_inc/class/' . $class_name . '.php';
 
@@ -30,7 +30,9 @@ spl_autoload_register( function( $class_name ){
 
 	return false;
 
-} );
+}
+
+sp1_autoload_register( 'furasta_autoload' );
 	
 /**
  * error
@@ -255,12 +257,13 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'USERS' => USERS,
 		'TRASH' => TRASH,
 		'GROUPS' => GROUPS,
+		'FILES' => FILES,
 		'OPTIONS' => OPTIONS,
 		'SITEURL' => SITEURL,
 		'USER_FILES' => USER_FILES,
 		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,
-    'LANG' => LANG,
-    'SET_REVISION' => REVISION,
+		'LANG' => LANG,
+		'SET_REVISION' => REVISION,
 	);
 
 	$constants = array_merge( $default_constants, $constants );
@@ -424,13 +427,64 @@ function rss_fetch( $url, $tagname = 'item' ){
  * Uses the Validate class for php validation and the
  * jQuery Form Validation Plugin for javascript validation.
  *
+ * The function returns true if validation has succeeded or
+ * the form wasn't submitted. Returns false if there has
+ * been an error.
+ *
+ * The $conds parameter is an array of inputs to be validated,
+ * and certain conditions which must be met for validation on
+ * that input to succeed. For documentation of all these
+ * parameters see the jQuery Form Validation Plugin located at
+ * _inc/js/jquery/validate.js
+ *
+ * See below for an example usage of the function:
+ *
+ * $conds = array(
+ * 	'input-name' => array(
+ * 		'name'		=> 'Text Input',
+ *		'required'	=> true,
+ *		'minlength'	=> 2
+ *	)
+ * );
+ *
+ * The above adds one input named "Name" for validation. The
+ * input is required (must be non-empty) and must have a minimum
+ * length of 2 characters. The name is used for alerts or warnings
+ * when validation fails.
+ *
+ * $valid = validate( $conds, "#form-id", 'submit-name' );
+ *
+ * The above adds form validation to the form with an id "form-id"
+ * (prefixed with a hash, it's essentially a CSS selector), with
+ * a submit input of the name "submit-name" and with the above
+ * conditions.
+ *
+ * The form validation can then be checked using the following:
+ *
+ * 
+ * if( $valid ){
+ * 	// form validation successful
+ * }
+ *
+ * The validation plugin uses the Template class for displaying
+ * errors. To display errors with the template class simply
+ * create an instance and call the display errors method:
+ *
+ * else{
+ *	$Template::getInstance( );
+ * 	$Template->displayErrors( );
+ * }
+ *
  * @param array $conds 
  * @param string $selector 
  * @param string $post 
  * @access public
- * @return void
+ * @return bool
  */
 function validate($conds,$selector,$post){
+
+        if( !isset( $_POST[ $post ] ) )
+                return true;
 
         $Validate = Validate::getInstance( );
 
@@ -453,9 +507,6 @@ function validate($conds,$selector,$post){
 	}
 
 	$Validate->addConds( $conds );
-
-        if( !isset( $_POST[ $post ] ) )
-                return true;
 
 	return $Validate->execute( );
 	

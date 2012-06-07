@@ -144,7 +144,7 @@ class FileManager{
 		 * path contains "..", therefore it's invalid
 		 */
 		if( strpos( '..', $path ) !== false )
-			return false;
+			return $this->setError( 4, $path ); 
 
 		return true;
 
@@ -270,11 +270,10 @@ class FileManager{
 	 * @param string/int $file
 	 * @param string $rw
 	 * @param int $id
-	 * @static
 	 * @access public
 	 * @return bool
 	 */
-	public static function hasPerm( $path, $rw = 'r', $id = false ){
+	public function hasPerm( $path, $rw = 'r', $id = false ){
 		
 		/**
 		 * get file details
@@ -291,7 +290,7 @@ class FileManager{
 		/**
 		 * if super user, bypass all permissions
 		 */
-		if( $User->isSuperUser( ) )
+		if( $User && $User->isSuperUser( ) )
 			return true;
 
 		$file = $this->getFile( $path );
@@ -300,7 +299,7 @@ class FileManager{
 	 	 * if user/group administers files for this user, then
 		 * don't bother checking file permissions just return true
 		 */
-		if( $User->hasFilePerm( $file[ 'owner' ] ) )
+		if( $User && $User->hasFilePerm( $file[ 'owner' ] ) )
 			return true;
 
 		/**
@@ -323,11 +322,17 @@ class FileManager{
 				case 'r': // check if is readable by user
 
 					/**
+					 * must be logged in
+					 */
+					if( !$User )
+						return $this->setError( 9 );
+
+					/**
 					 * if user does not have permission to manage
 					 * files, return false
 					 */
 					if( !$User->hasPerm( 'f' ) )
-						return false;
+						return $this->setError( 1, $path );
 
 					// if not in users array, check groups array
 					if( !in_array( $User->id( ), $read[ 'users' ] ) ){
@@ -338,11 +343,17 @@ class FileManager{
 							}
 						}
 						if( !$match ) // user does not have permission to view file
-							return false;
+							return $this->setError( 1, $path );
 					}
 					
 				break;
 				case 'w': // check if is writable by user
+
+					/**
+					 * must be logged in
+					 */
+					if( !$User )
+						return $this->setError( 9 );
 
 					/**
 					 * if is system file/folder (ie. owner=0) then
@@ -356,7 +367,7 @@ class FileManager{
 					 * files, return false
 					 */
 					if( !$User->hasPerm( 'f' ) )
-						return false;
+						return $this->setError( 2, $path );
 
 					// if not in users array, check groups array
 					if( !in_array( $User->id( ), $write[ 'users' ] ) ){
@@ -367,7 +378,7 @@ class FileManager{
 							}
 						}
 						if( !$match ) // user does not have permission to view file
-							return false;
+							return $this->setError( 2, $path );
 					}
 				break;
 			}
@@ -408,6 +419,7 @@ class FileManager{
 			6 => 'The %1 at %2 cannot be created as it already exists',
 			7 => 'There was a problem querying the database. The following query caused the error: %1',
 			8 => 'The path %1 contains a Furasta.Org system file which cannot be written',
+			9 => 'User must be logged in to perform this action',
 		);
 
 		$this->error{ 'id' } = $id;
@@ -539,10 +551,11 @@ class FileManager{
 
 		foreach( new RecursiveIteratorIterator( $it ) as $file ){
 
-		// skip dots and dirs, (dir symlinks are processed
-		// by .dirname.lnk so will still be traversed)
-		if( $file->isDot( ) || $file->isDir( ) )
-		continue;
+			if( $file->isDot( ) )
+				continue;
+
+			$path = $file->getSubPathname( );
+			die( $path );
 
 		}
 	}
