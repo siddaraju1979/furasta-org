@@ -75,7 +75,7 @@ function content_areas_frontend_template_function( $params, &$smarty ){
 	$registered = ( $ContentAreas->isRegistered( $params[ 'name' ] ) ) ? 
 		'' : ' content-area-unregistered';
 	echo '<div class="content-area' . $registered . '" id="content-area-' . $params[ 'name' ] . '">';
-	echo $ContentAreas->getContent( $params[ 'name' ], $smarty->_tpl_vars[ 'page_id' ] );
+	echo $ContentAreas->getContent( $params[ 'name' ], $smarty->getTemplateVars( 'page_id' ) );
 	echo '</div>';
 }
 

@@ -32,7 +32,7 @@ $Smarty->right_delimiter = ']';
  */
 $plugin_functions = $Plugins->frontendTemplateFunctions( );
 foreach( $plugin_functions as $name => $function )
-	$Smarty->register_function( $name, $function );
+	$Smarty->registerPlugin( 'function',  $name, $function );
 
 /**
  * filter $Page before output, in case plugins want to change anything
@@ -65,13 +65,13 @@ $Smarty->assign( 'site_subtitle', $SETTINGS[ 'site_subtitle' ] );
 /**
  * register default template functions 
  */
-$Smarty->register_function( 'page_content', 'frontend_page_content' );
-$Smarty->register_function( 'menu', 'frontend_menu' );
-$Smarty->register_function( 'breadcrumbs', 'frontend_breadcrumbs' );
-$Smarty->register_function( 'metadata', 'frontend_metadata' );
-$Smarty->register_function( 'cache_css', 'frontend_css_load' );
-$Smarty->register_function( 'cache_js', 'frontend_javascript_load' );
-$Smarty->register_function( 'page_load_time', 'frontend_page_load_time' );
+$Smarty->registerPlugin( 'function',  'page_content', 'frontend_page_content' );
+$Smarty->registerPlugin( 'function',  'menu', 'frontend_menu' );
+$Smarty->registerPlugin( 'function',  'breadcrumbs', 'frontend_breadcrumbs' );
+$Smarty->registerPlugin( 'function',  'metadata', 'frontend_metadata' );
+$Smarty->registerPlugin( 'function',  'cache_css', 'frontend_css_load' );
+$Smarty->registerPlugin( 'function',  'cache_js', 'frontend_javascript_load' );
+$Smarty->registerPlugin( 'function',  'page_load_time', 'frontend_page_load_time' );
 
 /**
  * find correct template to use
