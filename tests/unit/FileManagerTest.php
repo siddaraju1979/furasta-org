@@ -12,6 +12,8 @@
  */
 
 // load config file
+$_SESSION[ 'user' ][ 'id' ] = 1;
+$_SESSION[ 'user' ][ 'login' ] = true;
 require dirname( __FILE__ ) . '/../../trunk/_inc/define.php';
 
 class FileManagerTest extends PHPUnit_Framework_Testcase{
@@ -25,8 +27,6 @@ class FileManagerTest extends PHPUnit_Framework_Testcase{
 	 */
 	public function hasPerm( ){
 
-		$this->assertFalse( true );
-
 		$FileManager = FileManager::getInstance( );
 		$User = User::getInstance( );
 
@@ -34,14 +34,15 @@ class FileManagerTest extends PHPUnit_Framework_Testcase{
 		 * checks if user has permission to write to a system
 		 * directory - should never be true
 		 */
-		$this->assertFalse( $FileManager->hasPerm( 'users/', 'w' ) );
+		$success = $FileManager->hasPerm( 'users/', 'w' );
 
-		/**
-		 * checks if the user has permission to read their own
-		 * home files directory. should always be true
-		 */
-		$this->assertFalse( !$FileManager->hasPerm( 'users/ ' . $User->id( ) . '/', 'r' ) );
+		// assert that the return value is false		
+		$this->assertFalse( $success );
 
+		if( !$success ){ // make sure it's for the right reason, check error id
+			$error = $FileManager->error( );
+			$this->assertEquals( 8, $error[ 'id' ] );	
+		}
 
 	}	
 
