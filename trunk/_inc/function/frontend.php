@@ -180,26 +180,29 @@ function frontend_metadata( $params, &$smarty ){
 		window.furasta = {
 			site : { 
 				url : "' . SITEURL . '",
-				title : "' . $smarty->_tpl_vars{ 'site_title' } . '",
-				subtitle : "' . $smarty->_tpl_vars{ 'site_subtitle' } . '"
+				title : "' . $smarty->getTemplateVars( 'site_title' ) . '",
+				subtitle : "' . $smarty->getTemplateVars( 'site_subtitle' ) . '"
 			},
 			page : {
-				id : "' . $smarty->_tpl_vars{ 'page_id' } . '" ,
-				name : "' . $smarty->_tpl_vars{ 'page_name' } . '" ,
-				slug : "' . $smarty->_tpl_vars{ 'page_slug' } . '" ,
-				parent_id : "' . $smarty->_tpl_vars{ 'parent_id' } . '"
+				id : "' . $smarty->getTemplateVars( 'page_id' ) . '" ,
+				name : "' . $smarty->getTemplateVars( 'page_name' ) . '" ,
+				slug : "' . $smarty->getTemplateVars( 'page_slug' ) . '" ,
+				parent_id : "' . $smarty->getTemplateVars( 'parent_id' ) . '"
 			},
 			postdata : ' . json_encode( $_POST );
 
 	if( User::verify( ) ){
+		/**
+		 * @todo update this to new multiple groups
 		$User = User::getInstance( );
 		$metadata .= ',
 			user:{
 				id: ' . $User->id( ) . ',
 				name: "' . $User->name( ) . '",
 				group: "' . implode( '', $User->groups( ) ) . '",
-				group_name: "' . $User->groupName( ) . '"	
+				group_name: "' . implode( $User->groupNames( ) . '"	
 			}';
+		*/
 	}
 
 	$metadata .= '
@@ -289,21 +292,26 @@ function frontend_javascript_load( $params ){
  * @return void
  */
 function frontend_page_content( $params, &$smarty, $silent = false ){
-	$type = $smarty->_tpl_vars{ 'page_type' };
+	$type = $smarty->getTemplateVars( 'page_type' );
 
 	// capture output to variable
 	ob_start( );
 
 	if( $type == 'Normal' )
-		echo $smarty->_tpl_vars{ '__page_content' };
+		echo $smarty->getTemplateVars( '__page_content' );
 	else{
-		$page_id = $smarty->_tpl_vars{ 'page_id' };
+		$page_id = $smarty->getTemplateVars( 'page_id' );
 		$Plugins = Plugins::getInstance( );
 		$Plugins->frontendPageType( $type, $page_id );
 	}
 
 	$content = ob_get_contents( );
 	ob_end_clean( );
+
+	/**
+	 * parse the page content as a smarty template
+	 */
+	$content = $smarty->fetch( 'eval:' . $content );
 
 	if( $silent )
 		return $content;
