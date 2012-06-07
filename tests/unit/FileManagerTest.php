@@ -19,6 +19,23 @@ require dirname( __FILE__ ) . '/../../trunk/_inc/define.php';
 class FileManagerTest extends PHPUnit_Framework_Testcase{
 
 	/**
+	 * holds an instance of the fm and user
+	 */
+	private $fm;
+	private $us;
+
+	/**
+	 * __construct
+	 * 
+	 * saves an instance of the file manager
+	 * and user in the class
+	 */
+	public function __construct( ){
+		$this->fm = FileManager::getInstance( );
+		$this->us = User::getInstance( );
+	}
+
+	/**
 	 * hasPerm
 	 *
 	 * tests the hasPerm method
@@ -27,23 +44,62 @@ class FileManagerTest extends PHPUnit_Framework_Testcase{
 	 */
 	public function hasPerm( ){
 
-		$FileManager = FileManager::getInstance( );
-		$User = User::getInstance( );
-
 		/**
 		 * checks if user has permission to write to a system
 		 * directory - should never be true
 		 */
-		$success = $FileManager->hasPerm( 'users/', 'w' );
+		$success = $this->fm->hasPerm( 'users/', 'w' );
 
 		// assert that the return value is false		
 		$this->assertFalse( $success );
 
 		if( !$success ){ // make sure it's for the right reason, check error id
-			$error = $FileManager->error( );
+			$error = $this->fm->error( );
 			$this->assertEquals( 8, $error[ 'id' ] );	
 		}
 
 	}	
 
+
+	/**
+	 * addDir
+	 *
+	 * tests the addDir method
+	 *
+	 * @test
+	 */
+	public function addDir( ){
+
+		/**
+		 * attempt to mkdir in users home dir
+		 */
+		$success = $this->fm->addDir( 'users/1/test' );
+
+		if( !$success ){
+			$error = $this->fm->error( );
+			echo $error[ 'description' ];
+		}
+
+		$this->assertFalse( !$success );
+
+	}
+
+
+	/**
+	 * removeDir
+	 *
+	 * tests the removeDir method
+	 *
+	 * @test
+	 */
+	public function removeDir( ){
+
+		/**
+		 * attempt to mkdir in users home dir
+		 *
+		$success = $fm->addDir( 'users/1/test' );
+
+		$this->assertFalse( !$success );
+		*/
+	}
 }

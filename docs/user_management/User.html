@@ -22,13 +22,13 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">User</p>
-<p class="description"><p>Used for user management. Some examples below:</p><p>== GENERAL USAGE ===</p><p>This class can be used to simply get access to  details on a user. Using this code:</p><p>$User = User::getInstance( $id );</p><p>you can gain access to user info. If no $id is  provided then the constructor will check for  currently a currently logged in user id</p><p>=== VERIFY LOGIN ===</p><p>if( User::verify( ) ){    // user is logged in  }</p><p>=== LOGIN USER ===</p><p>This is usefull in the case of creating another  login area for the CMS, through the use of a  plugin. You can see how it works in admin/login.php  Basically you can use the static method &quot;login&quot; to log  the user in:</p><p>if( User::login( $email, $password, $permissions, $instance ) ){ 	$User = User::getInstance( );  	// user is logged in  }  else  	// user login failed</p><p>An array of permissions required to log into the  area can also be passed. The last paramater decides  whether to create a new instance of the class for the  user if login is successful</p><p>=== CHECK USER PERMISSIONS ===</p><p>This class also manages group permissions for the  user. To check wether the user has permission to do  something use the following syntax, where $section  is a permission string ( see the key table below ):</p><p>$User = User::getInstance( );</p><p>if( $User-&gt;hasPerm( $string ){    // user has permission to access this of the system  }</p><p>The string above can be anything from the table below,  or if plugins are installed there may be other  keys - refer to the plugin documentation for details on  that.</p><p>+---------------+----------------------------+  |      a        |      login to admin area   |  |      e        |      edit pages            |  |      c        |      create pages          |  |      d        |      delete pages          |  |      t        |      manage trash          |  |      o        |      order pages           | // @todo make order pages perms work  |      s	   |	  edit settings	        |  |      u	   |      edit users	        |  +---------------+----------------------------+</p><p>The class can also be used to check if the user has  permission to edit a certain page. The function accepts  an array of page permissions, or the string of perms  directly from the database.</p><p>if( $User-&gt;adminPagePerm( $perm_array ) ){    // user has permission to edit page  }</p><p>When using the pagePerm function it handles group  permissions as well internally, so there is no need  to run hasPerm if pagePerm is run.</p><p>=== DATA &amp; OPTIONS ===</p><p>Not all required data on users can be stored in the users table.  This class provides two alternatives to storing data for users:</p><p>Data can be stored in the data column in the users table -  a JSON encoded string of user data, so it's sufficient for data  that does not need to be indexed.</p><p>It can also be stored using the options methods which use the  options table (for general CMS options/settings) to store data.  This table takes the form of name, value and stores data very simply.  Note: It is advisable to take a look at the database structure.  Using this method extra data can be stored and indexed. For example,  assuming you have stored user rating data using the options methods in  this class you could retrieve all user ratings with the following query:</p><p>select users.id,options.value from users,options where options.name=concat(&quot;user_&quot;,users.id,&quot;_rating&quot;);</p></p>
+<p class="description"><p>Used for user management. Some examples below:</p><p>== GENERAL USAGE ===</p><p>This class can be used to simply get access to  details on a user. Using this code:</p><p>$User = User::getInstance( $id );</p><p>you can gain access to user info. If no $id is  provided then the constructor will check for  currently a currently logged in user id</p><p>=== VERIFY LOGIN ===</p><p>if( User::verify( ) ){    // user is logged in  }</p><p>=== LOGIN USER ===</p><p>This is usefull in the case of creating another  login area for the CMS, through the use of a  plugin. You can see how it works in admin/login.php  Basically you can use the static method &quot;login&quot; to log  the user in:</p><p>if( User::login( $email, $password, $permissions, $instance ) ){ 	$User = User::getInstance( );  	// user is logged in  }  else  	// user login failed</p><p>An array of permissions required to log into the  area can also be passed. The last paramater decides  whether to create a new instance of the class for the  user if login is successful</p><p>=== CHECK USER PERMISSIONS ===</p><p>This class also manages group permissions for the  user. To check wether the user has permission to do  something use the following syntax, where $section  is a permission string ( see the key table below ):</p><p>$User = User::getInstance( );</p><p>if( $User-&gt;hasPerm( $string ){    // user has permission to access this of the system  }</p><p>The string above can be anything from the table below,  or if plugins are installed there may be other  keys - refer to the plugin documentation for details on  that.</p><p>+---------------+----------------------------+  |      a        |      login to admin area   |  |      e        |      edit pages            |  |      c        |      create pages          |  |      d        |      delete pages          |  |      t        |      manage trash          |  |      o        |      order pages           | // @todo make order pages perms work  |      s	   |	  edit settings	        |  |      u	   |      edit users	        |  +---------------+----------------------------+</p><p>The class can also be used to check if the user has  permission to edit a certain page. The function accepts  an array of page permissions, or the string of perms  directly from the database.</p><p>if( $User-&gt;adminPagePerm( $perm_array ) ){    // user has permission to edit page  }</p><p>When using the pagePerm function it handles group  permissions as well internally, so there is no need  to run hasPerm if pagePerm is run.</p><p>=== DATA &amp; OPTIONS ===</p><p>Not all required data on users can be stored in the users table.  This class provides two alternatives to storing data for users:</p><p>Data can be stored in the data column in the users table -  a JSON encoded string of user data, so it's sufficient for data  that does not need to be indexed.</p><p>It can also be stored using the options methods which use the  options table (for general CMS options/settings) to store data.  This table takes the form of name, value and stores data very simply.  Note: It is advisable to take a look at the database structure.  Using this method extra data can be stored and indexed.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Conor Mac Aoidh &lt;<a href="mailto:conormacaoidh@gmail.com">conormacaoidh@gmail.com</a>&gt;</li>
 				<li><span class="field">license:</span> <a href="http://furasta.org/licence.txt">The BSD License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="__inc---class---User.php.html">/_inc/class/User.php</a> (line <span class="field">122</span>)
+			Located in <a class="field" href="__inc---class---User.php.html">/_inc/class/User.php</a> (line <span class="field">117</span>)
 		</p>
 		
 				
@@ -204,7 +204,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method createUserDirs</span> (line <span class="line-number">800</span>)
+		<span class="method-title">static method createUserDirs</span> (line <span class="line-number">795</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -236,7 +236,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method destroyCookie</span> (line <span class="line-number">531</span>)
+		<span class="method-title">static method destroyCookie</span> (line <span class="line-number">526</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -262,7 +262,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method getInstance</span> (line <span class="line-number">342</span>)
+		<span class="method-title">static method getInstance</span> (line <span class="line-number">337</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -293,7 +293,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method login</span> (line <span class="line-number">424</span>)
+		<span class="method-title">static method login</span> (line <span class="line-number">419</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -336,7 +336,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method loginHash</span> (line <span class="line-number">449</span>)
+		<span class="method-title">static method loginHash</span> (line <span class="line-number">444</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -376,7 +376,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method logout</span> (line <span class="line-number">510</span>)
+		<span class="method-title">static method logout</span> (line <span class="line-number">505</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -402,7 +402,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method permToArray</span> (line <span class="line-number">784</span>)
+		<span class="method-title">static method permToArray</span> (line <span class="line-number">779</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -433,7 +433,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method removeUserDirs</span> (line <span class="line-number">826</span>)
+		<span class="method-title">static method removeUserDirs</span> (line <span class="line-number">821</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -465,7 +465,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static method verify</span> (line <span class="line-number">468</span>)
+		<span class="method-title">static method verify</span> (line <span class="line-number">463</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -492,7 +492,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">372</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">367</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -522,7 +522,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">adminPagePerm</span> (line <span class="line-number">634</span>)
+		<span class="method-title">adminPagePerm</span> (line <span class="line-number">629</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -552,7 +552,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">email</span> (line <span class="line-number">867</span>)
+		<span class="method-title">email</span> (line <span class="line-number">862</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -577,7 +577,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">frontendPagePerm</span> (line <span class="line-number">706</span>)
+		<span class="method-title">frontendPagePerm</span> (line <span class="line-number">701</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -607,7 +607,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getData</span> (line <span class="line-number">933</span>)
+		<span class="method-title">getData</span> (line <span class="line-number">928</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -632,7 +632,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getOption</span> (line <span class="line-number">971</span>)
+		<span class="method-title">getOption</span> (line <span class="line-number">966</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -662,7 +662,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getOptions</span> (line <span class="line-number">946</span>)
+		<span class="method-title">getOptions</span> (line <span class="line-number">941</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -687,7 +687,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">groups</span> (line <span class="line-number">918</span>)
+		<span class="method-title">groups</span> (line <span class="line-number">913</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -712,7 +712,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">hasFilePerm</span> (line <span class="line-number">591</span>)
+		<span class="method-title">hasFilePerm</span> (line <span class="line-number">586</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -742,7 +742,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">hash</span> (line <span class="line-number">892</span>)
+		<span class="method-title">hash</span> (line <span class="line-number">887</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -767,7 +767,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">hasPerm</span> (line <span class="line-number">562</span>)
+		<span class="method-title">hasPerm</span> (line <span class="line-number">557</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -797,7 +797,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">id</span> (line <span class="line-number">842</span>)
+		<span class="method-title">id</span> (line <span class="line-number">837</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -822,7 +822,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">isSuperUser</span> (line <span class="line-number">1015</span>)
+		<span class="method-title">isSuperUser</span> (line <span class="line-number">1010</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -847,7 +847,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">name</span> (line <span class="line-number">855</span>)
+		<span class="method-title">name</span> (line <span class="line-number">850</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -872,7 +872,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">password</span> (line <span class="line-number">880</span>)
+		<span class="method-title">password</span> (line <span class="line-number">875</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -898,7 +898,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">perm</span> (line <span class="line-number">904</span>)
+		<span class="method-title">perm</span> (line <span class="line-number">899</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -923,7 +923,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCookie</span> (line <span class="line-number">485</span>)
+		<span class="method-title">setCookie</span> (line <span class="line-number">480</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -948,7 +948,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setOption</span> (line <span class="line-number">989</span>)
+		<span class="method-title">setOption</span> (line <span class="line-number">984</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -983,7 +983,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Thu, 07 Jun 2012 09:52:56 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+		Documentation generated on Thu, 07 Jun 2012 18:22:51 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
 	</p>
 	</div></body>
 </html>
