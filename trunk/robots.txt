@@ -1,3 +1,0 @@
-# robots.txt - Furasta.Org
-User-agent: *
-Disallow: /
