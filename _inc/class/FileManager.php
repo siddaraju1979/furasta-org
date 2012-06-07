@@ -169,18 +169,20 @@ class FileManager{
 		if( $new ){ // insert db and files array
 			$query = 'insert into ' . FILES . ' values ( '
 				. '"",'
-        . '"' . $data[ 'name' ] . '",'
-        . '"' . $data[ 'path' ] . '",'
+				. '"' . $data[ 'name' ] . '",'
+				. '"' . $data[ 'path' ] . '",'
 				. $data[ 'owner' ] . ','
 				. '"' . @$data[ 'perm' ] . '",'
 				. '"' . $data[ 'type' ] . '",'
 				. '"' . $data[ 'public' ] . '",'
 				. '"' . $data[ 'hash' ] . '"'
 			. ')';
-				query( $query ) or {
-					$this->setError( 7, $query );
-					return false;
-				};
+			
+			$success = query( $query );
+
+			if( !$success )
+				return $this->setError( 7, $query );
+
 			$data[ 'id' ] = $id;
 			$this->files{ $data[ 'path' ] } = $data;
 		}
@@ -191,10 +193,11 @@ class FileManager{
 				$this->files{ $data[ 'path' ] }{ $name } = $value;
 			}
 			$query = substr( $query, 0, 1 ) . ' where path="' . $data[ 'path' ] . '"';
-			query( $query ) or{
-				$this->setError( 7, $query );
-				return false;
-			};
+
+			$success = query( $query );
+
+			if( !$success )
+				return $this->setError( 7, $query );
 		}
 
 	} 
@@ -294,19 +297,6 @@ class FileManager{
 		$file = $this->getFile( $path );
 
 		/**
-		 * file is not in db
-		 */
-		if( !$file )
-			return false;
-
-		/**
-		 * if is system file/folder (ie. owner=0) then
-		 * return false
-		 */
-		if( $file[ 'owner' ] == 0 )
-			return false;
-
-		/**
 	 	 * if user/group administers files for this user, then
 		 * don't bother checking file permissions just return true
 		 */
@@ -355,6 +345,13 @@ class FileManager{
 				case 'w': // check if is writable by user
 
 					/**
+					 * if is system file/folder (ie. owner=0) then
+					 * return false
+					 */
+					if( $file[ 'owner' ] == 0 )
+						return $this->setError( 8, $path );
+
+					/**
 					 * if user does not have permission to manage
 					 * files, return false
 					 */
@@ -381,61 +378,64 @@ class FileManager{
 
 	}
 
-  /**
-   * setError
-   *
-   * logs an error by id. The error description is 
-   * calculated and logged
-   *
-   * $params  -   array of arguments to the error
-   *              description, will replace %1 - %n
-   *              in the form array( %1, %2 .. %n )
-   *
-   * @param int $id optional
-   * @param array $params optional
-   * @access private
-   * @return void
-   */
-  private setError( $id = 0, $params = false ){
+	/**
+	* setError
+	*
+	* logs an error by id. The error description is 
+	* calculated and logged
+	*
+	* $params  -   array of arguments to the error
+	*              description, will replace %1 - %n
+	*              in the form array( %1, %2 .. %n )
+	*
+	* @param int $id optional
+	* @param array $params optional
+	* @access private
+	* @return false
+	*/
+	private function setError( $id = 0, $params = false ){
 
-    // do not rely on this, a temporary array to
-    // hold error descriptions pending language
-    // support additions
-    $errors = array(
-      0 => 'An unknown error occured',
-      1 => 'You have insufficient privilege to read %1',
-      2 => 'You have insufficient privilege to write %1',
-      3 => 'You have insufficient privilege to view %1',
-      4 => 'The path %1 is invalid',
-      5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . 'files directory',
-      6 => 'The %1 at %2 cannot be created as it already exists',
-	7 => 'There was a problem querying the database. The following query caused the error: %1',
-    );
+		// do not rely on this, a temporary array to
+		// hold error descriptions pending language
+		// support additions
+		$errors = array(
+			0 => 'An unknown error occured',
+			1 => 'You have insufficient privilege to read %1',
+			2 => 'You have insufficient privilege to write %1',
+			3 => 'You have insufficient privilege to view %1',
+			4 => 'The path %1 is invalid',
+			5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . 'files directory',
+			6 => 'The %1 at %2 cannot be created as it already exists',
+			7 => 'There was a problem querying the database. The following query caused the error: %1',
+			8 => 'The path %1 contains a Furasta.Org system file which cannot be written',
+		);
 
-    $this->error{ 'id' } = $id;
+		$this->error{ 'id' } = $id;
 
 		/**
-		 * if params var is present replace occurances
-		 * of %i with var. can take an array of vars 
-		 */
+		* if params var is present replace occurances
+		* of %i with var. can take an array of vars 
+		*/
 		if( $params != false ){
 
 			if( is_array( $params ) ){
 				/**
-				 * reindex array to start with 1 instead of 0
-				 */
+				* reindex array to start with 1 instead of 0
+				*/
 				$params = array_combine( range( 1, count( $params ) ), array_values( $params ) );
 
 				for( $i = 1; $i <= count( $params ); $i++ )
-					$this->error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
+				$this->error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
 
 			}
 			else
 				$this->error{ 'desc' } = str_replace( '%1', $params, $error );
-			
-    }
 
-  }
+		}
+
+		return false;
+
+	}
 
 	/**
 	 * getInstance
@@ -472,26 +472,22 @@ class FileManager{
 
 
 		// file exists, return false
-    if( file_exists( USER_FILES . 'files/' . $path ) ){
-      $this->setError( 6, array( 'dir', $path ) );
-      return false;
-    }
+		if( file_exists( USER_FILES . 'files/' . $path ) )
+			return $this->setError( 6, array( 'dir', $path ) );
 
 		/**
 		 * permission failure
 		 */
-    if( !$this->hasPerm( $path, 'w' ) ){
-      $this->setError( 2, $path );
-      return false;
-    }
+		if( !$this->hasPerm( $path, 'w' ) )
+			return $this->setError( 2, $path );
 
 		/**
 		 * build data
 		 */
 		$User = User::getInstance( );
 		$data = array(
-      'name' => end( explode( '/', $path ) ),
-      'path' => $path,
+			'name' => end( explode( '/', $path ) ),
+			'path' => $path,
 			'owner' => $User->id( ),
 			'type' => 'dir',
 			'perm' => ( empty( $perm ) ) ? '' : implode( ',', $perm ),
@@ -502,10 +498,11 @@ class FileManager{
 		/**
 		 * create directory
 		 */
-    mkdir( $path ) or {
-      $this->setError( 5, $path );
-      return false; 
-    };
+		$success = mkdir( $path ); 
+
+		if( !$success )
+			return $this->setError( 5, $path );
+
 
 		/**
 		 * add to database
@@ -529,27 +526,25 @@ class FileManager{
 		/**
 		 * permission failure
 		 */
-    if( !$this->hasPerm( $path, 'w' ) ){
-      $this->setError( 2, $path );
-      return false;
-    }
+		if( !$this->hasPerm( $path, 'w' ) )
+			return $this->setError( 2, $path );
 
-    /**
-     * loop through elements in directory
-     */
-    $query = 'select * from ' . FILES . ' where';
-    $it = new RecursiveDirectoryIterator( $path );
-    $file_ids = array( );
-    $count = 0;
+		/**
+		* loop through elements in directory
+		*/
+		$query = 'select * from ' . FILES . ' where';
+		$it = new RecursiveDirectoryIterator( $path );
+		$file_ids = array( );
+		$count = 0;
 
-    foreach( new RecursiveIteratorIterator( $it ) as $file ){
+		foreach( new RecursiveIteratorIterator( $it ) as $file ){
 
-      // skip dots and dirs, (dir symlinks are processed
-      // by .dirname.lnk so will still be traversed)
-      if( $file->isDot( ) || $file->isDir( ) )
-        continue;
+		// skip dots and dirs, (dir symlinks are processed
+		// by .dirname.lnk so will still be traversed)
+		if( $file->isDot( ) || $file->isDir( ) )
+		continue;
 
-    }
+		}
 	}
 
 	/**
@@ -557,8 +552,8 @@ class FileManager{
 	 *
 	 * reads a directory and returns it's contents. if $all
 	 * is true then all directory and sub directory contents
-   * are returned. if strict is true then will return false
-   * if permission is denied to read any file
+	 * are returned. if strict is true then will return false
+	 * if permission is denied to read any file
 	 *
 	 * $level	-	can be an integer of how many levels
 	 *			of directories to read or true to read
@@ -569,78 +564,20 @@ class FileManager{
 	 *			will just be excluded from the list
 	 *
 	 * @param string $path
-   * @param int/bool $level
-   * @param bool $strict
+	 * @param int/bool $level
+	 * @param bool $strict
 	 * @access public
-   * @return array
+	 * @return array
 	 */
 	public function readDir( $path, $level = 1, $strict = false ){
 
 		/**
 		 * permission failure
 		 */
-    if( !$this->hasPerm( $path, 'r' ) ){
-      $this->setError( 1, $path ); 
-      return false;
-    }
+		if( !$this->hasPerm( $path, 'r' ) )
+			return $this->setError( 1, $path );
 
-    /**
-     * loop through elements in directory,
-     */
-    $query = 'select * from ' . FILES . ' where';
-    $it = new RecursiveDirectoryIterator( $path );
-    $file_ids = array( );
-    $count = 0;
-
-    foreach( new RecursiveIteratorIterator( $it ) as $file ){
-
-      // skip dots and dirs, (dir symlinks are processed
-      // by .dirname.lnk so will still be traversed)
-      if( $file->isDot( ) || $file->isDir( ) )
-        continue;
-
-      $path = $file->getPathname( );
-      $link = $this->symLink( $path ); 
-      $id = end( array_filter( explode( '/', $link ) ) );
-
-      // if file isn't in files array, add to query
-      if( !isset( $this->files{ $id } ) ){
-        $query .= ' id=' . $id . ' or';
-        $count++;
-      }
-
-      // add id to file_ids array
-      array_push( $file_ids, $id );
-
-    }
-    /**
-     * if required, fetch all files from db,
-     * add to files array
-     */
-    if( $count != 0 ){
-      $files = rows( $query );
-
-      foreach( $files as $file ){
-        $this->files{ $file[ 'id' ] } = $file;
-      }
-    }
-
-    /**
-     * loop through files and filter out ones
-     * that user does not have permission to
-     * view
-     */
-    $files = array( );
-    foreach( $file_ids as $id ){
-      if( $this->hasPerm( $id, 'r' ) )
-        array_push( $files, $this->files{ $id } );
-      elseif( $strict ){ // strict is enabled, so return false on permission failure
-        $this->setError( 1, $this->files{ $id }{ 'name' } ); 
-        return false;
-      }
-    }
-
-    return $files;
+		// @todo implement this
 
 	}
 
@@ -660,10 +597,8 @@ class FileManager{
 		/**
 		 * permission failure
 		 */
-    if( !$this->hasPerm( $path, 'w' ) ){
-      $this->setError( 1, $path );
-      return false;
-    }
+		if( !$this->hasPerm( $path, 'w' ) )
+			$this->setError( 1, $path );
                 
 		/**
 		 * build data
@@ -682,10 +617,10 @@ class FileManager{
 		/**
 		 * add file
 		 */
-		file_put_contents( $link, $contents ) or {
-			$this->setError( 5, $path );
-			return false;
-		};
+		$success = file_put_contents( $link, $contents );
+
+		if( !$success ) 
+			return $this->setError( 5, $path );
 
 		/**
 		 * add file to database
@@ -708,24 +643,21 @@ class FileManager{
 	public function moveFile( $file, $path ){
 
 		/**
-     * check permissions
-     */
-    if( !$this->hasPerm( $file, 'w' ) ){
-      $this->setError( 2, $file );
-      return false;
-    }      
-    if( !$this->hasPerm( $path, 'w' ) ){
-      $this->setError( 2, $path );
-      return false;
-    }
+		 * check permissions
+		 */
+		if( !$this->hasPerm( $file, 'w' ) )
+			return $this->setError( 2, $file );
+ 
+		if( !$this->hasPerm( $path, 'w' ) )
+			return $this->setError( 2, $path );
 
 		/**
 		 * move file
 		 */
-		rename( $file, $path ) or {
-			$this->setError( 5, $path );
-			return false;
-		}; 
+		$success = rename( $file, $path );
+
+		if( !$success ) 
+			return $this->setError( 5, $path );
 
 		/**
 		 * update database
@@ -782,17 +714,13 @@ class FileManager{
 	 */
 	public function readFile( $path ){
 
-		if( !$this->hasPerm( $path, 'r' ) ){
-			$this->setError( 2, $path );
-			return false;
-		}
+		if( !$this->hasPerm( $path, 'r' ) )
+			return $this->setError( 2, $path );
 
 		$contents = file_get_contents( $file );
 
-		if( !$contents ){
-			$this->setError( 5, $path );
-			return false;
-		}
+		if( !$contents )
+			return $this->setError( 5, $path );
 
 		return $contents;
 
@@ -815,19 +743,19 @@ class FileManager{
 		// @todo
 	}
 
-  /**
-   * error
-   *
-   * returns information on the last recorded error.
-   * for the form of the array, see the private error
-   * variable
-   *
-   * @access public
-   * @return array
-   */
-  public function error( ){
-    return $this->error( );
-  }
+	/**
+ 	 * error
+  	 *
+	 * returns information on the last recorded error.
+	 * for the form of the array, see the private error
+	 * variable
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function error( ){
+		return $this->error( );
+	}
 
 	/**
 	 * cleanUp

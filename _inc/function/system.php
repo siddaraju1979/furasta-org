@@ -13,7 +13,7 @@
  */
 
 /**
- * __autoload 
+ * spl_autoload_register 
  * 
  * Autoloads classes stored in the _inc/class directory
  *
@@ -21,7 +21,7 @@
  * @access protected
  * @return bool
  */
-function __autoload( $class_name ){
+spl_autoload_register( function( $class_name ){
 
 	$file = HOME . '_inc/class/' . $class_name . '.php';
 
@@ -29,7 +29,8 @@ function __autoload( $class_name ){
 		return require_once HOME . '_inc/class/' . $class_name . '.php';
 
 	return false;
-}
+
+} );
 	
 /**
  * error

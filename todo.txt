@@ -14,6 +14,7 @@
 50. fix problems with login
 51. combine new users and new groups with edit users and edit groups
 53. add furasta version for plugins so that they can tie themselves to particular versions of furasta
+54. go over how errors work & languages
 
 # TODO list for Furasta.Org v1.0 - General Release #
 

@@ -108,12 +108,7 @@
  * options table (for general CMS options/settings) to store data.
  * This table takes the form of name, value and stores data very simply.
  * Note: It is advisable to take a look at the database structure.
- * Using this method extra data can be stored and indexed. For example,
- * assuming you have stored user rating data using the options methods in
- * this class you could retrieve all user ratings with the following query:
- *
- * select users.id,options.value from users,options where options.name=concat("user_",users.id,"_rating");
- * 
+ * Using this method extra data can be stored and indexed.
  * 
  * @package user_management
  * @author Conor Mac Aoidh <conormacaoidh@gmail.com> 
