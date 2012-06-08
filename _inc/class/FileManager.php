@@ -273,13 +273,13 @@ class FileManager{
 	 * @access public
 	 * @return bool
 	 */
-	public function hasPerm( $path, $rw = 'r', $id = false ){
+	public function hasPerm( $file, $rw = 'r', $id = false ){
 		
 		/**
 		 * get file details
 		 */
 
-		if( !self::checkPath( $path ) )
+		if( !self::checkPath( $file ) )
 			return false;
 
 		/**
@@ -293,7 +293,7 @@ class FileManager{
 		if( $User && $User->isSuperUser( ) )
 			return true;
 
-		$file = $this->getFile( $path );
+		$file = $this->getFile( $file );
 
 		/**
 	 	 * if user/group administers files for this user, then
@@ -306,7 +306,7 @@ class FileManager{
 		 * split file permissions string from fb into
 		 * different arrays for easy processing
 		 */
-		list( $read, $write ) = split_perms( $perm );
+		list( $read, $write ) = split_perms( $file[ 'perm' ] );
 
 		/**
 		 * switch between different permissions checks
@@ -332,7 +332,7 @@ class FileManager{
 					 * files, return false
 					 */
 					if( !$User->hasPerm( 'f' ) )
-						return $this->setError( 1, $path );
+						return $this->setError( 1, $file );
 
 					// if not in users array, check groups array
 					if( !in_array( $User->id( ), $read[ 'users' ] ) ){
@@ -343,7 +343,7 @@ class FileManager{
 							}
 						}
 						if( !$match ) // user does not have permission to view file
-							return $this->setError( 1, $path );
+							return $this->setError( 1, $file );
 					}
 					
 				break;
@@ -360,14 +360,14 @@ class FileManager{
 					 * return false
 					 */
 					if( $file[ 'owner' ] == 0 )
-						return $this->setError( 8, $path );
+						return $this->setError( 8, $file );
 
 					/**
 					 * if user does not have permission to manage
 					 * files, return false
 					 */
 					if( !$User->hasPerm( 'f' ) )
-						return $this->setError( 2, $path );
+						return $this->setError( 2, $file );
 
 					// if not in users array, check groups array
 					if( !in_array( $User->id( ), $write[ 'users' ] ) ){
@@ -378,7 +378,7 @@ class FileManager{
 							}
 						}
 						if( !$match ) // user does not have permission to view file
-							return $this->setError( 2, $path );
+							return $this->setError( 2, $file );
 					}
 				break;
 			}
@@ -389,21 +389,22 @@ class FileManager{
 
 	}
 
+
 	/**
-	* setError
-	*
-	* logs an error by id. The error description is 
-	* calculated and logged
-	*
-	* $params  -   array of arguments to the error
-	*              description, will replace %1 - %n
-	*              in the form array( %1, %2 .. %n )
-	*
-	* @param int $id optional
-	* @param array $params optional
-	* @access private
-	* @return false
-	*/
+ 	 * setError
+ 	 *
+ 	 * logs an error by id. The error description is 
+ 	 * calculated and logged
+ 	 *
+	 * $params  -   array of arguments to the error
+	 *              description, will replace %1 - %n
+	 *              in the form array( %1, %2 .. %n )
+	 *
+	 * @param int $id optional
+	 * @param array $params optional
+	 * @access private
+	 * @return false
+	 */
 	private function setError( $id = 0, $params = false ){
 
 		// do not rely on this, a temporary array to
@@ -446,6 +447,54 @@ class FileManager{
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * _rreadDir
+	 *
+	 * private recursive function which reads all files
+	 * and folders in a directory up to $level levels
+	 * deep. If $level is true all sub directories
+	 * are read
+	 *
+	 * $current tells the function which level it is
+	 * currently processing
+	 *
+	 * @param string $path
+	 * @param int $level
+	 * @param int $current
+	 * @return array
+	 */
+	private static function _rreadDir( $path, $level, $current = 0 ){
+
+
+		$files = array( $path );
+
+		/**
+		 * make sure maximum level isn't exceeded
+		 */
+		if( is_int( $level ) && $level == $current )
+			return $files;
+
+		/**
+		 * scan directory
+		 */
+		$dir = scandir( $path );
+		foreach( $dir as $file ){
+
+			// exclude current dir and previous dir
+			if( $file == '.' || $file == '..' )
+				continue;
+
+			if( is_dir( $file ) )
+				$files += self::_rreadDir( $file, $level, ( $current++ ) );
+			else
+				array_push( $files, $file );
+			
+		}
+
+		return $files;
 
 	}
 
@@ -585,13 +634,27 @@ class FileManager{
 	public function readDir( $path, $level = 1, $strict = false ){
 
 		/**
-		 * permission failure
+		 * make sure path is valid
 		 */
-		if( !$this->hasPerm( $path, 'r' ) )
-			return $this->setError( 1, $path );
+		if( !self::checkPath( $path ) )
+			return false;
 
-		// @todo implement this
+		// read files and dirs
+		$files = self::_rreadDir( $path, $level );
 
+		/**
+		 * build query to fetch all items from database
+		 * at once and save result in $this->files
+		 */
+		$query = 'select * from ' . FILES . ' where ';
+		foreach( $files as $file ){
+			if( !isset( $this->files{ $path } ) )
+				$query .= ' or path="' . $file . '"';
+		}
+		$dbfiles = rows( $query );
+
+		array_merge( $this->files, $dbfiles );
+		
 	}
 
 	/**
@@ -739,8 +802,21 @@ class FileManager{
 
 	}			
 
+	/**
+	 * moveDir
+	 *
+	 * reccursively moves a directory assuming
+	 * you have write permissions for all files
+	 * in $path and $dest
+	 *
+	 * @param string $path
+	 * @param string $dest
+	 * @access public
+	 * @return bool
+	 */
 	public function moveDir( $path, $dest ){
-		// @todo
+
+
 	}
 
 	public function moveUploadedFile( $file, $path ){
