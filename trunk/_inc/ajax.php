@@ -3,13 +3,46 @@
 /**
  * AJAX Access, Furasta.Org
  *
- * Designed as a method through which logged in users
+ * Designed as a method through which you
  * can make AJAX requests through the CMS. This file
  * provides developers access to all main libraries that
  * the CMS provides, through AJAX, and then includes the
  * developers own script. It essentially provides a
  * working enviornment for AJAX calls.
+ *
+ * =========== USAGE ===========
  * 
+ * Instead of making an ajax request to your file,
+ * make it to the _inc/ajax.php file and pass your
+ * filename as a url parameter:
+ *
+ * _inc/ajax.php?file=path/to/file
+ *
+ * THen you will have a fully set up furasta enviornment
+ * in your file. It is recommended to use the AJAX_LOADED
+ * constant to make sure the file was loaded through the
+ * ajax file for security reasons:
+ *
+ * if( !defined( 'AJAX_LOADED' ) )
+ * 	exit;
+ *
+ * The AJAX_VERIFIED constant can also be used to check
+ * if the user is logged in:
+ *
+ * if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
+ * 	exit;
+ *
+ * ========= OPTIONS ==========
+ * 
+ * The no_config option can be used to load a minimal
+ * enviornment with only the .settings.php file loaded
+ * and a database connection setup:
+ *
+ * _inc/ajax.php?no_config&file=path/to/file
+ * 
+ * In this case you can use AJAX_NO_CONFIG to check
+ * that the minimal enviornment was loaded
+ *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
@@ -30,6 +63,7 @@ if( isset( $_GET[ 'no_config' ] ) ){
 	 */
 	define( 'START_TIME', microtime( true ) );
 	define( 'HOME', substr( dirname( __FILE__ ), 0, -4 ) );
+	define( 'AJAX_NO_CONFIG', true );
 
 	require HOME . '.settings.php';
 
@@ -57,7 +91,9 @@ else{
 }
 
 
-
+/**
+ * make sure file is valid and exists
+ */
 $file = @$_GET[ 'file' ];
 
 if( strpos( $file, '..' ) !== false )
@@ -68,6 +104,9 @@ $file = HOME . $file;
 if( !file_exists( $file ) )
 	die( 'The file at <i>' . $file . '</i> does not exist.' );
 
+/**
+ * display through admin/layout/ajax.php
+ */
 $Template = Template::getInstance( );
 
 require $file;
