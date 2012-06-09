@@ -31,8 +31,6 @@ function furasta_autoload( $class_name ){
 	return false;
 
 }
-
-sp1_autoload_register( 'furasta_autoload' );
 	
 /**
  * error
@@ -167,13 +165,26 @@ function htaccess_rewrite(){
 
 	$Plugins = Plugins::getInstance( );
 
-	if(function_exists('apache_get_modules')){
+	/**
+	 * if the apache_get_modules function is
+	 * available, make sure that the apache
+	 * rewrite module is loaded
+	 */
+	if( function_exists( 'apache_get_modules' ) ){
 		$modules=apache_get_modules();
 
 		if(!in_array('mod_rewrite',$modules))
-        		error('The apache module mod_rewrite must be installed. Please visit <a href="http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html">Apache Module mod_rewrite</a> for more details.','Apache Error');
+			error(
+				'The apache module mod_rewrite must be installed. Please visit <a href="http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html">'
+				. 'Apache Module mod_rewrite</a> for more details.'
+				,'Apache Error'
+			);
 	}
 
+	/**
+	 * build up array of rewrite rules and filter
+	 * through the plugin filter
+	 */
 	$rules = array(
 		'admin' => 'RewriteRule ^admin[/]*$ /admin/index.php [L]',
 		'sitemap' => 'RewriteRule ^sitemap.xml /_inc/sitemap.php [L]',
@@ -205,7 +216,17 @@ function htaccess_rewrite(){
 		"AddCharset utf-8 .css\n".
                 "AddCharset utf-8 .php";
 
-	file_put_contents(HOME.'.htaccess',$htaccess);
+	/**
+	 * write htaccess file or throw error
+	 */
+	file_put_contents( HOME . '.htaccess', $htaccess ) 
+		or error(
+			'You must grant <i>0777</i> write access to the <i>' . HOME . 
+			'</i> directory for <a href="http://furasta.org">Furasta.Org</a> to function correctly.' .
+			'Please do so then reload this page to save the settings.'
+			,'Runtime Error'
+		);
+
 	$_url='http://'.$_SERVER["SERVER_NAME"].'/';
 	
 	if($SETTINGS['index']==0){
@@ -228,8 +249,14 @@ function htaccess_rewrite(){
                 if(file_exists($file))
                         unlink($file);
 
-        }
-	return file_put_contents(HOME.'robots.txt',$robots);
+	}
+
+	/**
+	 * write robots.txt or throw error
+	 */
+	file_put_contents( HOME. 'robots.txt', $robots );
+
+	return true;
 }
 
 /**
@@ -268,7 +295,26 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 
 	$constants = array_merge( $default_constants, $constants );
 
-        /**
+	/**
+	 * calculate plugin dependencies
+	 */
+	$plugins = array( );
+	foreach( $PLUGINS as $p_name => $version ){
+		require HOME . '_plugins/' . $p_name . '/plugin.php';
+
+		array_push(
+			$plugins,
+			array(
+				'sys_name' => $p_name,
+				'name' => $plugin[ 'name' ],
+				'version' => $plugin[ 'version' ],
+				'dependencies' => @$plugin[ 'dependencies' ]
+			)
+		);
+	}
+	resolve_dependencies( $plugins, &$PLUGINS );
+
+	/**
          * plugins - filter the settings, constants and plugins arrays 
          */
         $Plugins = Plugins::getInstance( );
@@ -277,53 +323,55 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	$constants = $filter[ 1 ];
 	$PLUGINS = $filter[ 2 ];
 
-	$filecontents = '<?php
-# Furasta.Org - .settings.php #
-
-';
+	$filecontents = '<?php' . "\n" .
+			'# Furasta.Org - .settings.php' . "\n\n";
 
 	foreach( $constants as $constant => $value )
 		$filecontents .= 'define( \'' . $constant . '\', \'' . $value . '\' );' . "\n"; 
 
-	$filecontents .= '
+	$filecontents .= "\n" .
+			'$PLUGINS = array(' . "\n";
 
-$PLUGINS = array(';
 
 	foreach( $PLUGINS as $plugin => $version )
-		$filecontents .= '\'' . $plugin . '\' => \'' . $version . '\',';
+		$filecontents .= "\t" . '\'' . $plugin . '\' => \'' . $version . '\',' . "\n";
 
-	$filecontents .= ');
-
-$SETTINGS = array(' . "\n";
+	$filecontents .= ');' . "\n" . "\n" .
+			'$SETTINGS = array(' . "\n";
 
 	/**
 	 * print settings array, two layer deep array
 	 */
 	foreach( $SETTINGS as $setting => $value ){
 		if( is_array( $value ) ){
-			$filecontents .= '	\'' . $setting . '\' => array(' . "\n";
+			$filecontents .= "\t" . '\'' . $setting . '\' => array(' . "\n";
 			foreach( $value as $s => $v )
 				$filecontents .= '		\'' . $s . '\' => \'' . $v . '\',' . "\n";
-			$filecontents .= '	),' . "\n";
+			$filecontents .= "\t" . '),' . "\n";
 			continue;
 		}
-		$filecontents .= '	\'' . $setting . '\' => \'' . addslashes( $value ) . '\',' . "\n";
+		$filecontents .= "\t" . '\'' . $setting . '\' => \'' . addslashes( $value ) . '\',' . "\n";
 	}
 
-	$filecontents .= '
-);
+	$filecontents .= "\n" 
+			. ');' . "\n"
+			. '$DB = array(' . "\n"
+			. "\t" . '\'name\' => \'' . $DB[ 'name' ] . '\',' . "\n" 
+			. "\t" . '\'host\' => \'' . $DB[ 'host' ] . '\',' . "\n" 
+			. "\t" . '\'user\' => \'' . $DB[ 'user' ] . '\',' . "\n" 
+			. "\t" . '\'pass\' => \'' . $DB[ 'pass' ] . '\'' . "\n" 
+			. ');' . "\n";
 
-$DB = array(
-        \'name\' => \'' . $DB[ 'name' ] . '\',
-        \'host\' => \'' . $DB[ 'host' ] . '\',
-        \'user\' => \'' . $DB[ 'user' ] . '\',
-        \'pass\' => \'' . $DB[ 'pass' ] . '\'
-);
-
-?>
-';
-
-	file_put_contents(HOME.'.settings.php',$filecontents) or error('You must grant <i>0777</i> write access to the <i>'.HOME.'</i> directory for <a href="http://furasta.org">Furasta.Org</a> to function correctly. Please do so then reload this page to save the settings.','Runtime Error');	
+	/**
+	 * write file or throw error
+	 */
+	file_put_contents( HOME . '.settings.php', $filecontents )
+		or error(
+			'You must grant <i>0777</i> write access to the <i>' . HOME . 
+			'</i> directory for <a href="http://furasta.org">Furasta.Org</a> to function correctly.' .
+			'Please do so then reload this page to save the settings.'
+			,'Runtime Error'
+		);
 
 	return htaccess_rewrite();
 }
@@ -552,7 +600,14 @@ function addslashes_array( $value ){
  * @return string
  */
 function meta_keywords( $string ){
-	$stop_words = array( 'i', 'a', 'about', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'com', 'de', 'en', 'for', 'from', 'how', 'in', 'is', 'it', 'la', 'of', 'on', 'or', 'that', 'the', 'this', 'to', 'was', 'what', 'when', 'where', 'who', 'will', 'with', 'und', 'the', 'www' );
+	$stop_words = array(
+		'i', 'a', 'about', 'an', 'and', 'are',
+		'as', 'at', 'be', 'by', 'com', 'de',
+		'en', 'for', 'from', 'how', 'in', 'is',
+		'it', 'la', 'of', 'on', 'or', 'that', 'the',
+		'this', 'to', 'was', 'what', 'when', 'where',
+		'who', 'will', 'with', 'und', 'the', 'www'
+	);
  
 	$string = preg_replace( '/ss+/i', '', $string );
 	$string = trim( $string );
@@ -705,5 +760,72 @@ function split_perm( $perms ){
 	}
 
 	return $result;
+}
+
+/**
+ * resolve_dependencies
+ *
+ * Takes an array of plugin data and adds
+ * plugins to the list which are dependencies
+ * of other plugins
+ *
+ * This function is run when the settings.php file
+ * is rewritten and automatically adds dependencies
+ * to the list of installed plugins
+ *
+ * @param array $plugins
+ * @param array &PLUGINS
+ * @return void
+ */
+function resolve_dependencies( $plugins, &$PLUGINS ){
+
+	/**
+	 * build list of dependencies
+	 */
+	$dependencies = array( );
+	$resolved = array( );
+	for( $i = 0; $i < count( $plugins ); ++$i ){
+
+		if( is_array( $plugins[ $i ][ 'dependencies' ] ) ){
+
+			array_merge( $dependencies, $plugins[ $i ][ 'dependencies' ] );
+
+			foreach( $plugins[ $i ][ 'dependencies' ] as $dependency ){
+
+				/**
+				 * if dependency was already resolved or
+				 * already installed, skip
+				 */
+				if( in_array( $dependency, $dependencies ) || isset( $PLUGINS[ $dependency ] ) )
+					 continue;
+
+				/**
+				 * if plugin is unavailable then throw an error
+				 */
+				if( !plugin_exists( $dependency ) ){
+					error(
+						'The plugin "' . $plugins[ $i ][ 'name' ] . '" requires the "' . $dependency . '"'
+						. ' plugin to be installed, however it is not available. In order to use'
+						. ' this plugin you will have to download and install the dependency',
+						'Plugin Dependency Unavailable'
+					);
+				}
+
+				/**
+				 * load plugin file to get version number
+				 */
+				require HOME . '_plugins/' . $dependency . '/plugin.php';
+
+				/**
+				 * add dependency to list of plugins
+				 */
+				$PLUGINS[ $dependency ] = $plugin[ 'version' ];
+			}
+
+		}
+
+		$PLUGINS[ $plugins[ $i ][ 'sys_name' ] ] = $plugins[ $i ][ 'version' ];
+	}
+
 }
 ?>

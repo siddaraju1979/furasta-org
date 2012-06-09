@@ -11,10 +11,12 @@
  * @package	   installer
  */
 
+session_start( );
+
 require 'header.php';
 
 $phpversion=phpversion();
-$ver=split("[/ ]",$_SERVER['SERVER_SOFTWARE']);
+$ver=explode('/',$_SERVER['SERVER_SOFTWARE']);
 $apacheversion=$ver[1].' '.$ver[2];
 
 $access=(is_writable(HOME)) ? '<span class="green">Granted</span>':'<span id="notgranted" class="red">Not Granted</span>';

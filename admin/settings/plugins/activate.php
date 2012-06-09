@@ -13,8 +13,12 @@
 
 $p_name = addslashes( @$_GET[ 'p_name' ] );
 
-if( !plugin_exists( $p_name ) )
-	error( 'Plugin does not exist. Please contact bugs@furasta.org for more details.', 'Plugin Error' );
+if( !plugin_exists( $p_name ) ){
+	error(
+		'Plugin "' . $p_name . '" is not available. In order to install the plugin must be downloaded.',
+		'Plugin Error'
+	);
+}
 
 $PLUGINS[ $p_name ] = 0;
 

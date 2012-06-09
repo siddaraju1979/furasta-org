@@ -24,9 +24,8 @@
  * @return bool
  */
 function plugin_exists( $plugin_name ){
-	$dir = str_replace( ' ', '-', $plugin_name );
-
-	if( file_exists( HOME . '_plugins/' . $dir . '/plugin.php' ) )
+	
+	if( file_exists( HOME . '_plugins/' . $plugin_name . '/plugin.php' ) )
 		return true;
 
 	return false;

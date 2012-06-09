@@ -74,7 +74,7 @@ switch( $overview_item ){
 			/**
 			 * check if user has permission to view page
 			 */
-			if( $User->pagePerm( $perm[ 1 ] ) )
+			if( $User->adminPagePerm( $perm[ 1 ] ) )
 		        		$content .= '<tr><td><span>' . date( "F j, Y", strtotime( $page[ 'edited' ] ) ) . '
 		        		</span><a href="pages.php?page=trash"><h3>' . $page[ 'name' ] . '</h3></a>
 		        		<p>' . strip_tags( substr( $page[ 'content' ], 0, 125 ) ) . ' [...]</p></td></tr>';
