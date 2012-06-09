@@ -15,7 +15,7 @@ if( !defined( 'SET_REVISION' ) )
   define( 'SET_REVISION', 100 );
 
 switch( SET_REVISION ){
-  // upgrades will go here
+
 }
 
 ?>

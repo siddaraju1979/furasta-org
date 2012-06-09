@@ -12,7 +12,7 @@
  * @package	   installer
  */
 
-require 'header.php';
+session_start( );
 
 if(@$_SESSION['begin']!=3)
         header('location: stage2.php');
@@ -35,6 +35,8 @@ if(isset($_POST['submit'])){
 	        header('location: complete.php');
 	}
 }
+
+require 'header.php';
 
 $index_checked=(@$_SESSION['settings']['index']==1)?'CHECKED':'';
 $maintenance_checked=(@$_SESSION['settings']['maintenance']==1)?'CHECKED':'';

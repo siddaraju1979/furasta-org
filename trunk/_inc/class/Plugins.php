@@ -26,18 +26,17 @@
  * piece of code during the runtime of the CMS, a filter is
  * a slot to change some of the output of the CMS.
  *
- * PLUGIN FILE 
+ * ======== PLUGIN FILE ========
  * 
  * Below are all the supported variables and functions
- * which should be contained in the plugin file. Note that
- * where ever functions are used methods can also be used. To use
- * methods use the format: array( 'classname', 'methodname' )
+ * which should be contained in the plugin file.
  * 
  * # array keys
  * $plugin = array(
  *       'name' => '', # required
  *       'description' => '',
  *       'version' => '', # required
+ *       'dependencies' => array( 'plugin_1', 'plugin_2' ),
  *       'email' => '',
  *       'href' => '',
  *       'importance' => '',
@@ -146,7 +145,11 @@
  * Please look at specific functions below for more
  * details.
  *
- * CREATING A PLUGIN HOOK / FILTER
+ * ======== DEPENDENCIES ========
+ *
+ * 
+ *
+ * ======== CREATING A PLUGIN HOOK / FILTER ========
  *  
  * Hooks and filters can be created within a plugin
  * so that other plugins can extend their functionality.
@@ -161,7 +164,7 @@
  * should have a high importance so that it is
  * loaded before plugins which extend it.
  *
- * JOBS
+ * ======== JOBS ========
  * 
  * Jobs are supposed to emulate the cron program on linux systems.
  * Cron allows you to set tasks which should be executed at given
@@ -176,7 +179,6 @@
  * be executed. This is calculated using strtotime so look at the
  * strtotime for documentation: http://php.net/manual/en/function.strtotime.php
  * 
- * @todo add support for $importance var, add the importance as array key in $this->plugins, and order foreaches by key 
  */
 class Plugins{
         /**
@@ -273,32 +275,6 @@ class Plugins{
 		}
 		else
 			error('Plugins cannot be defined twice.','Plugin Error');
-	}
-
-	/**
-	 * refactor
-         *
-         * re-order the plugins array by order
-         * of the $importance var
-	 * 
-	 * @access public
-	 * @return void
-	 * @todo finish this
-	 */
-	public function refactor( ){
-
-		$plugins = array( );
-
-		foreach( $this->plugins as $plugin ){
-
-			if( isset( $plugin[ 'importance' ] ) )
-				$plugins[ $plugin[ 'importance' ] ] = $plugin;
-			else
-				$plugins[ '1' ] = $plugin;
-
-		}
-
-		die( print_r( $plugins ) );
 	}
 
 	/**

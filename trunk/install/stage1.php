@@ -12,7 +12,7 @@
  * @package	   installer
  */
 
-require 'header.php';
+session_start( );
 
 if(isset($_POST['submit'])){
 	$_SESSION[ 'db' ][ 'name' ] = addslashes( $_POST[ 'DatabaseName' ] );
@@ -26,8 +26,11 @@ if(isset($_POST['submit'])){
 		$_SESSION[ 'db' ][ 'pass' ]= addslashes( $_POST[ 'Password' ] );
 		$_SESSION[ 'begin' ] = 2;
 		header( 'location: stage2.php' );
+		exit;
 	}
 }
+
+require 'header.php';
 
 echo '
 <script type="text/javascript">

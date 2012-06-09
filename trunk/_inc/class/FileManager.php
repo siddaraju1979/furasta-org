@@ -3,6 +3,20 @@
 /**
  * File Manager Class, Furasta.Org
  *
+ * This file contains a file manager class which should
+ * be used for reading/writing to the user files
+ * directory.
+ * 
+ * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
+ * @license    http://furasta.org/licence.txt The BSD License
+ * @version    1.0
+ * @package    file_management
+ * @todo	make sure paths are used correctly everywhere - USER_FILES . 'files/' . $path
+ */
+
+/**
+ * FileManager
+ *
  * This is the Furasta.Org File Manager Class. It is intended to be used
  * to manage all of the writing to / reading from the user files
  * directory. The advantage of using this class over standard PHP functions
@@ -53,50 +67,11 @@
  *
  * The error function can also be used to get further information on the
  * last error to occur.
- * 
- * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
- * @license    http://furasta.org/licence.txt The BSD License
- * @version    1.0
- * @package    admin_files
- * @todo return errors in number format instead of boolean for better de-bugging and for language support
- *  also add lastError function or something like that to see errors
+ *
+ * @package	file_management
+ * @author	Conor Mac Aoidh <conormacaoidh@gmail.com> 
+ * @license	http://furasta.org/licence.txt The BSD License
  */
-
-/**
- * FileManager
- *
- * this class will be used for manipulation of files
- * in the user files directory
- *
-interface FileManagerFace{
-
-	public function getInstance( $new );
-	public function __construct( ); // load database of protected files
-
-	private function checkPath( $path ); // checks if path is in user files
-
-	public function addFile( $path, $contents );
-	public function moveFile( $file, $path );
-	public function copyFile( $file, $path );
-	public function getFile( $path );
-	public function removeFile( $path );
-	public function filePerm( $path );
-	public function hasPerm( $file, $perm );
-	public function addDir( $path );
-	public function moveDir( $dir, $path ); // reccursive
-	public function copyDir( $dir, $path ); // reccursive
-	public function readDir( $path ); // filter for permissions
-	public function removeDir( $path, $recursive ); // recurrsive remove function
-
-	public function updateInfo( $file );// updates the database info and the files array on a file
-	// accepts a string of database info
-	public function search( $string, $location ); // searches for a file by name or string in contents, optional in a certain location
-	// keep symbolic links for groups/files
-	private function addLink( $target, $link );
-	private function readLink( $path );
-	private function removeLink( $path );
-}*/
-
 class FileManager{
 
 	/**
@@ -120,8 +95,8 @@ class FileManager{
 	 * error
 	 *
 	 * holds information on the last error. ie
-   * error number and description
-   *
+	 * error number and description
+	 *
 	 * @access private
 	 * @var array
 	 */
@@ -234,11 +209,14 @@ class FileManager{
 	 * if the file is not present it is fetched
 	 * from the db and added to the array
 	 *
+	 * NOTE: this does not return the file contents,
+	 * it returns the associated file data
+	 *
 	 * @param string $path
-	 * @access private
+	 * @access public
 	 * @return array $file
 	 */
-	private function getFile( $path ){
+	public function getFile( $path ){
 
 		if( !isset( $this->files{ $path } ) ){
 			$file = row( 'select * from ' . FILES . ' where path="' . addslashes( $path ) . '"' );
@@ -416,7 +394,7 @@ class FileManager{
 			2 => 'You have insufficient privilege to write %1',
 			3 => 'You have insufficient privilege to view %1',
 			4 => 'The path %1 is invalid',
-			5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . 'files directory',
+			5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . '/files directory',
 			6 => 'The %1 at %2 cannot be created as it already exists',
 			7 => 'There was a problem querying the database. The following query caused the error: %1',
 			8 => 'The path %1 contains a Furasta.Org system file which cannot be written',
@@ -488,13 +466,58 @@ class FileManager{
 				continue;
 
 			if( is_dir( $file ) )
-				$files += self::_rreadDir( $file, $level, ( $current++ ) );
+				$files += self::_rreadDir( $file, $level, $current + 1 );
 			else
 				array_push( $files, $file );
 			
 		}
 
 		return $files;
+
+	}
+
+	/**
+	 * _rexecDir
+	 *
+	 * private recursive function which executes a
+	 * function $fn on all files in a directory.
+	 * this uses anonymous functions
+	 *
+	 * $dest is used for specifying a destination in
+	 * the case of copy or move functions
+	 *
+	 * @param string $path
+	 * @param function $fn
+	 * @param string $dest
+	 * @access private
+	 * @return bool
+	 */
+	private function _rexecDir( $path, $fn, $dest = false  ){
+
+		/**
+		 * scan directory
+		 */
+		$dir = scandir( USER_FILES . 'files/' . $path );
+		foreach( $dir as $file ){
+
+			// exclude current dir and previous dir
+			if( $file == '.' || $file == '..' )
+				continue;
+
+			$new = $dest . '/' . $file;
+			if( is_dir( $file ) )
+				$this->_rreadDir( $file, $fn, $new );
+
+			/**
+			 * call $fn on the file/directory, check
+			 * for errors
+			 */	
+			$success = $fn( $file, $new );
+			if( !$success )
+				return $this->setError( 5 ); 
+		}
+
+		return false;
 
 	}
 
@@ -572,7 +595,7 @@ class FileManager{
 	}
 
 	/**
-	 * removeDir
+	 * reeoveDir
 	 *
 	 * removes a directory, and all of it's contents if
 	 * non-empty. must have permission to remove all files in
@@ -584,36 +607,35 @@ class FileManager{
 	 */
 	public function removeDir( $path ){	
 
+		// @todo update this, not working
+
 		/**
-		 * permission failure
+		 * get all files and check permissions
 		 */
-		if( !$this->hasPerm( $path, 'w' ) )
-			return $this->setError( 2, $path );
+		if( !$this->readDir( $path, 'w', true, true ) )
+			return false;
 
 		/**
-		* loop through elements in directory
-		*/
-		$query = 'select * from ' . FILES . ' where';
-		$it = new RecursiveDirectoryIterator( $path );
-		$file_ids = array( );
-		$count = 0;
-
-		foreach( new RecursiveIteratorIterator( $it ) as $file ){
-
-			if( $file->isDot( ) )
-				continue;
-
-			$path = $file->getSubPathname( );
-			die( $path );
-
+		 * create anonymous function to remove
+		 * directory
+		 */
+		$fn = function( $file, $dest ){
+			return rename( $file, USER_FILES . '/' . $dest );
 		}
+		
+		/**
+		 * call 
+		 */
+		$success = $this->_rexecDir( $path );
+
+		// 	
 	}
 
 	/**
 	 * readDir
 	 *
-	 * reads a directory and returns it's contents. if $all
-	 * is true then all directory and sub directory contents
+	 * reads a directory and returns all files and directories
+	 * if $all is true then all directory and sub directory contents
 	 * are returned. if strict is true then will return false
 	 * if permission is denied to read any file
 	 *
@@ -624,14 +646,18 @@ class FileManager{
 	 *			be read the method will generate an error
 	 *			and return false, otherwise those files
 	 *			will just be excluded from the list
+	 * $rw		- 	specifies what permissions to check for,
+	 * 			see the hasPerm method. this way, readDir
+	 * 			can be used to recursively check permissions
 	 *
 	 * @param string $path
+	 * @param string $rw
 	 * @param int/bool $level
 	 * @param bool $strict
 	 * @access public
 	 * @return array
 	 */
-	public function readDir( $path, $level = 1, $strict = false ){
+	public function readDir( $path, $rw = 'r', $level = 1, $strict = false ){
 
 		/**
 		 * make sure path is valid
@@ -642,19 +668,23 @@ class FileManager{
 		// read files and dirs
 		$files = self::_rreadDir( $path, $level );
 
-		/**
-		 * build query to fetch all items from database
-		 * at once and save result in $this->files
+		/*
+		 * get file database data
 		 */
-		$query = 'select * from ' . FILES . ' where ';
-		foreach( $files as $file ){
-			if( !isset( $this->files{ $path } ) )
-				$query .= ' or path="' . $file . '"';
-		}
-		$dbfiles = rows( $query );
+		$this->getFiles( $files );
 
-		array_merge( $this->files, $dbfiles );
-		
+		/**
+		 * check read permission on all files
+		 */
+		for( $i < 0; $i < count( $files ); $i++ ){
+			if( !$this->hasPerm( $files[ $i ], $rw ) ){
+				if( $strict )
+					return false;
+				unset( $files[ $i ] );
+			}
+		}
+
+		return $files;
 	}
 
 	/**
@@ -807,16 +837,43 @@ class FileManager{
 	 *
 	 * reccursively moves a directory assuming
 	 * you have write permissions for all files
-	 * in $path and $dest
+	 * in $path and $dest.
 	 *
 	 * @param string $path
 	 * @param string $dest
 	 * @access public
 	 * @return bool
 	 */
-	public function moveDir( $path, $dest ){
+	public function moveDir( $path, $dest, $strict = false ){
 
+		/**
+		 * check permission for destination
+		 */
+		if( !$this->hasPerm( $dest ) )
+			return false;
+	
+		/**
+		 * get all files and check permissions
+		 */
+		if( !$this->readDir( $path, 'w', true, true ) )
+			return false;
 
+		/**
+		 * create anonymous function to remove
+		 * directory
+		 */
+		$fn = function( $file, $dest ){
+			return rename( $file, USER_FILES . '/' . $dest );
+		}
+		
+		/**
+		 * rename all files, error check
+		 */
+		$success = $this->_rexecDir( $path, $fn, $dest );
+		if( !$success )
+			return false;
+
+		// @todo update database
 	}
 
 	public function moveUploadedFile( $file, $path ){

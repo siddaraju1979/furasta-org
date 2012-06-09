@@ -26,11 +26,6 @@ if( file_exists( HOME . '.settings.php' ) ){
 }
 
 /**
- * start session 
- */
-session_start( );
-
-/**
  * load javascript 
  */
 echo '

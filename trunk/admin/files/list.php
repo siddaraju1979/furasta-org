@@ -15,11 +15,6 @@ $User = User::getInstance( );
 $Template = Template::getInstance( );
 $Template->loadJavascript( 'admin/files/list.js' );
 
-$files = array(
-	USER_FILES . 'users/' . $User->id( ),
-	USER_FILES . 'groups/' . implode( '', $User->groups( ) )
-);
-
 $content = '
 <h1>Files</h1>
 <div id="file-manager">

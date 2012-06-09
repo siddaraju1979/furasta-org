@@ -45,14 +45,25 @@ require $function_dir . 'cache.php';
 require $function_dir . 'template.php';
 
 /**
+ * register furasta autoloader
+ */
+spl_autoload_register( 'furasta_autoload' );
+
+/**
  * connect to database - display error if details are wrong 
  */
-
-if( ! ( $connect = mysql_connect( $DB[ 'host' ], $DB[ 'user' ], $DB[ 'pass' ] ) ) ) 
-	error( 'The MySQL connection details are incorrect. The hostname, username or password are incorrect.' , 'MySQL Connection Failure' );
-
-if( ! mysql_select_db( $DB['name'], $connect ) ) 
-	error( 'Cannot connect to the MySQL database. Please make sure that the database name is correct.', 'Database Connection Failure' );
+if( ! ( $connect = mysql_connect( $DB[ 'host' ], $DB[ 'user' ], $DB[ 'pass' ] ) ) ){
+	error( 
+		'The MySQL connection details are incorrect. The hostname, username or password are incorrect.',
+		'MySQL Connection Failure'
+	);
+}
+if( ! mysql_select_db( $DB['name'], $connect ) ){
+	error(
+		'Cannot connect to the MySQL database. Please make sure that the database name is correct.',
+		'Database Connection Failure'
+	);
+}
 
 /**
  * perform stripslashes on the $SETTINGS array 
@@ -62,7 +73,6 @@ $SETTINGS = stripslashes_array( $SETTINGS );
 /**
  * start session and get instance of the Plugin class 
  * cycle through active plugins and require plugin files
- * finally refactor the plugins according to the $importance var
  */
 session_start( );
 

@@ -32,6 +32,10 @@
  * if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
  * 	exit;
  *
+ * This file uses the Template class and the template located
+ * at admin/layout/ajax.php. echo or print can still be used
+ * as output is captured and added to the Template class.
+ *
  * ========= OPTIONS ==========
  * 
  * The no_config option can be used to load a minimal
@@ -104,12 +108,20 @@ $file = HOME . $file;
 if( !file_exists( $file ) )
 	die( 'The file at <i>' . $file . '</i> does not exist.' );
 
+$Template = Template::getInstance( );
+
+/**
+ * capture output and add to template class
+ */
+ob_start( );
+require $file;
+$content = ob_get_contents( );
+$Template->add( 'content', $content );
+ob_end_clean( );
+
 /**
  * display through admin/layout/ajax.php
  */
-$Template = Template::getInstance( );
-
-require $file;
 require HOME . 'admin/layout/ajax.php';
 
 exit;

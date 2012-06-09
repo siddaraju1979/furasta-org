@@ -13,11 +13,13 @@
  * @package    installer
  */
 
-require 'header.php';
-require HOME . '_inc/function/system.php';
+session_start( );
 
 if(@$_SESSION['complete']!=1)
 	header('location: stage3.php');
+
+require 'header.php';
+require HOME . '_inc/function/system.php';
 
 $connect=mysql_connect($_SESSION['db']['host'],$_SESSION['db']['user'],$_SESSION['db']['pass']);
 $select=mysql_select_db($_SESSION['db']['name'],$connect);
@@ -63,7 +65,7 @@ mysql_query('insert into '.$trash.' values(0,"Example Page","Sample page content
 
 // options
 mysql_query( 'drop table if exists ' . $options );
-mysql_query( 'create table ' . $options . ' (name text,value text)' );
+mysql_query( 'create table ' . $options . ' (name text,value text,category text)' );
 
 // file manager
 mysql_query( 'drop table if exists ' . $files );
@@ -85,13 +87,14 @@ define(\'TRASH\',\''.$trash.'\');
 define(\'GROUPS\',\''.$groups.'\');
 define(\'OPTIONS\',\''.$options.'\');
 define(\'FILES\',\'' . $files . '\');
-define(\'TEMPLATE_DIR\',\''.HOME.'_www/\');
+define(\'TEMPLATE_DIR\',\''.HOME.'_www/vitruvius/\');
 define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
 define(\'SITEURL\',\''.$site_url.'\');
 define(\'USER_FILES\',\''.$user_files.'\');
-define(\'DIAGNOSTIC_MODE\',\'0\');
+define(\'DIAGNOSTIC_MODE\', 0 );
 define(\'LANG\', \'English\' );
+define(\'SET_REVISION\', 100 );
 
 $PLUGINS=array();
 
@@ -122,7 +125,7 @@ $dirs = array(
 	$user_files . 'backup',
 	$user_files . 'smarty',
 	$user_files . 'smarty/templates',
-	$user_files . 'smarty/template_c',
+	$user_files . 'smarty/templates_c',
 	
 	// file manager dirs
 	$user_files . 'files',

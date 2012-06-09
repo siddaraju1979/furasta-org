@@ -12,7 +12,7 @@
  * @package	   installer
  */
 
-require 'header.php';
+session_start( );
 
 if(@$_SESSION['begin']!=2)
         header('location: stage1.php');
@@ -34,6 +34,8 @@ if(isset($_POST['submit'])){
 		header( 'location: stage3.php' );
 	}
 }
+
+require 'header.php';
 
 echo '
 <script type="text/javascript">

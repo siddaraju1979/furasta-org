@@ -15,18 +15,6 @@
  * class will be initialised by the user class
  */
 
-interface Grouperface{
-
-	public function getInstance( $new );
-	public function __construct( $id );
-
-	public function perm( ); // returns group perms
-	public function name( ); // returns group name
-
-	public function createGroupDirs( $id ); // use filemanager to add dirs
-	public function removeGroupDirs( $id ); // use filemanager
-}
-
 class Group{
 
 	/**
