@@ -16,7 +16,7 @@
  * logged in 
  */
 if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
-        die( );
+        exit;
 
 /**
  * check if user has permission to delete template

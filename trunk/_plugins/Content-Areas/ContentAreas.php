@@ -85,21 +85,25 @@ class ContentAreas{
 		$registered = rows( 'select * from ' . PREFIX . 'content_areas' );
 		$reg = array( );
 
-		for( $i = 0; $i < count( $registered ); ++$i ){
-			$name =  $registered[ $i ][ 'name' ];
-			$reg[ $name ] = array( );
+		/**
+		 * add registered content areas to $this->registered
+		 */
+		if( !empty( $registered ) ){
+			for( $i = 0; $i < count( $registered ); ++$i ){
+				$name =  $registered[ $i ][ 'name' ];
+				$reg[ $name ] = array( );
 
-			foreach( $registered[ $i ] as $area => $val ){
+				foreach( $registered[ $i ] as $area => $val ){
 
-				if( $area == 'data' || $area == 'content' ){
-					$reg[ $name ][ $area ] = json_decode( $val, true );
-					continue;
+					if( $area == 'data' || $area == 'content' ){
+						$reg[ $name ][ $area ] = json_decode( $val, true );
+						continue;
+					}
+					$reg[ $name ][ $area ] = $val;
+
 				}
-				$reg[ $name ][ $area ] = $val;
-
 			}
 		}
-
 		$this->registered = $reg;
 
 		/**
@@ -311,7 +315,7 @@ class ContentAreas{
 	 * @return string
 	 */
 	public function widgetContent( $widget_name, $area_name, $id, $area = 'all' ){
-		if( isset( $this->widgets{ $widget_name } ) ){
+		if( isset( $this->widgets{ $widget_name } ) && function_exists( $this->widgets{ $widget_name }{ 'frontend' } ) ){
 			return call_user_func_array( $this->widgets{ $widget_name }{ 'frontend' }, array( $area_name, $id, $area ) );
 		}
 		return false;

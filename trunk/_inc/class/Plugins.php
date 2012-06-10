@@ -256,11 +256,12 @@ class Plugins{
 	 * Function through which plugins are registered. Plugins
 	 * must be registered for the CMS to even recognise them.
 	 *
-	 * @param mixed $plugin , the name of the plugin
+	 * @param string $p_name
+	 * @param array $plugin
 	 * @access public
 	 * @return bool true or void
 	 */
-	public function register( $plugin ){
+	public function register( $p_name, $plugin ){
 
 		/**
 		 * check if plugin being registered is defined already,
@@ -268,13 +269,12 @@ class Plugins{
 		 */
 		if( !in_array( $plugin, $this->plugins ) ){
 			if( isset( $plugin[ 'name' ] ) && isset( $plugin[ 'version' ] ) ){
-				array_push( $this->plugins, $plugin );
+				$this->plugins{ $p_name } = $plugin;
 				return true;
 			}
-			error('Plugins must define at least the name and version variables.','Plugin Error');
+			error('The plugin "' . $p_name . '" must define at least the name and version variables.','Plugin Error');
 		}
-		else
-			error('Plugins cannot be defined twice.','Plugin Error');
+
 	}
 
 	/**
@@ -442,21 +442,6 @@ class Plugins{
 	}
 
 	/**
-	 * registeredPlugins
-	 *
-	 * This function allows access to the
-	 * array of registered plugins
-	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function registeredPlugins( ){
-
-		return $this->plugins;
-
-	}
-
-	/**
 	 * frontendTemplateFunctions
 	 *
 	 * returns an array of the names
@@ -465,16 +450,17 @@ class Plugins{
 	 * 
 	 * @access public
 	 * @return array
-	 * @todo order by $importance var
 	 */
-	public function frontendTemplateFunctions(){
-		$functions = array();
+	public function frontendTemplateFunctions( ){
 
-                for( $i = 0; $i < count( $this->plugins ); $i++ ){
-                        if( isset( $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ) && function_exists( @$this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'function' } ) )
-					$functions[ $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'name' } ] = $this->plugins{ $i }{ 'frontend' }{ 'template_function' }{ 'function' };					
+		$functions = array( );
 
-                }
+		foreach( $this->plugins as $plugin ){
+			if( isset( $plugin[ 'frontend' ][ 'template_function' ][ 'name' ] ) &&
+				function_exists( $plugin[ 'frontend' ][ 'template_function' ][ 'function' ] ) ){
+				$functions[ $plugin[ 'frontend' ][ 'template_function' ][ 'name' ] ] = $plugin[ 'frontend' ][ 'template_function' ][ 'function' ];
+			}
+		}
 
 		return $functions;
 	}
@@ -727,14 +713,13 @@ class Plugins{
 	 *
 	 * @params string $name optional
 	 * @access public
-	 * @return array
+	 * @return array|bool
 	 */
 	public function plugins( $name = false ){
 		if( $name ){
-			foreach( $this->plugins as $plugin ){
-				if( $plugin[ 'name' ] == $name )
-					return $plugin;
-			}
+			if( isset( $this->plugins{ $name } ) )
+				return $this->plugins{ $name };
+			return false;
 		}
 		return $this->plugins;
 	}

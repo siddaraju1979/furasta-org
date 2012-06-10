@@ -113,7 +113,7 @@ foreach( $PLUGINS as $p_name => $version ){
 	/**
 	 * register the $plugin array from the plugins file
 	 */
-	$Plugins->register( $plugin );
+	$Plugins->register( $p_name, $plugin );
 }
 
 /**
