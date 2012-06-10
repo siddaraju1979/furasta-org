@@ -294,13 +294,17 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	);
 
 	$constants = array_merge( $default_constants, $constants );
+        $Plugins = Plugins::getInstance( );
 
 	/**
 	 * calculate plugin dependencies
 	 */
 	$plugins = array( );
 	foreach( $PLUGINS as $p_name => $version ){
-		require HOME . '_plugins/' . $p_name . '/plugin.php';
+
+		$plugin = $Plugins->plugins( $p_name );
+		if( !$plugin )
+			require HOME . '_plugins/' . $p_name . '/plugin.php';	
 
 		array_push(
 			$plugins,
@@ -317,7 +321,6 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	/**
          * plugins - filter the settings, constants and plugins arrays 
          */
-        $Plugins = Plugins::getInstance( );
         $filter = $Plugins->filter( 'general', 'filter_settings', array( $SETTINGS, $constants, $PLUGINS ) );
 	$SETTINGS = $filter[ 0 ];
 	$constants = $filter[ 1 ];
@@ -774,16 +777,19 @@ function split_perm( $perms ){
  * to the list of installed plugins
  *
  * @param array $plugins
- * @param array &PLUGINS
+ * @param array &$NEWPLUGINS
  * @return void
  */
-function resolve_dependencies( $plugins, &$PLUGINS ){
+function resolve_dependencies( $plugins, &$NEWPLUGINS ){
+
+	global $PLUGINS;
 
 	/**
 	 * build list of dependencies
 	 */
 	$dependencies = array( );
 	$resolved = array( );
+	$Plugins = Plugins::getInstance( );
 	for( $i = 0; $i < count( $plugins ); ++$i ){
 
 		if( is_array( $plugins[ $i ][ 'dependencies' ] ) ){
@@ -793,11 +799,24 @@ function resolve_dependencies( $plugins, &$PLUGINS ){
 			foreach( $plugins[ $i ][ 'dependencies' ] as $dependency ){
 
 				/**
-				 * if dependency was already resolved or
-				 * already installed, skip
+				 * if dependency was already resolved, skip
 				 */
-				if( in_array( $dependency, $dependencies ) || isset( $PLUGINS[ $dependency ] ) )
+				if( in_array( $dependency, $dependencies ) )
 					 continue;
+
+				/**
+				 * if plugin is being removed and is still a dependency
+				 * of another plugin, throw error
+				 */
+				if( isset( $PLUGINS[ $dependency ] ) && !isset( $NEWPLUGINS[ $dependency ] ) ){
+					error( 	
+						'The "' . $dependency . '" plugin cannot be uninstall as it is a dependency'
+						. 'of the "' . $plugins[ $i ][ 'name' ] . '" plugin. To uninstall, remove'
+						. 'the "' . $plugins[ $i ][ 'name' ] . '" plugin first.'
+						,'Plugin Dependency Error'
+					);
+				}
+
 
 				/**
 				 * if plugin is unavailable then throw an error
@@ -811,20 +830,20 @@ function resolve_dependencies( $plugins, &$PLUGINS ){
 					);
 				}
 
-				/**
-				 * load plugin file to get version number
-				 */
-				require HOME . '_plugins/' . $dependency . '/plugin.php';
+
+				$plugin = $Plugins->plugins( $p_name );
+				if( !$plugin )
+					require HOME . '_plugins/' . $p_name . '/plugin.php';	
 
 				/**
 				 * add dependency to list of plugins
 				 */
-				$PLUGINS[ $dependency ] = $plugin[ 'version' ];
+				$NEWPLUGINS[ $dependency ] = $plugin[ 'version' ];
 			}
 
 		}
 
-		$PLUGINS[ $plugins[ $i ][ 'sys_name' ] ] = $plugins[ $i ][ 'version' ];
+		$NEWPLUGINS[ $plugins[ $i ][ 'sys_name' ] ] = $plugins[ $i ][ 'version' ];
 	}
 
 }

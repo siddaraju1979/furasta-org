@@ -32,7 +32,7 @@ $p_inactive=scan_dir(HOME.'_plugins');
 /**
  * load active plugins 
  */
-$plugins = $Plugins->registeredPlugins( );
+$plugins = $Plugins->plugins( );
 
 /**
  * load inactive plugins and merge $plugin array to registerd plugins array 

@@ -34,14 +34,17 @@ function query( $query, $alert = false ){
 	 * if the query fails check if alert is true or that
 	 * diagnostic_mode is enabled for debugging
 	 */
-	if( !$result && ( $alert == true || DIAGNOSTIC_MODE == 1 ) ){
+	if( !$result ){
 		error_log( 'Furasta.Org Notice: MySQL Query Error: ' . mysql_error( ), 0 );
-		error(
-			'There has been a problem executing this MySQL query:<br/><br/>'
-			. htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' 
-			. mysql_error( ) 
-			, 'MySQL Error'
-		);
+		
+		if( $alert == true || DIAGNOSTIC_MODE == 1 ){
+			error(
+				'There has been a problem executing this MySQL query:<br/><br/>'
+				. htmlspecialchars( $query ) . '<br/><br/><b>MySQL Error:</b> ' 
+				. mysql_error( ) 
+				, 'MySQL Error'
+			);
+		}
 	}
 
 	return $result;

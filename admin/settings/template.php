@@ -78,7 +78,7 @@ foreach($templates as $template){
 $i=0;
 foreach( $validated as $array ){
 	$screenshot=(file_exists(HOME.'_www/'.$array[ 'slug' ].'/screenshot.png'))?'<img src="' . SITEURL . '_www/'.$array[ 'slug' ].'/screenshot.png" width="300px"/>': '<p>No Screenshot</p>';
-	if( $i == 0 ){
+	if( TEMPLATE_DIR == HOME . '_www/' . $array[ 'slug' ] . '/'){
 		$class = ' activated';
 		$status = 'Activated';
 	}

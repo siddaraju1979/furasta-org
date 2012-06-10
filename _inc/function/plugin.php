@@ -43,7 +43,7 @@ function plugin_exists( $plugin_name ){
 function plugin_installed($plugin_name){
 	$Plugins = Plugins::getInstance( );
 
-	$plugins = $Plugins->registeredPlugins( );
+	$plugins = $Plugins->plugins( );
 
 	if( in_array( $plugins, $plugin_name ) )
 		return true;
