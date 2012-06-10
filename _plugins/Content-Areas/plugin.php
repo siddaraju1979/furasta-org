@@ -110,7 +110,7 @@ function content_areas_admin( ){
 	require HOME . '_plugins/Content-Areas/admin/index.php';
 }
 
-function content_areas_admin_widget_textarea( $area_name, $widget_id, $pages ){
+function content_areas_admin_widget_textarea( $area_name, $widget_id, $pages, $postdata ){
 	require HOME . '_plugins/Content-Areas/widgets/textarea-admin.php';
 }
 
@@ -123,7 +123,7 @@ function content_areas_frontend_widget_textarea( ){
  *
  *
  */
-function content_areas_admin_widget_breadcrumbs( $area_name, $widget_id, $pages ){
+function content_areas_admin_widget_breadcrumbs( $area_name, $widget_id, $pages, $postdata ){
 	require HOME . '_plugins/Content-Areas/widgets/breadcrumbs-admin.php';
 }
 
@@ -137,7 +137,7 @@ function content_areas_frontend_widget_breadcrumbs( ){
 	require HOME . '_plugins/Content-Areas/widgets/breadcrumbs-frontend.php';
 }
 
-function content_areas_admin_widget_menu( $area_name, $widget_id, $pages ){
+function content_areas_admin_widget_menu( $area_name, $widget_id, $pages, $postdata ){
 	require HOME . '_plugins/Content-Areas/widgets/menu-admin.php';
 }
 

@@ -316,7 +316,11 @@ class ContentAreas{
 	 */
 	public function widgetContent( $widget_name, $area_name, $id, $area = 'all' ){
 		if( isset( $this->widgets{ $widget_name } ) && function_exists( $this->widgets{ $widget_name }{ 'frontend' } ) ){
-			return call_user_func_array( $this->widgets{ $widget_name }{ 'frontend' }, array( $area_name, $id, $area ) );
+			ob_start( );
+			call_user_func_array( $this->widgets{ $widget_name }{ 'frontend' }, array( $area_name, $id, $area ) );
+			$content = ob_get_contents( );
+			ob_end_clean( );
+			return $content;
 		}
 		return false;
 	}

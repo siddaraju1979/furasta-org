@@ -17,6 +17,8 @@ ob_start('ob_gzhandler');
 header('Connection: close');
 header('Content-type: text/html; charset: UTF-8');
 
+define( 'FURASTA_FRONTEND', true );
+
 require '_inc/define.php';
 require_once $function_dir . 'frontend.php';
 

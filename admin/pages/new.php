@@ -279,10 +279,7 @@ $(document).ready(function(){
 /**
  * Load javascript files 
  */
-$Template->loadJavascript( '_inc/js/tiny_mce.js' );
 $Template->loadJavascript( 'FURASTA_ADMIN_PAGES_NEW', $javascript );
-// @todo find a way to cache this without breaking tinymce
-$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
 /**
  * create base url 

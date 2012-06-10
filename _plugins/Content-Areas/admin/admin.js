@@ -131,8 +131,13 @@ function edit_widget( ){
 	var widget_id = $this.attr( 'id' );
 	var a_name = $( '#content-area-select' ).val( );
 	var dialogButtons = {}
-	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
-	dialogButtons[ trans( 'prompt_save' ) ] = function( ){ $( this ).dialog( 'close' ) };
+	dialogButtons[ trans( 'prompt_close' ) ] = function( ){
+		$( this ).dialog( 'close' );
+	};
+	dialogButtons[ trans( 'prompt_save' ) ] = function( ){ 
+		save_widget( widget_id, widget_name, a_name );	
+		$( this ).dialog( 'close' );
+	};
 
 	$( '#edit-dialog' )
 		.attr( 'title', widget_name + ' Widget' )
@@ -179,6 +184,30 @@ function delete_widget( ){
 	});
 }
 
-// calls save_area when finished
-function create_widget( ){
+function save_widget( widget_id, widget_name, area_name ){
+	var postdata = $( "#edit-dialog" ).find( 'checkbox,input,select,radio' ).serializeArray( );
+	$( '#edit-dialog' ).find( 'textarea' ).each(function( ){
+		$this = $( this );
+		name = $this.attr( 'name' );
+		if( $( this ).hasClass( 'tinymce' ) )
+			value = tinyMCE.activeEditor.getContent( ); 
+		else
+			value = $this.html( );;
+
+		postdata.push( { "name" : name, "value" : value } );
+	});
+
+	$.ajax({
+		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		type : 'POST',
+		data : {
+			name : widget_name,
+			area_name : area_name,
+			id : widget_id,
+			data : postdata
+		},
+		success : function( ht ){
+			$( '#edit-dialog' ).html( ht );
+		}
+	});
 }

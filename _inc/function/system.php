@@ -540,10 +540,6 @@ function validate($conds,$selector,$post){
         $Validate = Validate::getInstance( );
 
 	if( !$Validate->hasConds ){
-		/**
-		 * initiate an instance of the Template class
-		 */
-		$Template = Template::getInstance( );
 
 		/**
 		 * set up javascript validation 
@@ -553,8 +549,13 @@ function validate($conds,$selector,$post){
 			$( "' . $selector . '" ).validate( ' . json_encode( $conds ) . ' );
 		});';
 
-		$Template->add( 'javascript', $javascript );
-
+		if( defined( 'FURASTA_FRONTEND' ) ){
+			echo '<script type="text/javascript">' . $javascript . '</script>';
+		}
+		else{
+			$Template = Template::getInstance( );
+			$Template->add( 'javascript', $javascript );
+		}
 	}
 
 	$Validate->addConds( $conds );
@@ -846,5 +847,37 @@ function resolve_dependencies( $plugins, &$NEWPLUGINS ){
 		$NEWPLUGINS[ $plugins[ $i ][ 'sys_name' ] ] = $plugins[ $i ][ 'version' ];
 	}
 
+}
+
+/**
+ * tinymce
+ *
+ * creates an instance of the tinymce text editor
+ * manages all javascript etc
+ *
+ * @params string $name
+ * @params string $content
+ * @params string $config optional
+ * @return string
+ */
+function tinymce( $name, $content, $config = 'Normal' ){
+
+	// add tinymce load to javascript
+	$javascript = '
+	$(function(){
+		tinymce_changeConfig( \'textarea[name="' . $name . '"]\', "' . $config . '" );
+	});
+	';
+	if( defined( 'FURASTA_FRONTEND' ) ){
+		echo '<script type="text/javascript">' . $javascript . '</script>';
+	}
+	else{
+		$Template = Template::getInstance( );
+		$Template->add( 'javascript', $javascript );
+	}
+
+	// return textarea
+	$content = '<textarea class="tinymce" name="' . $name . '" id="tinymce_' .$name . '">' . $content . '</textarea>';
+	return $content;
 }
 ?>

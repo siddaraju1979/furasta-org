@@ -65,7 +65,10 @@ function cache_get($name,$dir=''){
  * @return bool
  */
 function cache_is_good($name,$length,$dir=''){
-        if($dir!=''&&substr($dir,-1)!='/')
+	if( DIAGNOSTIC_MODE == 1 )
+		return false;
+
+	if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 	
 	$file=USER_FILES.'cache/'.$dir.$name;

@@ -76,9 +76,9 @@ $(function(){
  *
  */
 function tinymce_changeConfig( element, key ){
-	var id = $( element ).attr( 'id' );
+	id = $( element ).attr( 'id' );
 	tinyMCE.settings = window.tinymceConfigs[ key ];
-
+	
 	tinyMCE.execCommand( 'mceAddControl', false, id );
 	tinyMCE.triggerSave();
 

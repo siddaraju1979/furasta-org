@@ -128,10 +128,7 @@ if( !$User->hasPerm( 'e' ) && !$User->adminPagePerm( $perm[ 1 ] ) )
 /**
  * load javascript files to Template class for output later 
  */
-$Template->loadJavascript( '_inc/js/tiny_mce.js' );
 $Template->loadJavascript( 'admin/pages/edit.js' );
-// @todo find a way to cache this without breaking tinymce
-$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
 $content='
 <div id="page-permissions-dialog" title="Page Permissions" style="display:none">

@@ -11,6 +11,8 @@
  * @version    1.0
  */
 
+define( 'FURASTA_ADMIN', true );
+
 ob_start( );
 
 require '../_inc/define.php';
@@ -73,7 +75,7 @@ if( !cache_is_good( $cache_file, '60*60*24*3', 'RSS' ) ){
 */
 $cache_file = md5( 'FURASTA_ADMIN_MENU_' . $_SESSION[ 'user' ][ 'id' ] );
 
-if( cache_exists( $cache_file, 'USERS' ) && DIAGNOSTIC_MODE == 0 )
+if( cache_exists( $cache_file, 'USERS' ) )
 	$menu = json_decode( cache_get( $cache_file, 'USERS' ) );
 else{
 	$url = SITEURL . 'admin/';
@@ -165,5 +167,8 @@ window.furasta = {
 
 $Template->loadJavascript( '_inc/js/admin.js' );
 $Template->loadJavascript( 'FURASTA_ADMIN_HEADER_SCRIPT', $javascript );
+$Template->loadJavascript( '_inc/js/tiny_mce.js' );
+// @todo find a way to cache this without breaking tinymce
+$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
 ?>

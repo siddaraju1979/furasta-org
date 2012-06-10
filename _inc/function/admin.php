@@ -228,35 +228,4 @@ function pages_array( ){
 	return $pages;
 }
 
-/**
- * tinymce
- *
- * creates an instance of the tinymce text editor
- * manages all javascript etc
- *
- * @params string $name
- * @params string $content
- * @params string $config optional
- * @return string
- */
-function tinymce( $name, $content, $config = 'Normal' ){
-	$Template = Template::getInstance( );
-
-	// add javascript files
-	$Template->loadJavascript( '_inc/tiny_mce/tiny_mce.js', false );
-	$Template->loadJavascript( '_inc/js/tiny_mce.js' );
-
-	// add tinymce load to javascript
-	$javascript = '
-	$(function(){
-		tinymce_changeConfig( \'textarea[name="' . $name . '"]\', "' . $config . '" );
-	});
-	';
-	$Template->add( 'javascript', $javascript );
-
-	// return textarea
-	$content = '<textarea name="' . $name . '" id="tinymce_' .$name . '">' . $content . '</textarea>';
-	return $content;
-}
-
 ?>

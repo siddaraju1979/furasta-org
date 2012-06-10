@@ -25,9 +25,8 @@ $perms = array(
                 's' => 'Edit Settings',
                 'u' => 'Edit Users'
 );
-$perms = $Plugins->filter( 'admin', 'filter_group_permissions', $perms );
 
-/**
- * file permissions
- */
-$file_perms = '|';
+if( !isset( $Plugins ) )
+	$Plugins = Plugins::getInstance( );
+
+$perms = $Plugins->filter( 'admin', 'filter_group_permissions', $perms );

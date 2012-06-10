@@ -17,6 +17,15 @@ if( $widget_id == 0 ){ // add new widget to database and return id
 	exit;
 }
 
+/**
+ * information is being posted
+ */
+if( is_array( $postdata ) ){
+	$content = addslashes( $postdata[ 'widget_textarea_content' ] );
+	query( 'update ' . PREFIX . 'widgets set content="' . $content . '" where id=' . $widget_id );
+	exit;
+}
+
 require HOME . '_inc/function/admin.php';
 $Template = Template::getInstance( );
 

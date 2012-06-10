@@ -20,10 +20,12 @@ $Template->add( 'title', 'Login' );
 
 $conds = array(
 	'Email' => array(
+		'name' => 'Email',
 		'required' => true,
 		'email'	=> true
 	),
 	'Password' => array(
+		'name' => 'Password',
 		'required' => true
 	)
 );
