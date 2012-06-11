@@ -15,6 +15,16 @@
  * class will be initialised by the user class
  */
 
+/**
+ * Group
+ *
+ * Used for group management, similar to the
+ * Users class.
+ *
+ * @package user_management
+ * @author Conor Mac Aoidh <conormacaoidh@gmail.com> 
+ * @license http://furasta.org/licence.txt The BSD License
+ */
 class Group{
 
 	/**
@@ -59,6 +69,47 @@ class Group{
 	private static $instances = array( );
 
 	/**
+	 * createInstances
+	 *
+	 * Used to create multiple instances of groups
+	 * at once. Accepts an array of group ids and
+	 * creates instances of them, they can then be
+	 * reterived using the getInstance method.
+	 * This method uses one database query as opposed
+	 * to many.
+	 *
+	 * @param array $group_ids
+	 * @access public
+	 * @static
+	 * @return void
+	 */
+	public static function createInstances( $group_ids ){
+
+		/**
+		 * check instance isn't already loaded
+		 */
+		foreach( $group_ids as $key => $id ){
+			if( !isset( self::$instances{ $id } ) )
+				unset( $group_ids[ $key ] );
+		}
+
+		/**
+		 * get groups info from db
+		 */
+		$query = 'select * from ' . GROUPS . ' where';
+		$query = implode( ' id=', $group_ids ) . ',';
+		$query = substr( $query, 0, -1 );
+		$groups = rows( $query );
+
+		/**
+		 * create instances
+		 */
+		foreach( $groups as $group )
+			self::$instances{ $group[ 'id' ] } = new Group( $group );
+
+	}
+
+	/**
 	 * getInstance
 	 *
 	 * gets an instance by id
@@ -83,18 +134,108 @@ class Group{
 	 *
 	 * constrcutor for the group class
 	 *
-	 * @param int $id
+	 * @param int|array $group
 	 * @access private
 	 * @return void
 	 */
-	private function __construct( $id ){
+	private function __construct( $group ){
 
-		// get a few properties from database
-		$group = row( 'select * from ' . GROUPS . ' where id=' . $id );
+		if( !is_array( $group ) )
+			$group = row( 'select * from ' . GROUPS . ' where id=' . $id );
+
 		$this->id = $id;
 		$this->name = $group[ 'name' ];
-		$this->perm = User::permToArray( $group[ 'perm' ] );
+		$this->perm = explode( ',', $group[ 'perm' ] );	
+		$this->file_perm = split_perm( $group[ 'file_perm' ] );
 
+	}
+
+	/**
+	 * hasPerm
+	 *
+	 * used to check if group has permission
+	 * to access a certain area of the cms
+	 * 
+	 * @param string $perm 
+	 * @access public
+	 * @return bool
+	 */
+	public function hasPerm( $perm ){
+
+		/**
+		 * searches the perm array to check
+		 * if user has perm and returns bool
+		 * value
+		 */
+		if( in_array( $perm, $this->perm ) )
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * hasFilePerm
+	 *
+	 * checks if the group has permission to access a
+	 * file in the user files directory
+	 *
+	 * @param string $path
+	 * @access public
+	 * @return bool
+	 */
+	public function hasFilePerm( $path ){
+
+		/**
+		 * get file details from file manager
+		 */
+		$FIleManager = FileManager::getInstance( );
+		$file = $FileManager->getFile( $path );
+
+		
+
+	}
+
+	/**
+	 * createGroupDirs
+	 *
+	 * create the group directory structure for a 
+	 * given group
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public static function createGroupDirs( $id ){
+		$dirs = array(
+			USER_FILES . 'files/groups/' . $id,
+			USER_FILES . 'files/groups/' . $id . '/public',
+			USER_FILES . 'files/groups/' . $id . '/private'
+		);
+
+		$mkdir = true;
+		foreach( $dirs as $dir ){
+			if( !is_dir( $dir ) )
+				mkdir( $dir ) || $mkdir == false;
+		}
+
+		return $mkdir;
+	}
+
+	/**
+	 * removeGroupDirs
+	 * 
+	 * removes the directory structure for a given group
+	 *
+	 * @params int $id
+	 * @return bool
+	 * @access public
+	 */
+	public static function removeGroupDirs( $id ){
+		$dir = USER_FILES . 'files/groups/' . $id;
+		$rmdir = true;
+		if( is_dir( $dir ) )
+			remove_dir( $dir ) || $rmdir = false;
+		return $rmdir;
 	}
 
 	/**
@@ -147,91 +288,6 @@ class Group{
 	 */
 	public function filePerm( ){
 		return $this->file_perm;
-	}
-
-	/**
-	 * hasFilePerm
-	 *
-	 * checks if the group has permission to access a
-	 * file in the user files directory
-	 *
-	 * @param string $path
-	 * @access public
-	 * @return bool
-	 */
-	public function hasFilePerm( $path ){
-
-
-	}
-
-	/**
-	 * groupsHaveFilePerm
-	 *
-	 * checks if an array of groups have file permissions
-	 * to access a file in the user files directory
-	 *
-	 * @param array $ids
-	 * @param string $path
-	 * @access public
-	 * @static
-	 * @return bool
-	 */
-	public static function groupsHaveFilePerm( $ids, $path ){
-
-		foreach( $ids as $id ){
-
-			$group = Group::getInstance( $id );
-
-			if( !$group->hasFilePerm( $path ) )
-				return false;
-
-		}
-
-		return true;
-
-	}
-
-	/**
-	 * createGroupDirs
-	 *
-	 * create the group directory structure for a 
-	 * given group
-	 *
-	 * @params int $id
-	 * @return bool
-	 * @access public
-	 */
-	public static function createGroupDirs( $id ){
-		$dirs = array(
-			USER_FILES . 'files/groups/' . $id,
-			USER_FILES . 'files/groups/' . $id . '/public',
-			USER_FILES . 'files/groups/' . $id . '/private'
-		);
-
-		$mkdir = true;
-		foreach( $dirs as $dir ){
-			if( !is_dir( $dir ) )
-				mkdir( $dir ) || $mkdir == false;
-		}
-
-		return $mkdir;
-	}
-
-	/**
-	 * removeGroupDirs
-	 * 
-	 * removes the directory structure for a given group
-	 *
-	 * @params int $id
-	 * @return bool
-	 * @access public
-	 */
-	public static function removeGroupDirs( $id ){
-		$dir = USER_FILES . 'files/groups/' . $id;
-		$rmdir = true;
-		if( is_dir( $dir ) )
-			remove_dir( $dir ) || $rmdir = false;
-		return $rmdir;
 	}
 
 }

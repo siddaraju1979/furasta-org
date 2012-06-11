@@ -681,7 +681,7 @@ function generate_error_report( $error_id, $error, $name ){
  * checks if file exists and also if file
  * name is safe
  *
- * @params string $file
+ * @param string $file
  * @return bool
  */
 function validate_file( $file ){
@@ -729,7 +729,7 @@ function maintenance_message( ){
  *	),
  * )
  *
- * @params string $perms
+ * @param string $perms
  * @access public
  * @return array
  */
@@ -764,6 +764,36 @@ function split_perm( $perms ){
 	}
 
 	return $result;
+}
+
+/**
+ * merge_perm
+ *
+ * mergers an array of permissions in the following
+ * format:
+ *
+ * array(
+ * 	0 => array(
+ *		'users' => array( 1, 2, 3 ),
+ *		'groups' => array( 4 )	
+ *	),
+ *	1 => array(
+ *		'users' => array( 1, 2, 3 ),
+ *		'groups' => array( 4, 5 )
+ *	),
+ * )
+ *
+ * @param array $one
+ * @param array $two
+ * @access public
+ * @return array
+ */
+function merge_perm( $one, $two ){
+	$one[ 0 ][ 'users' ] = array_merge( $one[ 0 ][ 'users' ], $two[ 0 ][ 'users' ] );
+	$one[ 0 ][ 'groups' ] = array_merge( $one[ 0 ][ 'groups' ], $two[ 0 ][ 'groups' ] );
+	$one[ 1 ][ 'users' ] = array_merge( $one[ 1 ][ 'users' ], $two[ 1 ][ 'users' ] );
+	$one[ 1 ][ 'groups' ] = array_merge( $one[ 1 ][ 'groups' ], $two[ 1 ][ 'groups' ] );
+	return $one;
 }
 
 /**
@@ -855,9 +885,9 @@ function resolve_dependencies( $plugins, &$NEWPLUGINS ){
  * creates an instance of the tinymce text editor
  * manages all javascript etc
  *
- * @params string $name
- * @params string $content
- * @params string $config optional
+ * @param string $name
+ * @param string $content
+ * @param string $config optional
  * @return string
  */
 function tinymce( $name, $content, $config = 'Normal' ){

@@ -250,6 +250,10 @@ class FileManager{
 	 * @param int $id
 	 * @access public
 	 * @return bool
+	 *
+	 *
+	 * @todo remove $rw as multiple character delimited values as
+	 * return false must be used for default permissions check
 	 */
 	public function hasPerm( $file, $rw = 'r', $id = false ){
 		
@@ -260,28 +264,28 @@ class FileManager{
 		if( !self::checkPath( $file ) )
 			return false;
 
-		/**
-		 * get user instance
-		 */
-		$User = User::getInstance( $id );
-
-		/**
-		 * if super user, bypass all permissions
-		 */
-		if( $User && $User->isSuperUser( ) )
-			return true;
-
 		$file = $this->getFile( $file );
 
 		/**
 	 	 * if user/group administers files for this user, then
 		 * don't bother checking file permissions just return true
 		 */
-		if( $User && $User->hasFilePerm( $file[ 'owner' ] ) )
-			return true;
+		$User = User::getInstance( $id );
+		if( $User ){
+
+			/**
+			 * user is trying to access their own
+			 * file
+			 */
+			if( $file[ 'owner' ] == $User->id( ) )
+				return true;			
+
+
+
+		}
 
 		/**
-		 * split file permissions string from fb into
+		 * split file permissions string from db into
 		 * different arrays for easy processing
 		 */
 		list( $read, $write ) = split_perms( $file[ 'perm' ] );
@@ -294,6 +298,12 @@ class FileManager{
 
 			switch( $check ){
 				case 'v': // check if is public
+					/**
+					 * if super user, return true
+					 */
+					if( $User->isSuperUser( ) )
+						return true;
+
 					if( $file[ 'public' ] == 0 )
 						return false;
 				break;
@@ -306,23 +316,61 @@ class FileManager{
 						return $this->setError( 9 );
 
 					/**
+					 * if super user, return true
+					 */
+					if( $User->isSuperUser( ) ){
+						$match = true;
+						break;
+					}
+
+					/**
 					 * if user does not have permission to manage
 					 * files, return false
 					 */
 					if( !$User->hasPerm( 'f' ) )
 						return $this->setError( 1, $file );
 
-					// if not in users array, check groups array
-					if( !in_array( $User->id( ), $read[ 'users' ] ) ){
-						foreach( $User->groups( ) as $Group ){
-							if( in_array( $Group->id( ), $read[ 'groups' ] ) ){
-								$match = true;
-								break;
-							}
-						}
-						if( !$match ) // user does not have permission to view file
-							return $this->setError( 1, $file );
+					/**
+					 * if user is in array of users allowed to access
+					 * file, return true
+					 */
+					if( in_array( $User->id( ), $read[ 'users' ] ) ){
+						$match = true;
+						break;
 					}
+
+					/**
+					 * if one of the user's groups is allowed to access
+					 * the file, return true
+					 */
+					foreach( $User->groups( ) as $id => $Group ){
+						if( in_array( $id, $read[ 'groups' ] ) ){
+							$match = true;
+							break;
+						}
+					}
+					if( !$match ) // user does not have permission to view file
+						return $this->setError( 1, $file );
+
+
+					/**
+					 * if user has admin permissions over the owner
+					 * of the file, return true
+					 */
+					$perm = $User->filePerm( );
+					if( in_array( $file[ 'owner' ], $perm[ 0 ][ 'users' ] ) )
+						return true;
+
+					/**
+					 * if one of the user's groups has admin permissions
+					 * over the owner of the file, return true
+					 */
+					$User = User::getInstance( $file[ 'owner' ] );
+					foreach( $User->groups( ) as $id => $Group ){
+						if( in_array( $id, $perm[ 0 ][ 'groups' ] ) )
+							return true;
+					}
+
 					
 				break;
 				case 'w': // check if is writable by user
@@ -339,6 +387,12 @@ class FileManager{
 					 */
 					if( $file[ 'owner' ] == 0 )
 						return $this->setError( 8, $file );
+
+					/**
+					 * if super user, return true
+					 */
+					if( $User->isSuperUser( ) )
+						return true;
 
 					/**
 					 * if user does not have permission to manage
@@ -363,7 +417,7 @@ class FileManager{
 
 		}
 
-		return true;
+		return false;
 
 	}
 
