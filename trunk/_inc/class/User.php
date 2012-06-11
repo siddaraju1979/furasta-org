@@ -184,6 +184,18 @@ class User{
 	private $perm = array( );
 
 	/**
+	 * filePerm
+	 *
+	 * holds a combination of all
+	 * file perm for the groups of which
+	 * the user is a member
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $filePerm = array( );
+
+	/**
 	 * data
 	 *
 	 * @var array
@@ -264,12 +276,12 @@ class User{
 		 * check is required
 		 */
 		if( $user[ 'groups' ] != '_superuser' && !empty( $permissions ) ){
-			$groups = self::permToArray( $user[ 'groups' ] );
+			$groups = explode( ',', $user[ 'groups' ] );
 			$perm = array( );
 	
 			foreach( $groups as $group ){
 				$Group = Group::getInstance( $group );
-				$perm = User::mergePerm( $perm, $Group->perms( ) );
+				$perm = array_merge( $perm, $Group->perms( ) );
 			} 
 
 			// make sure user has login perms
@@ -304,24 +316,6 @@ class User{
 		$Plugins->hook( 'general', 'on_login' );
 
 		return true;
-	}
-
-	/**
-	 * mergePerm
-	 *
-	 * merges two arrays of perms
-	 *
-	 * @param array $perms
-	 * @access private
-	 * @return void
-	 * @static
-	 */
-	private static function mergePerm( $perm1, $perm2 ){
-		foreach( $perm2 as $p ){
-			if( !in_array( $p, $perm1 ) )
-				array_push( $perm1, $p );
-		}
-		return $perm1;
 	}
 
 	/**
@@ -380,20 +374,23 @@ class User{
 		$this->groups = array( );
 		$this->hash = $user[ 'hash' ];
 		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );
-
+		
 		// if not superuser check perms
 		if( $groups == '_superuser' ){
 			$this->_superuser = true;
 		}
 		else{
 			/**
-			 * create an instance of each group this user is in
-			 * to inherit permissions
+			 * create an instance of each group of which
+			 * the user is a member in order to inherit
+			 * permissions
 			 */
-			$groups = self::permToArray( $groups );
+			$groups = explode( ',', $groups );
+			Group::createInstances( $groups );
 			foreach( $groups as $group ){
 				$this->groups{ $group } = Group::getInstance( $group );
-				$this->perm = $this->mergePerm( $this->perm, $groups{ $group }->perm( ) );
+				$this->perm = array_merge( $this->perm, $this->groups{ $group }->perm( ) );
+				$this->filePerm = merge_perms( $this->filePerm, $this->groups{ $group }->filePerm( ) );
 			}
 		}	
 	
@@ -576,39 +573,54 @@ class User{
 	/**
 	 * hasFilePerm
 	 *
-	 * checks if a user has permission to access a file
+	 * checks the user has permission to access a file
 	 * in the user files directory
 	 *
-	 * @param string $id
+	 * @param string $path
 	 * @access public
 	 * @return bool
 	 */
-	public function hasFilePerm( $id ){
+	public function hasFilePerm( $owner, $rw ){
 
 		// if user is superuser bypass all permissions
 		if( $this->_superuser )
 			return true;
 
-		// the user is trying to access his own file
-		if( $this->id == $id )
+		/**
+		 * true if user is trying to access his own file
+		 */
+		if( $this->id == $file[ 'owner' ] )
 			return true;
 
 		/**
-		 * if user has admin permissions over the owner
-		 * of the file, return true
+		 * switch between different permissions checks
 		 */
-		if( in_array( $id, $this->file_perm{ 'users' } ) )
-			return true;
+		$rw = ( strlen( $rw ) > 1 ) ? explode( '', $rw ) : array( $rw );
+		foreach( $rw as $check ){
 
-		/**
-		 * if groups are set, they must be checked
-		 */
-		if( !empty( $this->file_perm{ 'groups' } ) ){
-			$User = User::getInstance( $id );
-			foreach( $User->groups( ) as $Group ){
-				if( in_array( $Group->id( ), $this->file_perm{ 'groups' } ) )
-					return true;
+			switch( $check ){
+
+				case 'r':
+				break;
+				case 'w':
+					/**
+					 * if user has admin permissions over the owner
+					 * of the file, return true
+					 */
+					if( in_array( $file[ 'owner' ], $this->file_perm{ 1 }{ 'users' } ) )
+						return true;
+
+					/**
+					 * if groups are set, they must be checked
+					 */
+					$User = User::getInstance( $file[ 'owner' ] );
+					foreach( $User->groups( ) as $id => $Group ){
+						if( in_array( $id, $this->file_perm{ 1 }{ 'groups' } ) )
+							return true;
+					}
+				break;
 			}
+
 		}
 
 		// nothing left to check, permission not granted
@@ -764,25 +776,6 @@ class User{
 	}
 
 	/**
-	 * permToArray
-	 *
-	 * converts a perm string ( comma delimited ) to
-	 * an array of perms, example:
-	 *
-	 * input: "a,c,p,t"
-	 * output: array( 'a', 'c', 'p', 't' )
-	 *
-	 * @params string $permString
-	 * @return array
-	 * @access public
-	 */
-	public static function permToArray( $permString ){
-		if( strpos( ',', $permString ) == -1 )
-			return array( $permString );
-		return explode( ',', $permString );
-	}
-
-	/**
 	 * createUserDirs
 	 * 
 	 * creates the directory structure for users
@@ -824,6 +817,75 @@ class User{
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;
 		return $rmdir;
+	}
+
+	/**
+	 * getOptions
+	 *
+	 * this function gets options for this user from the
+	 * options table and stores them in the options array
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function getOptions( ){
+
+		$options = rows( 'select * from ' . OPTIONS . ' where name like "%user_' . $this->id( ) . '_%"' );
+
+		$this->options = array( );		
+		foreach( $options as $name => $value ){
+			$name = end( explode( '_', $name ) );
+			$this->options{ $name } = $value;
+		}
+
+		return $this->options;
+
+	}
+
+	/**
+	 * getOption
+	 *
+	 * gets the value of a specified user option. these methods
+	 * manages the storage of the options so a simple option name
+	 * is required like "user_rating" or "address"
+	 *
+	 * @param string $name
+	 * @access public
+	 * @return string
+	 */
+	public function getOption( $name ){
+		if( !is_array( $this->options ) )
+			$this->getOptions( );
+
+		return @$this->options{ $name };
+	}
+
+	/**
+	 * setOption
+	 *
+	 * sets an option to a specified value. updates the database
+	 * and the class's record of the options
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @access public
+	 * @return bool
+	 */
+	public function setOption( $name, $value ){
+		if( !is_array( $this->options ) )
+			$this->getOptions( );
+
+		$name = addslashes( $name );
+		$value = addslashes( $value );
+
+		if( isset( $this->options{ $name } ) ) // if isset, update db
+			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="user_' . $this->id( ) . '_' . $name . '"' );
+		else // else create db entry
+			query( 'insert into ' . OPTIONS . ' values( "user_' . $this->id( ) . '_' . $name . '", "' . $value . '")' );
+
+		$this->options{ $name } = $value;
+
+		return true;
 	}
 
 	/**
@@ -930,85 +992,16 @@ class User{
 	}
 
 	/**
-	 * getOptions
+	 * isSuperUser
 	 *
-	 * this function gets options for this user from the
-	 * options table and stores them in the options array
+	 * returns true if the users is the
+	 * _superuser
 	 *
-	 * @access public
-	 * @return array
-	 */
-	public function getOptions( ){
-
-		$options = rows( 'select * from ' . OPTIONS . ' where name like "%user_' . $this->id( ) . '_%"' );
-
-		$this->options = array( );		
-		foreach( $options as $name => $value ){
-			$name = end( explode( '_', $name ) );
-			$this->options{ $name } = $value;
-		}
-
-		return $this->options;
-
-	}
-
-	/**
-	 * getOption
-	 *
-	 * gets the value of a specified user option. these methods
-	 * manages the storage of the options so a simple option name
-	 * is required like "user_rating" or "address"
-	 *
-	 * @param string $name
-	 * @access public
-	 * @return string
-	 */
-	public function getOption( $name ){
-		if( !is_array( $this->options ) )
-			$this->getOptions( );
-
-		return @$this->options{ $name };
-	}
-
-	/**
-	 * setOption
-	 *
-	 * sets an option to a specified value. updates the database
-	 * and the class's record of the options
-	 *
-	 * @param string $name
-	 * @param string $value
 	 * @access public
 	 * @return bool
 	 */
-	public function setOption( $name, $value ){
-		if( !is_array( $this->options ) )
-			$this->getOptions( );
-
-		$name = addslashes( $name );
-		$value = addslashes( $value );
-
-		if( isset( $this->options{ $name } ) ) // if isset, update db
-			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="user_' . $this->id( ) . '_' . $name . '"' );
-		else // else create db entry
-			query( 'insert into ' . OPTIONS . ' values( "user_' . $this->id( ) . '_' . $name . '", "' . $value . '")' );
-
-		$this->options{ $name } = $value;
-
-		return true;
+	public function isSuperUser( ){
+		return $this->_superuser;
 	}
-
-  /**
-   * isSuperUser
-   *
-   * returns true if the users is the
-   * _superuser
-   *
-   * @access public
-   * @return bool
-   */
-  public function isSuperUser( ){
-    return $this->_superuser;
-  }
 }
 ?>
