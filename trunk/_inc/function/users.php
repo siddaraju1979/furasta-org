@@ -9,15 +9,13 @@
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
- * @todo implement these functions
  */
 
 /**
- * users_add
+ * user_create
  * 
  * creates a new user in the database with the
- * given parameters and returns an instance of
- * the user class for the new user
+ * given parameters
  * 
  * $data    -   an array of items to be JSON encoded in
  *              the data field
@@ -33,26 +31,51 @@
  * @param array $data optional
  * @param array $options optional
  * @param array $mail optional
- * @return int $id
+ * @return int|bool $id
  */
-function users_add( $name, $email, $password, $groups = array( ), $data = array( ), $options = array( ), $mail = true ){
+function user_create( $name, $email, $password, $groups = array( ), $data = array( ), $options = array( ), $mail = true ){
 
-        query( $query );
+	/**
+	 * if email is in use, return false
+	 * note; one account per email
+	 */
+	if( num( 'select id from ' . USERS . ' where email="' . $email .'"' ) != 0 )
+		return false;
+
+	/**
+	 * add to users table
+	 */
+	$hash = md5( mt_rand( ) );
+	query( 'insert into ' . USERS . ' values ('
+		. '"",'
+		. '"' . $name . '",'
+		. '"' . $email . '",'
+		. '"' . $password . '",'
+		. '"' . $hash . '",'
+		. '"",'
+		. '"' . json_encode( $data ) . '"'
+	. ')' );
         $id = mysql_last_insert( );
-    
-        /**
-         * create user files directories
-         * @todo update this to using file manager 
-         */
-	$dirs = array(
-		USER_FILES . 'files/users/' . $id,
-		USER_FILES . 'files/users/' . $id . '/public',
-		USER_FILES . 'files/users/' . $id . '/private'
-	);
 
-	foreach( $dirs as $dir ){
-		if( !is_dir( $dir ) )
-			mkdir( $dir );
+	/**
+	 * add to groups table for each group
+	 */
+	foreach( $groups as $group )
+		query( 'insert into ' . USERS_GROUPS . ' values( ' . $id . ', ' . $group . ' )' );	
+
+        /**
+         * create user files directory
+         */
+	$FileManager = FileManager::getInstance( );
+	$FileManager->addDir( 'users/' . $id );
+
+	/**
+	 * add options to options table if nessecary
+	 */
+	if( !empty( $options ) ){
+		foreach( $options as $name => $value ){
+			query( 'insert into ' . OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $id . '"' );
+		}
 	}
 
         // default email
@@ -73,6 +96,7 @@ function users_add( $name, $email, $password, $groups = array( ), $data = array(
         email( $email, $mail[ 'subject' ], $mail[ 'message' ] );
         cache_clear( 'USERS' );
 
+	return $id;
 }
 
 /**
@@ -86,7 +110,7 @@ function users_add( $name, $email, $password, $groups = array( ), $data = array(
  * @return bool 
  */
 function users_delete( $id, $message = '' ){
-    
+  
 }
 
 /**

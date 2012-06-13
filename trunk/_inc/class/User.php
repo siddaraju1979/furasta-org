@@ -830,7 +830,7 @@ class User{
 	 */
 	public function getOptions( ){
 
-		$options = rows( 'select * from ' . OPTIONS . ' where name like "%user_' . $this->id( ) . '_%"' );
+		$options = rows( 'select * from ' . OPTIONS . ' where category="user_' . $this->id . '"' );
 
 		$this->options = array( );		
 		foreach( $options as $name => $value ){
@@ -879,9 +879,9 @@ class User{
 		$value = addslashes( $value );
 
 		if( isset( $this->options{ $name } ) ) // if isset, update db
-			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="user_' . $this->id( ) . '_' . $name . '"' );
+			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="' . $name . '" and category="user_' . $this->id . '"' );
 		else // else create db entry
-			query( 'insert into ' . OPTIONS . ' values( "user_' . $this->id( ) . '_' . $name . '", "' . $value . '")' );
+			query( 'insert into ' . OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $this->id . '" )' );
 
 		$this->options{ $name } = $value;
 
