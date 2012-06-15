@@ -934,9 +934,48 @@ class FileManager{
 		// @todo
 	}
 
-	// path is directory or array of filenames
-	public function zip( $zip, $path ){
-		// @todo
+
+	/**
+	 * zip
+	 *
+	 * zips the path $path which can be a
+	 * directory or array of files in the archive
+	 * $zip
+	 *
+	 * $zip		-	name of archive to be created
+	 *
+	 * $path	-	can be a directory or an array
+	 * 			of file paths to be zipped
+	 *
+	 * $strict	-	if path is a directory and strict
+	 * 			is true, the method will return
+	 * 			false if an item cannot be read
+	 *
+	 * @param string $zip
+	 * @param string $path
+	 * @param bool $strict
+	 * @access public
+	 * @return bool
+	 */
+	public function zip( $zip, $path, $strict = false ){
+
+		/**
+		 * check permission on location of zip file
+		 */
+		if( !$this->hasPerm( $zip, 'w' ) )
+			return false;
+
+		/**
+		 * check permission to read all files
+		 * to be zipped
+		 */
+		$files = $this->readDir( $path, 'r', true, $strict );
+
+		if( !$files ) // readDir failed
+			return false;
+
+
+
 	}
 
 	public function unzip( $zip, $path ){
