@@ -88,17 +88,20 @@ class Group{
 		/**
 		 * check instance isn't already loaded
 		 */
+		$ids = array( );
 		foreach( $group_ids as $key => $id ){
 			if( !isset( self::$instances{ $id } ) )
-				unset( $group_ids[ $key ] );
+				array_push( $ids, $id );
 		}
+		
+		if( empty( $ids[ 0 ] ) )
+			return;
 
 		/**
 		 * get groups info from db
 		 */
-		$query = 'select * from ' . GROUPS . ' where';
-		$query = implode( ' id=', $group_ids ) . ',';
-		$query = substr( $query, 0, -1 );
+		$query = 'select * from ' . GROUPS . ' where id=';
+		$query .= implode( ' or id=', $ids );
 		$groups = rows( $query );
 
 		/**
@@ -126,7 +129,6 @@ class Group{
 			self::$instances{ $id } = new Group( $id );
 
 		return self::$instances{ $id };
-
 	}
 
 	/**
@@ -171,28 +173,6 @@ class Group{
 			return true;
 
 		return false;
-	}
-
-	/**
-	 * hasFilePerm
-	 *
-	 * checks if the group has permission to access a
-	 * file in the user files directory
-	 *
-	 * @param string $path
-	 * @access public
-	 * @return bool
-	 */
-	public function hasFilePerm( $path ){
-
-		/**
-		 * get file details from file manager
-		 */
-		$FIleManager = FileManager::getInstance( );
-		$file = $FileManager->getFile( $path );
-
-		
-
 	}
 
 	/**
