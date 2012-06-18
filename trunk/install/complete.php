@@ -29,6 +29,7 @@ $pages=$prefix.'pages';
 $users=$prefix.'users';
 $trash=$prefix.'trash';
 $groups=$prefix.'groups';
+$users_groups=$prefix.'users_groups';
 $options= $prefix . 'options';
 $files = $prefix . 'files';
 $hash=md5(mt_rand());
@@ -36,9 +37,9 @@ $site_url=$_SESSION['settings']['site_url'];
 $user_files=$_SESSION['settings']['user_files'];
 
 $pagecontent='
-<h1>Welcome to Furasta CMS</h1>
-<p>This is your new installation of Furasta CMS.</p>
-<p>To log in to your CP <a href=\'/admin\'>Click Here</a></p>
+<h1>Welcome to Furasta.Org</h1>
+<p>Welcome to your new installation of Furasta.Org Content Management System.</p>
+<p>To log in to the administration area <a href=\'' . $site_url . '/admin\'>Click Here</a></p>
 ';
 
 // pages
@@ -48,15 +49,19 @@ mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","D
 
 // user
 mysql_query('drop table if exists '.$users);
-mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,groups text,hash text,reminder text, data text)');
-mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","_superuser","'.$hash.'","","")');
+mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,hash text,reminder text, data text)');
+mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","'.$hash.'","","")');
 $user_id = mysql_insert_id( );
-
 
 // groups
 mysql_query( 'drop table if exists ' . $groups );
 mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text, file_perm text )' );
-mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "a,e,c,d,t,o,s,u", "|" )' );
+mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "a,e,c,d,t,o,s,u,f", "|" )' );
+
+// users_groups
+mysql_query( 'drop table if exists ' . $users_groups );
+mysql_query( 'create table ' . $users_groups . ' ( user_id int, group_id text )' );
+mysql_query( 'insert into ' . $users_groups . ' values ( 1, "_superuser" )' );
 
 // trash
 mysql_query('drop table if exists '.$trash);
@@ -69,15 +74,15 @@ mysql_query( 'create table ' . $options . ' (name text,value text,category text)
 
 // file manager
 mysql_query( 'drop table if exists ' . $files );
-mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, owner int, perm text, type text, public int, hash text )' );
+mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
 // file manager add initial directory structure
-mysql_query( 'insert into ' . $files . ' values( "", "users", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
+mysql_query( 'insert into ' . $files . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
 $fm_users_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "1", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+mysql_query( 'insert into ' . $files . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
 $fm_users_su_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "groups", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+mysql_query( 'insert into ' . $files . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
 $fm_groups_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "_superuser", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+mysql_query( 'insert into ' . $files . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
 $fm_groups_su_id = mysql_insert_id( );
 
 $filecontents='<?php
@@ -120,6 +125,7 @@ file_put_contents(HOME.'.settings.php',$filecontents) or error('Please grant <i>
 
 // dirs to create
 $dirs = array(
+	$user_files,
 	// system dirs
 	$user_files . 'cache',
 	$user_files . 'backup',
@@ -132,20 +138,7 @@ $dirs = array(
 	$user_files . 'files/users',
 	$user_files . 'files/users/' . $user_id,
 	$user_files . 'files/groups',
-	$user_files . 'files/groups/_superuser',
-	$user_files . 'db',
-	$user_files . 'db/' . $fm_users_id,
-	$user_files . 'db/' . $fm_users_id . '/' . $fm_users_su_id,
-	$user_files . 'db/' . $fm_groups_id,
-	$user_files . 'db/' . $fm_groups_id . '/' . $fm_groups_su_id
-);
-
-// symlinks to create for the file manager 
-$symlinks = array(
-	$user_files . 'files/.users.lnk' => $user_files . 'db/' . $fm_users_id . '/',
-	$user_files . 'files/users/.' . $user_id . '.lnk' => $user_files . 'db/' . $fm_users_id . '/' . $fm_users_su_id . '/',
-	$user_files . 'files/.groups.lnk' => $user_files . 'db/' . $fm_groups_id . '/',
-	$user_files . 'files/groups/._superuser.lnk' =>  $user_files . 'db/' . $fm_groups_id . '/' . $fm_groups_su_id . '/'
+	$user_files . 'files/groups/_superuser'
 );
 
 // create dirs
@@ -156,12 +149,6 @@ foreach( $dirs as $dir ){
 }
 if( $match == false )
 	die( 'could not create some of the required directories in the user dir. make sure your user dir is writable' );
-
-// create symlinks
-foreach( $symlinks as $link => $target ){
-	if( !file_exists( $link ) )
-		symlink( $target, $link );
-}
 
 $htaccess=
 	"# .htaccess - Furasta.Org\n".

@@ -284,6 +284,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		'USERS' => USERS,
 		'TRASH' => TRASH,
 		'GROUPS' => GROUPS,
+		'USERS_GROUPS' => USERS_GROUPS,
 		'FILES' => FILES,
 		'OPTIONS' => OPTIONS,
 		'SITEURL' => SITEURL,
@@ -747,19 +748,19 @@ function split_perm( $perms ){
 	);
 
 	// if no "|" symbol, can't process
-	if( strpos( '|', $perms ) === false )
+	if( strpos( $perms, '|' ) === false )
 		return $result;
 
-	$perms = explode( '|', $perms );
+	$perms = explode( $perms, '|' );
 
 	foreach( $perms as $i => $perm ){
-		if( strpos( '#', $perm ) === false ){
-			$result[ $i ][ 'users' ] = ( strpos( ',', $perm ) === false ) ? array( $perm ) : explode( ',', $perm );
+		if( strpos( $perm, '#' ) === false ){
+			$result[ $i ][ 'users' ] = explode( ',', $perm );
 		}
 		else{
-			$permissions = explode( '#', $perm );
-			$result[ $i ][ 'users' ] = ( strpos( ',', $perm[ 0 ] ) === false ) ? array( $perm[ 0 ] ) : explode( ',', $perm[ 0 ] );
-			$result[ $i ][ 'groups' ] = ( strpos( ',', $perm[ 1 ] ) === false ) ? array( $perm[ 1 ] ) : explode( ',', $perm[ 1 ] );
+			$permissions = explode( $perm, '#' );
+			$result[ $i ][ 'users' ] = explode( ',', $perm[ 0 ] );
+			$result[ $i ][ 'groups' ] = explode( ',', $perm[ 1 ] );
 		}
 	}
 
@@ -789,6 +790,9 @@ function split_perm( $perms ){
  * @return array
  */
 function merge_perm( $one, $two ){
+	if( empty( $one[ 0 ][ 'users' ] ) || empty( $two[ 0 ][ 'users' ] ) )
+		return $one;
+
 	$one[ 0 ][ 'users' ] = array_merge( $one[ 0 ][ 'users' ], $two[ 0 ][ 'users' ] );
 	$one[ 0 ][ 'groups' ] = array_merge( $one[ 0 ][ 'groups' ], $two[ 0 ][ 'groups' ] );
 	$one[ 1 ][ 'users' ] = array_merge( $one[ 1 ][ 'users' ], $two[ 1 ][ 'users' ] );
@@ -909,5 +913,26 @@ function tinymce( $name, $content, $config = 'Normal' ){
 	// return textarea
 	$content = '<textarea class="tinymce" name="' . $name . '" id="tinymce_' .$name . '">' . $content . '</textarea>';
 	return $content;
+}
+
+/**
+ * empty_array
+ *
+ * checks if there are empty elements in an array
+ *
+ * @param array $array
+ * @return bool
+ */
+function empty_array( $array ){
+
+	if( empty( $array ) )
+		return false;
+
+	foreach( $array as $element ){
+		if( empty( $element ) )
+			return true;
+	}
+
+	return false;
 }
 ?>

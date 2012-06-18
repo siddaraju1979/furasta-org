@@ -275,20 +275,26 @@ class User{
 	 	 * check permissions if not super user and permissions
 		 * check is required
 		 */
-		if( $user[ 'groups' ] != '_superuser' && !empty( $permissions ) ){
+		if( !empty( $permissions ) ){
 			$groups = explode( ',', $user[ 'groups' ] );
 			$perm = array( );
+			$match = false;
+
+			/**
+			 * if super user, has permission
+			 */
+			if( in_array( 1, $groups ) )
+				$match = true;
 	
 			foreach( $groups as $group ){
 				$Group = Group::getInstance( $group );
-				$perm = array_merge( $perm, $Group->perms( ) );
+				$perm = array_merge( $perm, $Group->perm( ) );
 			} 
 
 			// make sure user has login perms
 			if( !is_array( $permissions ) )
 				$permissions = array( $permissions );
 
-			$match = false;
 			foreach( $permissions as $p ){
 				if( in_array( $p, $perm ) )
 					$match = true;
@@ -317,6 +323,52 @@ class User{
 
 		return true;
 	}
+
+	/**
+	 * createInstances
+	 *
+	 * Used to create multiple instances of users
+	 * at once. Accepts an array of users ids and
+	 * creates instances of them, they can then be
+	 * reterived using the getInstance method.
+	 * This method uses one database query as opposed
+	 * to many.
+	 *
+	 * @param array $group_ids
+	 * @access public
+	 * @static
+	 * @return void
+	 */
+	public static function createInstances( $user_ids ){
+
+		/**
+		 * check instance isn't already loaded
+		 */
+		$ids = array( );
+		foreach( $user_ids as $key => $id ){
+			if( !isset( self::$instances{ $id } ) )
+				array_push( $ids, $id );
+		}
+
+		if( empty( $ids[ 0 ] ) )
+			return;
+
+		/**
+		 * get users info from db
+		 */
+		$query = 'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups  from ' . USERS . ',' . USERS_GROUPS . ' where (' . USERS . '.id=';
+		$query .= implode( ' or ' . USERS . '.id=', $ids );
+		$query .= ') and ' . USERS_GROUPS . '.user_id=' . USERS . '.id group by ' . USERS . '.id';
+		$users = rows( $query );
+
+		/**
+		 * create instances
+		 */
+		foreach( $users as $user )
+			self::$instances{ $user[ 'id' ] } = new User( $user );
+
+	}
+
 
 	/**
 	 * getInstance
@@ -351,17 +403,17 @@ class User{
 	 * __construct
 	 *
 	 * sets up the user. will take an id
-	 * but will use session id if isset and
-	 * no id given
+	 * or an array of user info
 	 *
-	 * @params int $id
+	 * @params int|array $user
 	 * @return bool
-	 * @access public
+	 * @access private
 	 */
-	public function __construct( $id ){
+	private function __construct( $user ){
 
-		$user = row( 'select * from ' . USERS . ' where id=' . $id );
-
+		if( !is_array( $user ) )
+			$user = row( 'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS . ' where ' . USERS_GROUPS . '.user_id=' . $user . ' group by ' . USERS . '.id' );
+			
 		// user doesn't exist
 		if( count( $user ) == 0 )
 			return false;		
@@ -373,26 +425,32 @@ class User{
 		$groups = $user[ 'groups' ];
 		$this->groups = array( );
 		$this->hash = $user[ 'hash' ];
-		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );
-		
-		// if not superuser check perms
-		if( $groups == '_superuser' ){
+		$this->data = json_decode( stripslashes( $user[ 'data' ] ), true );	
+
+		/**
+		 * create an instance of each group of which
+		 * the user is a member in order to inherit
+		 * permissions
+		 */
+		$groups = explode( ',', $groups );
+
+		/**
+		 * if superuser, set in _superuser field
+		 */
+		if( in_array( '_superuser', $groups ) ){
 			$this->_superuser = true;
+			unset( $groups[ array_search( '_superuser', $groups ) ] );
 		}
-		else{
-			/**
-			 * create an instance of each group of which
-			 * the user is a member in order to inherit
-			 * permissions
-			 */
-			$groups = explode( ',', $groups );
-			Group::createInstances( $groups );
-			foreach( $groups as $group ){
-				$this->groups{ $group } = Group::getInstance( $group );
-				$this->perm = array_merge( $this->perm, $this->groups{ $group }->perm( ) );
-				$this->filePerm = merge_perms( $this->filePerm, $this->groups{ $group }->filePerm( ) );
-			}
-		}	
+
+		Group::createInstances( $groups );
+		foreach( $groups as $id ){
+
+			array_push( $this->groups, $id );
+			$group = Group::getInstance( $id );
+
+			$this->perm = array_merge( $this->perm, $group->perm( ) );
+			$this->filePerm = merge_perm( $this->filePerm, $group->filePerm( ) );
+		}
 	
 		return true;
 	}
@@ -416,10 +474,11 @@ class User{
 	public static function login( $email, $password, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select id,email,password,hash,groups from ' . USERS
-			. ' where email="' . $email . '" and password="' . $password . '"'
+			'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS
+			. ' where ' . USERS . '.email="' . $email . '" and ' . USERS . '.password="' . $password . '"'
+			. ' and ' . USERS_GROUPS . '.user_id=' . USERS . '.id group by ' . USERS . '.id limit 1'
 		);
-
+	
 		return self::performLogin( $user, $permissions, $instance );
 
 	}
@@ -441,8 +500,9 @@ class User{
 	public static function loginHash( $userid, $hash, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select id,email,password,hash,groups from ' . USERS
-			. ' where id="' . $userid . '" and password="' . $hash . '"'
+			'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS
+			. ' where ' . USERS . '.password="' . $hash . '"'
+			. ' and ' . USERS_GROUPS . '.user_id=' . $userid . '.id group by ' . USERS . '.id limit 1'
 		);
 
 		return self::performLogin( $user, $permissions, $instance );
@@ -571,63 +631,6 @@ class User{
 	}
 
 	/**
-	 * hasFilePerm
-	 *
-	 * checks the user has permission to access a file
-	 * in the user files directory
-	 *
-	 * @param string $path
-	 * @access public
-	 * @return bool
-	 */
-	public function hasFilePerm( $owner, $rw ){
-
-		// if user is superuser bypass all permissions
-		if( $this->_superuser )
-			return true;
-
-		/**
-		 * true if user is trying to access his own file
-		 */
-		if( $this->id == $file[ 'owner' ] )
-			return true;
-
-		/**
-		 * switch between different permissions checks
-		 */
-		$rw = ( strlen( $rw ) > 1 ) ? explode( '', $rw ) : array( $rw );
-		foreach( $rw as $check ){
-
-			switch( $check ){
-
-				case 'r':
-				break;
-				case 'w':
-					/**
-					 * if user has admin permissions over the owner
-					 * of the file, return true
-					 */
-					if( in_array( $file[ 'owner' ], $this->file_perm{ 1 }{ 'users' } ) )
-						return true;
-
-					/**
-					 * if groups are set, they must be checked
-					 */
-					$User = User::getInstance( $file[ 'owner' ] );
-					foreach( $User->groups( ) as $id => $Group ){
-						if( in_array( $id, $this->file_perm{ 1 }{ 'groups' } ) )
-							return true;
-					}
-				break;
-			}
-
-		}
-
-		// nothing left to check, permission not granted
-		return false;
-	}
-
-	/**
 	 * adminPagePerm
 	 * 
 	 * used to check if the user has permission
@@ -676,7 +679,7 @@ class User{
 				 * if user is in group, then he has
 				 * permission
 				 */
-				if( isset( $this->groups{ $group } ) )
+				if( in_array( $group, $this->groups ) )
 					return true;
 		
 			}
@@ -753,7 +756,7 @@ class User{
 				 * if user is in group, then he has
 				 * permission
 				 */
-				if( isset( $this->groups{ $group } ) )
+				if( in_array( $group, $this->groups ) )
 					return true;
 		
 			}
@@ -965,17 +968,13 @@ class User{
 	/**
 	 * groups
 	 *
-	 * accessor method for groups, returns an array in format:
-	 *
-	 * group_id => group_class_instance
+	 * accessor method for groups, returns an array
+	 * of group ids of which this user is a member
 	 *
 	 * @access public
 	 * @return array
 	 */
 	public function groups( ){
-		if( $this->_superuser )
-			return '_superuser';
-
 		return $this->groups;
 	}
 

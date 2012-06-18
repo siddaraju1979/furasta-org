@@ -126,6 +126,33 @@ class FileManager{
 	}
 
 	/**
+	 * checkFileName
+	 *
+	 * checks if a filename is valid. files are only allowed
+	 * one extension - no extensions or multiple extensions
+	 * cause the method to return false. accepts a $path
+	 *
+	 * @param string $path
+	 * @static
+	 * @access private
+	 * @return bool
+	 */
+	private static function checkFileName( $path ){
+
+		$file = basename( $file );
+
+		/**
+		 * if path contains more or less than one ".",
+		 * it's invalid
+		 */
+		if( strpos( '.', $path ) != 1 )
+			return $this->setError( 10, $file ); 
+
+		return true;
+
+	}
+
+	/**
 	 * updateInfo
 	 *
 	 * updates info on a file keeping the database
@@ -214,14 +241,14 @@ class FileManager{
 	 *
 	 * @param string $path
 	 * @access public
-	 * @return array $file
+	 * @return array|bool $file
 	 */
 	public function getFile( $path ){
 
 		if( !isset( $this->files{ $path } ) ){
 			$file = row( 'select * from ' . FILES . ' where path="' . addslashes( $path ) . '"' );
 			if( !$file ) // file is not in db
-				return false;
+				return $this->setError( 11, $path );
 			$this->files{ $path } = $file;
 		}
 		
@@ -236,8 +263,8 @@ class FileManager{
 	 * a file in the user files directory.
 	 *
 	 * $rw defines what permissions are being checked
-	 * and must be one of or a combination of (such as
-	 * rw or wv) the following:
+	 * and must be one of the following:
+	 *
 	 * r - read
 	 * w - write
 	 * v - view (checks if the file is public/private)
@@ -250,39 +277,26 @@ class FileManager{
 	 * @param int $id
 	 * @access public
 	 * @return bool
-	 *
-	 *
-	 * @todo remove $rw as multiple character delimited values as
-	 * return false must be used for default permissions check
 	 */
 	public function hasPerm( $file, $rw = 'r', $id = false ){
 		
 		/**
-		 * get file details
+		 * make sure path is valid
 		 */
-
 		if( !self::checkPath( $file ) )
 			return false;
 
+		/**
+		 * get user and file info
+		 */
 		$file = $this->getFile( $file );
+		$User = User::getInstance( $id );
 
 		/**
-	 	 * if user/group administers files for this user, then
-		 * don't bother checking file permissions just return true
+		 * file not found
 		 */
-		$User = User::getInstance( $id );
-		if( $User ){
-
-			/**
-			 * user is trying to access their own
-			 * file
-			 */
-			if( $file[ 'owner' ] == $User->id( ) )
-				return true;			
-
-
-
-		}
+		if( !$file )
+			return false;
 
 		/**
 		 * split file permissions string from db into
@@ -293,131 +307,156 @@ class FileManager{
 		/**
 		 * switch between different permissions checks
 		 */
-		$rw = ( strlen( $rw ) > 1 ) ? explode( '', $rw ) : array( $rw );
-		foreach( $rw as $check ){
+		switch( $check ){
+			case 'v': // check if is public
+				/**
+				 * if super user, return true
+				 */
+				if( $User && $User->isSuperUser( ) )
+					return true;
 
-			switch( $check ){
-				case 'v': // check if is public
-					/**
-					 * if super user, return true
-					 */
-					if( $User->isSuperUser( ) )
+				/**
+				 * if file is public, return true
+				 */
+				if( $file[ 'public' ] == 1 )
+					return true;
+
+				return $this->setError( 3, $file[ 'name' ] );
+			break;
+			case 'r': // check if is readable by user
+
+				/**
+				 * must be logged in
+				 */
+				if( !$User )
+					return $this->setError( 9 );
+
+				/**
+				 * if super user, return true
+				 */
+				if( $User->isSuperUser( ) )
+					return true;
+
+				/**
+				 * if user does not have permission to manage
+				 * files, return false
+				 */
+				if( !$User->hasPerm( 'f' ) )
+					return $this->setError( 12 );
+
+				/**
+				 * if user is accessing their own file, return true
+				 */
+				if( $file[ 'owner' ] == $User->id( ) )
+					return true;
+
+				/**
+				 * if user is in array of users allowed to access
+				 * file, return true
+				 */
+				if( in_array( $User->id( ), $read[ 'users' ] ) )
+					return true;
+
+				/**
+				 * if one of the user's groups is allowed to access
+				 * the file, return true
+				 */
+				foreach( $User->groups( ) as $id ){
+					if( in_array( $id, $read[ 'groups' ] ) )
 						return true;
+				}
 
-					if( $file[ 'public' ] == 0 )
-						return false;
-				break;
-				case 'r': // check if is readable by user
+				/**
+				 * if user has admin permissions over the owner
+				 * of the file, return true
+				 */
+				list( $u_read, $u_write ) = $User->filePerm( );
+				if( in_array( $file[ 'owner' ], $u_read[ 'users' ] ) )
+					return true;
 
-					/**
-					 * must be logged in
-					 */
-					if( !$User )
-						return $this->setError( 9 );
-
-					/**
-					 * if super user, return true
-					 */
-					if( $User->isSuperUser( ) ){
-						$match = true;
-						break;
-					}
-
-					/**
-					 * if user does not have permission to manage
-					 * files, return false
-					 */
-					if( !$User->hasPerm( 'f' ) )
-						return $this->setError( 1, $file );
-
-					/**
-					 * if user is in array of users allowed to access
-					 * file, return true
-					 */
-					if( in_array( $User->id( ), $read[ 'users' ] ) ){
-						$match = true;
-						break;
-					}
-
-					/**
-					 * if one of the user's groups is allowed to access
-					 * the file, return true
-					 */
-					foreach( $User->groups( ) as $id => $Group ){
-						if( in_array( $id, $read[ 'groups' ] ) ){
-							$match = true;
-							break;
-						}
-					}
-					if( !$match ) // user does not have permission to view file
-						return $this->setError( 1, $file );
-
-
-					/**
-					 * if user has admin permissions over the owner
-					 * of the file, return true
-					 */
-					$perm = $User->filePerm( );
-					if( in_array( $file[ 'owner' ], $perm[ 0 ][ 'users' ] ) )
+				/**
+				 * if user has admin permissions over a group of which
+				 * the owner of the group is a member, return true
+				 */
+				$Owner = User::getInstance( $file[ 'owner' ] );
+				foreach( $Owner->groups( ) as $id ){
+					if( in_array( $id, $u_read[ 'groups' ] ) )
 						return true;
+				}
 
-					/**
-					 * if one of the user's groups has admin permissions
-					 * over the owner of the file, return true
-					 */
-					$User = User::getInstance( $file[ 'owner' ] );
-					foreach( $User->groups( ) as $id => $Group ){
-						if( in_array( $id, $perm[ 0 ][ 'groups' ] ) )
-							return true;
-					}
+				/**
+				 * permission failure
+				 */
+				return $this->setError( 1, $file[ 'name' ] );
+			break;
+			case 'w': // check if is writable by user
 
-					
-				break;
-				case 'w': // check if is writable by user
+				/**
+				 * must be logged in
+				 */
+				if( !$User )
+					return $this->setError( 9 );
 
-					/**
-					 * must be logged in
-					 */
-					if( !$User )
-						return $this->setError( 9 );
+				/**
+				 * if is system file/folder (ie. owner=0) then
+				 * return false
+				 */
+				if( $file[ 'owner' ] == 0 )
+					return $this->setError( 8, $file );
 
-					/**
-					 * if is system file/folder (ie. owner=0) then
-					 * return false
-					 */
-					if( $file[ 'owner' ] == 0 )
-						return $this->setError( 8, $file );
+				/**
+				 * if user does not have permission to manage
+				 * files, return false
+				 */
+				if( !$User->hasPerm( 'f' ) )
+					return $this->setError( 12 );
 
-					/**
-					 * if super user, return true
-					 */
-					if( $User->isSuperUser( ) )
+				/**
+				 * if user is accessing their own file, return true
+				 */
+				if( $file[ 'owner' ] == $User->id( ) )
+					return true;
+
+				/**
+				 * if user is in array of users allowed to access
+				 * file, return true
+				 */
+				if( in_array( $User->id( ), $write[ 'users' ] ) )
+					return true;
+
+				/**
+				 * if one of the user's groups is allowed to access
+				 * the file, return true
+				 */
+				foreach( $User->groups( ) as $id ){
+					if( in_array( $id, $write[ 'groups' ] ) )
 						return true;
+				}
 
-					/**
-					 * if user does not have permission to manage
-					 * files, return false
-					 */
-					if( !$User->hasPerm( 'f' ) )
-						return $this->setError( 2, $file );
+				/**
+				 * if user has admin permissions over the owner
+				 * of the file, return true
+				 */
+				list( $u_read, $u_write ) = $User->filePerm( );
+				if( in_array( $file[ 'owner' ], $u_write[ 'users' ] ) )
+					return true;
 
-					// if not in users array, check groups array
-					if( !in_array( $User->id( ), $write[ 'users' ] ) ){
-						foreach( $User->groups( ) as $Group ){
-							if( in_array( $Group->id( ), $write[ 'groups' ] ) ){
-								$match = true;
-								break;
-							}
-						}
-						if( !$match ) // user does not have permission to view file
-							return $this->setError( 2, $file );
-					}
-				break;
-			}
+				/**
+				 * if user has admin permissions over a group of which
+				 * the owner of the group is a member, return true
+				 */
+				$Owner = User::getInstance( $file[ 'owner' ] );
+				foreach( $Owner->groups( ) as $id ){
+					if( in_array( $id, $u_write[ 'groups' ] ) )
+						return true;
+				}
 
+				/**
+				 * permission check failed
+				 */
+				return $this->setError( 2, $file[ 'name' ] );
+			break;
 		}
-
-		return false;
 
 	}
 
@@ -439,20 +478,25 @@ class FileManager{
 	 */
 	private function setError( $id = 0, $params = false ){
 
-		// do not rely on this, a temporary array to
-		// hold error descriptions pending language
-		// support additions
+		/**
+		 * a temporary array to hold error descriptions
+		 * pending language support additions
+		 * @todo enable language support
+		 */
 		$errors = array(
-			0 => 'An unknown error occured',
-			1 => 'You have insufficient privilege to read %1',
-			2 => 'You have insufficient privilege to write %1',
-			3 => 'You have insufficient privilege to view %1',
-			4 => 'The path %1 is invalid',
-			5 => 'You have insufficient system permissions to perform that action. Please grant write access to the ' . USER_FILES . '/files directory',
-			6 => 'The %1 at %2 cannot be created as it already exists',
-			7 => 'There was a problem querying the database. The following query caused the error: %1',
-			8 => 'The path %1 contains a Furasta.Org system file which cannot be written',
-			9 => 'User must be logged in to perform this action',
+			0	=>	'An unknown error occured',
+			1	=>	'You have insufficient privilege to read "%1"',
+			2	=>	'You have insufficient privilege to write "%1"',
+			3	=>	'You have insufficient privilege to view "%1"',
+			4	=>	'The path "%1" is invalid',
+			5	=>	'You have insufficient system permissions to perform that action. Please grant write access to the "' . USER_FILES . '/files" directory',
+			6	=>	'The "%1" at "%2" cannot be created as it already exists',
+			7	=>	'There was a problem querying the database. The following query caused the error: %1',
+			8	=>	'The path "%1" contains a Furasta.Org system file which cannot be written',
+			9	=>	'User must be logged in to perform this action',
+			10	=>	'The file name "%1" is invalid. Files must have one extension, file names with more that one extension or no extension are invalid,',
+			11	=>	'The file "%1" could not be found in the database.',
+			12	=>	'You do not have permission to manage files. Please contact the system administrator',
 		);
 
 		$this->error{ 'id' } = $id;
@@ -673,9 +717,9 @@ class FileManager{
 		 * create anonymous function to remove
 		 * directory
 		 */
-		$fn = function( $file, $dest ){
-			return rename( $file, USER_FILES . '/' . $dest );
-		}
+//		$fn = function( $file, $dest ){
+//			return rename( $file, USER_FILES . '/' . $dest );
+//		}
 		
 		/**
 		 * call 
@@ -916,9 +960,9 @@ class FileManager{
 		 * create anonymous function to remove
 		 * directory
 		 */
-		$fn = function( $file, $dest ){
-			return rename( $file, USER_FILES . '/' . $dest );
-		}
+//		$fn = function( $file, $dest ){
+//			return rename( $file, USER_FILES . '/' . $dest );
+//		}
 		
 		/**
 		 * rename all files, error check

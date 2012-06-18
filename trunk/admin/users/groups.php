@@ -42,7 +42,7 @@ $content='
 			$i = 0;
 			foreach( $perms as $value => $name ){
 
-			        $content .= '<td><input type="checkbox" class="checkbox" name="perms" value="' . $value . '"/> ' . $name . '</td>';
+			        $content .= '<td><input type="checkbox" class="checkbox" name="group" value="' . $value . '"/> ' . $name . '</td>';
 
 			        if( ( $i + 1 ) % 3 == 0 && ( $i + 1 ) < count( $perms ) )
 			                $content .= '</tr><tr>';

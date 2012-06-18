@@ -27,13 +27,13 @@
  * @param string $name
  * @param string $email
  * @param string $password
- * @param array $groups optional
+ * @param array $groups
  * @param array $data optional
  * @param array $options optional
  * @param array $mail optional
  * @return int|bool $id
  */
-function user_create( $name, $email, $password, $groups = array( ), $data = array( ), $options = array( ), $mail = true ){
+function user_create( $name, $email, $password, $groups, $data = array( ), $options = array( ), $mail = true ){
 
 	/**
 	 * if email is in use, return false
@@ -50,12 +50,12 @@ function user_create( $name, $email, $password, $groups = array( ), $data = arra
 		. '"",'
 		. '"' . $name . '",'
 		. '"' . $email . '",'
-		. '"' . $password . '",'
+		. '"' . md5( $password ) . '",'
 		. '"' . $hash . '",'
 		. '"",'
 		. '"' . json_encode( $data ) . '"'
 	. ')' );
-        $id = mysql_last_insert( );
+        $id = mysql_insert_id( );
 
 	/**
 	 * add to groups table for each group
@@ -80,16 +80,17 @@ function user_create( $name, $email, $password, $groups = array( ), $data = arra
 
         // default email
 	if( $mail ){
-            $mail[ 'subject' ] = 'User Activation - Furasta.Org';
-            $mail[ 'message' ] = $name . ',<br/>
-            	<br/>
-                Please activate your new user by clicking on the link below:<br/>
-                <br/>
-                <a href="' . SITEURL . 'admin/users/activate.php?hash=' . $hash . '">'
-                    . $url . '/admin/users/activate.php?hash=' . $hash . '</a><br/>
-                <br/>
-                If you are not the person stated above please ignore this email.<br/>
-            ';
+		$mail = array( );	
+		$mail[ 'subject' ] = 'User Activation - Furasta.Org';
+		$mail[ 'message' ] = $name . ',<br/>
+		<br/>
+		Please activate your new user by clicking on the link below:<br/>
+		<br/>
+		<a href="' . SITEURL . 'admin/users/activate.php?hash=' . $hash . '">'
+		    . $url . '/admin/users/activate.php?hash=' . $hash . '</a><br/>
+		<br/>
+		If you are not the person stated above please ignore this email.<br/>
+		';
         }
         
         // send notification email to user

@@ -77,19 +77,16 @@ echo '
 		</div>
 		<div id="bottom">
                         <p class="right"><a href="settings.php?page=edit-users&id=' . $User->id( ) . '">'. $User->name( ) .'</a> - ' 
-			. $Template->e( 'group' ) . ': ';
+			. $Template->e( 'group' ) . 's: ';
 
 // print user groups
 $gs = array( );
 $Groups = $User->groups( );
-if( $Groups == '_superuser' )
-	echo '_superuser';
-else{
-	foreach( $User->groups( ) as $Group ){
-		array_push( $gs, '<a href="settings.php?page=edit-groups&id=' . $Group->id( ) .'">'. $Group->name( ) . '</a>' );
-	}
-	echo implode( ',', $gs );
+foreach( $Groups as $id ){
+	$Group = Group::getInstance( $id );
+	array_push( $gs, '<a href="settings.php?page=edit-groups&id=' . $Group->id( ) .'">'. $Group->name( ) . '</a>' );
 }
+echo implode( ',', $gs );
 
 echo '
 			</p>

@@ -33,6 +33,8 @@ $(document).ready(function(){
 
 		var saveFunction = function( ){
 
+			$( '#form-error' ).html( '' );
+
                         var conds = {
                                 "Name" : {
 					'name' : trans( 'name' ),
@@ -52,10 +54,6 @@ $(document).ready(function(){
                                 "Repeat-Password" : {
 					'name' : trans( 'users_repeat_pass' ),
                                         "required" : true
-                                },
-                                "Group":{
-					'name' : trans( 'group' ),
-                                        "required" : true
                                 }
                         };
 
@@ -68,22 +66,30 @@ $(document).ready(function(){
 			var result = $( "#new-user-content" ).validate( "execute" );
 
                         if( result == false )
-
                                 return;
 
                         $( "#form-error" ).html( '<img src="' + window.furasta.site.url + '_inc/img/loading.gif"/> ' + trans( 'loading' ) + '..' );
 
-			var name = $( "input[name=\'Name\']" ).val( );
+			var name = $( "input[name='Name']" ).val( );
 
-                        var email = $( "input[name=\'Email\']" ).val( );
+                        var email = $( "input[name='Email']" ).val( );
 
-                        var password = $( "input[name=\'Password\']" ).val( );
+                        var password = $( "input[name='Password']" ).val( );
 
-                        var repeat = $( "input[name=\'Repeat-Password\']" ).val( );
+                        var repeat = $( "input[name='Repeat-Password']" ).val( );
 
-                        var group = $( "select[name=\'Group\']" ).val( );
+			// get groups in array
+			var groups = [];
+                        $( "#new-user-dialog .checkbox:checked" ).each(function(){
+				groups.push( $(this).val( ) );
+			});
+			groups.join( ',' );
 
-			var group_name = $( "select[name=\'Group\'] option:selected" ).text( );
+			// throw error if no groups selected
+			if( groups.length == 0 ){
+				$( '#form-error' ).html( "You must select at least one group" );
+				return;
+			}
 
 			$.ajax({
 
@@ -91,7 +97,7 @@ $(document).ready(function(){
 
 				url : window.furasta.site.url + "_inc/ajax.php?file=admin/users/new-user.php",
 
-				data: "name=" + name + "&email=" + email + "&password=" + password + "&repeat=" + repeat + "&group=" + group,
+				data: "name=" + name + "&email=" + email + "&password=" + password + "&repeat=" + repeat + "&groups=" + groups,
 
                                 success : function( html ){
 

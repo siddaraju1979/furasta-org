@@ -38,22 +38,23 @@ $content='
 				<td><input type="password" name="Repeat-Password" value=""/></td>
 			</tr>
 			<tr>
-				<td>Group:</td>
-				<td><select name="Group" id="group">';
+				<td colspan="2"><h2>Groups</h2></td>
+			</tr>
+			<tr>';
 
-/**
- * get groups from database, reorder the array for use later
- * and print options for select box
- */
-$groups = rows( 'select id,name from ' . GROUPS );
-$Groups = array( );
-foreach( $groups as $group ){
-	$Groups[ $group[ 'id' ] ] = $group[ 'name' ];
-	$content .= '<option value="' . $group[ 'id' ] . '">' . $group[ 'name' ] . '</option>';
-}
+			/**
+			 * iterate through groups and print checkboxes 
+			 */
+			$groups = rows( 'select id,name from ' . GROUPS );
+			for( $i = 0; $i < count( $groups ); $i++ ){
+
+			        $content .= '<td><input type="checkbox" class="checkbox" name="groups" value="' . $groups[ $i ][ 'id' ] . '"/> ' . $groups[ $i ][ 'name' ] . '</td>';
+			        if( ( $i + 1 ) % 3 == 0 && ( $i + 1 ) < count( $groups ) )
+			                $content .= '</tr><tr>';
+			}
+
 
 $content.='
-				</td>
 			</tr>
 		</table>
 	</form>
@@ -64,15 +65,15 @@ $content.='
 <span><span id="header-Users" class="header-img">&nbsp;</span> <h1 class="image-left">Users</h1></span>
 <br/>';
 
-// check if superuser, saves checking again later
-$super = ( $User->groups( ) == '_superuser' );
+// check if superuser, saves checki$super = ( $User->groups( ) == '_superuser' );
+$super = $User->isSuperUser( );
 
 $content .= '
 <table id="users" class="row-color">
 	<tr class="top_bar">
 		<th>Name</th>
 		<th>Email</th>
-		<th>Group</th>';
+		<th>Groups</th>';
 if( $super )
 	$content .= '<th>Login</th>';
 
@@ -82,48 +83,47 @@ $content .= '
 ';
 
 /**
- * print users from database
+ * get users from database and create instances of the user class
  */
-$query = query( 'select id,name,email,password,groups,hash from ' . USERS . ' order by id' );
-while( $row = mysql_fetch_array( $query ) ){
-	$id = $row['id'];
+$users = rows( 'select id from ' . USERS );
+$ids = array( );
+foreach( $users as $user )
+	array_push( $ids, $user[ 'id' ] );
+User::createInstances( $ids );
+
+foreach( $ids as $id ){
+	$user = User::getInstance( $id );
 
 	/**
 	 * get names of groups the user is a member of
 	 */
-	if( $row[ 'groups' ] == '_superuser' ){
-		$group = '_superuser';
-		$delete = '';
-	}
-	else{
-		$groups = ( strpos( ',', $groups ) === false )
-			? array( $row[ 'groups' ] )
-			: explode( ',', $row[ 'groups' ] );
-		$group = '';
+	$group = '';
 
-		foreach( $groups as $gid ){
-			if( isset( $Groups[ $gid ] ) )
-				$group .= $Groups[ $gid ] . '<br/>';
-		}
-
-		$delete = '<a id="' . $id . '" class="delete link"><span class="admin-menu-img" id="delete-img"'
-			. ' title="Delete User" alt="Delete User"/></a>';
+	if( $user->isSuperUser( ) ) // if is super user, show in groups
+		$group .= '<b>_superuser</b><br/>';
+	
+	foreach( $user->groups( ) as $id ){
+		$g = Group::getInstance( $id );
+		$group .= $g->name( ) . '<br/>';
 	}
 
-	$href = '<a href="users.php?page=edit-users&id='.$id.'" class="list-link">';
-	$content.='<tr>
-			<td class="first">'.$href.$row['name'].'</a></td>
-			<td>'.$href.$row['email'].'</a></td>
-			<td>'.$href.$group.'</a></td>';
-	if( $super && $row[ 'hash' ] == 'activated' )
-		$content .= '<td><a class="link loginas" user_id="' . $id . '" hashstr="' . $row[ 'password' ] . '">Login</a></td>';
+	$delete = '<a id="' . $user->id( ) . '" class="delete link"><span class="admin-menu-img" id="delete-img"'
+		. ' title="Delete User" alt="Delete User"/></a>';
+
+	$href = '<a href="users.php?page=edit-users&id=' . $user->id( ) . '" class="list-link">';
+	$content .= '<tr>
+			<td class="first">' . $href . $user->name( ) . '</a></td>
+			<td>' . $href . $user->email( ) . '</a></td>
+			<td>' . $href . $group . '</a></td>';
+	if( $super )
+		$content .= '<td><a class="link loginas" user_id="' . $user->id( ) . '" hashstr="' . $user->password( ) . '">Login</a></td>';	
 	$content .= '
 			<td>' . $delete . '</td>
 		</tr>';
 }
 
-$content.='<tr><th colspan="6"></th></tr></table>';
+$content .= '<tr><th colspan="6"></th></tr></table>';
 
-$Template->add('content',$content);
+$Template->add( 'content', $content );
 
 ?>
