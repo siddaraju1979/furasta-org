@@ -159,8 +159,8 @@ function frontend_breadcrumbs( $params ){
  * @todo manually cache css/js files added here
  * @return string of metadata
  */
-function frontend_metadata( $params, &$smarty ){
-	$content = strip_html_tags( frontend_page_content( $params, &$smarty, true ) );
+function frontend_metadata( $params, $smarty ){
+	$content = strip_html_tags( frontend_page_content( $params, $smarty, true ) );
 	$keywords = meta_keywords( $content );
 	$description = substr( $content, 0, 250 ) . '...';
 
@@ -291,7 +291,7 @@ function frontend_javascript_load( $params ){
  * @params array $params
  * @return void
  */
-function frontend_page_content( $params, &$smarty, $silent = false ){
+function frontend_page_content( $params, $smarty, $silent = false ){
 	$type = $smarty->getTemplateVars( 'page_type' );
 
 	// capture output to variable
@@ -348,5 +348,4 @@ function strip_html_tags( $text ){
 	$text = str_replace( array( "\n", "\t", "  ", "   ", "    ", "     ", "      ", "       ", "        " ), ' ', $text );
 	return $text;
 }
-
 ?>

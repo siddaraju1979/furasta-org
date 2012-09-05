@@ -11,7 +11,6 @@
  * @package	admin_template
  */
 
-ob_start('ob_gzhandler');
 header('Content-Type: text/html; charset=UTF-8');
 
 foreach( $Template->cssUrls( ) as $url )
