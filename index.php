@@ -13,7 +13,6 @@
  * @package    admin_overview
  */
 
-ob_start('ob_gzhandler');
 header('Connection: close');
 header('Content-type: text/html; charset: UTF-8');
 

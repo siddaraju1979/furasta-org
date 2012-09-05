@@ -22,6 +22,11 @@ $Smarty->template_dir = $smarty_dir . 'templates';
 $Smarty->compile_dir = $smarty_dir . 'templates_c';
 
 /**
+ * set errors only for warnings
+ */
+//$Smarty->error_reporting = E_ERROR;
+
+/**
  * set smarty delimiters to "[" and "]"
  */
 $Smarty->left_delimiter = '[';

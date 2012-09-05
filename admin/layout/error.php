@@ -12,7 +12,6 @@
  */
 
 ob_end_clean( );
-ob_start('ob_gzhandler');
 header('Content-Type: text/html; charset=UTF-8');
 
 $Template->loadCSS('_inc/css/admin.css');

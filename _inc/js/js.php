@@ -21,7 +21,6 @@ $cache_file=$_SERVER['QUERY_STRING'];
 if($cache_file==''||strpos($cache_file,'..')!==false)
 	die('hash cannot be blank, or contain ".." for security reasons.');
 
-ob_start('ob_gzhandler');
 header('Content-type: text/javascript; charset: UTF-8');
 header('Expires: '.gmdate( "D, d M Y H:i:s",time()+'35000000').' GMT');
 header('Cache-Control: public, max-age=35000000');
