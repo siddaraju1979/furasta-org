@@ -317,7 +317,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 			)
 		);
 	}
-	resolve_dependencies( $plugins, &$PLUGINS );
+	resolve_dependencies( $plugins, $PLUGINS );
 
 	/**
          * plugins - filter the settings, constants and plugins arrays 
@@ -812,10 +812,10 @@ function merge_perm( $one, $two ){
  * to the list of installed plugins
  *
  * @param array $plugins
- * @param array &$NEWPLUGINS
- * @return void
+ * @param array $NEWPLUGINS
+ * @return arrray
  */
-function resolve_dependencies( $plugins, &$NEWPLUGINS ){
+function resolve_dependencies( $plugins, $NEWPLUGINS ){
 
 	global $PLUGINS;
 
@@ -880,6 +880,8 @@ function resolve_dependencies( $plugins, &$NEWPLUGINS ){
 
 		$NEWPLUGINS[ $plugins[ $i ][ 'sys_name' ] ] = $plugins[ $i ][ 'version' ];
 	}
+
+        return $NEWPLUGINS;
 
 }
 
