@@ -31,6 +31,7 @@ if( file_exists( HOME . '.settings.php' ) ){
 echo '
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
 <noscript><meta http-equiv="refresh" content="0;url=../_inc/noscript.php"></noscript>
 <title>Furasta.Org Installation</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
@@ -87,5 +88,7 @@ function calculate_url( ){
 
         return $url;
 }
+
+define( 'SITE_URL', calculate_url( ) );
 
 ?>

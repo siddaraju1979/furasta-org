@@ -70,7 +70,7 @@ function checkConnection(details){
 	$.ajax({
 		type: "POST",
 		data: dataString,
-		url:'/install/connection.php?hash='+hash,
+		url:'connection.php?hash='+hash,
 		async: false,
                 success:function(html){
 			window.html=html;

@@ -28,8 +28,6 @@ if(isset($_POST['submit'])){
 	if( empty( $_SESSION['settings']['title'] ) || empty( $_SESSION['settings']['sub_title'] )
 		|| empty( $_SESSION['settings']['user_files'] ) || empty( $_SESSION['settings']['site_url'] ) )
 		$error = 'The Site Title, Site Sub Title, User Files and Site URL fields are required';
-	elseif( !is_writable( $_SESSION['settings']['user_files'] ) )
-		$error = 'The User Files dir must be writable';
 	else{
 	        $_SESSION['complete']=1;
 	        header('location: complete.php');

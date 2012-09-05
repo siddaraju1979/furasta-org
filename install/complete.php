@@ -73,6 +73,7 @@ mysql_query( 'drop table if exists ' . $options );
 mysql_query( 'create table ' . $options . ' (name text,value text,category text)' );
 
 // file manager
+// @todo this should be changed, i don't like how these values are hard coded
 mysql_query( 'drop table if exists ' . $files );
 mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
 // file manager add initial directory structure

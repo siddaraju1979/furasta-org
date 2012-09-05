@@ -54,7 +54,7 @@ $( document ).ready( function( ){
 		}
 	);
 	$( "#install" ).submit( function( ){
-		$("#check_connection").html("<img src=\"/_inc/img/loading.gif\"/> Checking Details...");
+		$("#check_connection").html("<img src=\"' . SITE_URL . '/_inc/img/loading.gif\"/> Checking Details...");
 		var connection=checkConnection(["Hostname","Username","DatabaseName","Password"]);
 		$("input[name=DatabaseName]").removeClass("error");
 		$("input[name=Hostname]").removeClass("error");
