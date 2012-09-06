@@ -97,7 +97,7 @@ define(\'FILES\',\'' . $files . '\');
 define(\'TEMPLATE_DIR\',\''.HOME.'_www/vitruvius/\');
 define(\'PREFIX\',\''.$prefix.'\');
 define(\'VERSION\',\'0.9.2\');
-define(\'SITEURL\',\''.$site_url.'\');
+define(\'$site_url\',\''.$site_url.'\');
 define(\'USER_FILES\',\''.$user_files.'\');
 define(\'DIAGNOSTIC_MODE\', 0 );
 define(\'LANG\', \'English\' );
@@ -152,40 +152,63 @@ foreach( $dirs as $dir ){
 if( $match == false )
 	die( 'could not create some of the required directories in the user dir. make sure your user dir is writable' );
 
+/**
+ * taken from _inc/function/system.php
+ * @todo find better way of doing this - causes
+ * inconsistency in code when system.php is altered
+ * and this isn't
+ */
+
+$rules = array(
+        'admin'         => 'RewriteRule ^admin[/]*$ ' . $site_url . 'admin/index.php [L]',
+        'sitemap'       => 'RewriteRule ^sitemap.xml ' . $site_url . '_inc/sitemap.php [L]',
+        'files'         => 'RewriteRule ^files/(.*)$ ' . $site_url . '_inc/files.php?name=$1 [QSA,L]',
+        'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . $site_url . 'index.php?page=$1 [QSA,L]',
+);
+
 $htaccess=
-	"# .htaccess - Furasta.Org\n".
-	"<IfModule mod_deflate.c>\n".
-	"       SetOutputFilter DEFLATE\n".
-	"       Header append Vary User-Agent env=!dont-vary\n".
-	"</IfModule>\n\n".
+        "# .htaccess - Furasta.Org\n".
+        "<IfModule mod_deflate.c>\n".
+        "	SetOutputFilter DEFLATE\n".
+        "	Header append Vary User-Agent env=!dont-vary\n".
+        "</IfModule>\n\n".
 
-	"php_flag magic_quotes_gpc off\n\n".
+        "php_flag magic_quotes_gpc off\n\n".
 
-	"RewriteEngine on\n".
-	"RewriteCond %{SCRIPT_NAME} !\.php\n".
-	"RewriteRule ^admin$ /admin/ [L]\n".
-	"RewriteRule ^files/(.*)$ /_user/files.php?name=$1 [L]\n".
-	"RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]\n\n".
+        "RewriteEngine on\n".
+        "RewriteCond %{SCRIPT_NAME} !\.php\n";
 
-	"AddCharset utf-8 .js\n".
-	"AddCharset utf-8 .xml\n".
-	"AddCharset utf-8 .css\n".
-	"AddCharset utf-8 .php";
+foreach( $rules as $rule ){
+        $htaccess .= $rule . "\n";
+}
+
+$htaccess .=
+        "\nAddCharset utf-8 .js\n".
+        "AddCharset utf-8 .xml\n".
+        "AddCharset utf-8 .css\n".
+        "AddCharset utf-8 .php";
 
 file_put_contents(HOME.'.htaccess',$htaccess);
 
 if($_SESSION['settings']['index']=='0')
-	$robots=
-	"# robots.txt - Furasta.Org\n".
-	"User-agent: *\n".
-	"Disallow: /admin\n".
-	"Disallow: /install\n".
-	"Disallow: /_user";
-else
-	$robots=
-	"# robots.txt - Furasta.Org\n".
-	"User-agent: *\n".
-	"Disallow: /\n";
+
+        $robots=
+        "# robots.txt - Furasta.Org\n".
+        "User-agent: *\n".
+        "Disallow: " . $site_url . "admin\n".
+        "Disallow: " . $site_url . "install\n".
+        "Disallow: " . $site_url . "_user\n".
+        "Sitemap: " . $site_url . "sitemap.xml";
+
+}
+else{
+        $robots=
+        "# robots.txt - Furasta.Org\n".
+        "User-agent: *\n".
+        "Disallow: " . $site_url . "\n";
+        $file=HOME.'sitemap.xml';
+}
+
 
 file_put_contents(HOME.'robots.txt',$robots);
 
