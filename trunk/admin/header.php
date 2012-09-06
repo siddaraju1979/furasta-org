@@ -103,10 +103,10 @@ else{
 				),
 			),
 		),
-//		'menu_files' => array(
-//			'url' => $url . 'files.php',
-//			'name' => $Template->e( 'menu_files' )
-//		),
+		'menu_files' => array(
+			'url' => $url . 'files.php',
+			'name' => $Template->e( 'menu_files' )
+		),
 		'menu_users_groups' => array(
 			'name' => $Template->e( 'menu_users_groups' ),
 			'url' => $url . 'users.php',

@@ -15,6 +15,9 @@ $User = User::getInstance( );
 $Template = Template::getInstance( );
 $Template->loadJavascript( 'admin/files/list.js' );
 
+$FileManager = FileManager::getInstance( );
+$FileManager->readDir( '/' );
+
 $content = '
 <h1>Files</h1>
 <div id="file-manager">

@@ -186,10 +186,10 @@ function htaccess_rewrite(){
 	 * through the plugin filter
 	 */
 	$rules = array(
-		'admin' => 'RewriteRule ^admin[/]*$ /admin/index.php [L]',
-		'sitemap' => 'RewriteRule ^sitemap.xml /_inc/sitemap.php [L]',
-		'files' => 'RewriteRule ^files/(.*)$ /_inc/files.php?name=$1 [QSA,L]',
-		'pages' => 'RewriteRule ^([^./]{3}[^.]*)$ /index.php?page=$1 [QSA,L]',
+		'admin'         => 'RewriteRule ^admin[/]*$ ' . SITEURL . 'admin/index.php [L]',
+		'sitemap'       => 'RewriteRule ^sitemap.xml ' . SITEURL . '_inc/sitemap.php [L]',
+		'files'         => 'RewriteRule ^files/(.*)$ ' . SITEURL . '_inc/files.php?name=$1 [QSA,L]',
+		'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . SITEURL . 'index.php?page=$1 [QSA,L]',
 	);
 
 	$rules = $Plugins->filter( 'general', 'filter_htaccess', $rules );
@@ -227,16 +227,14 @@ function htaccess_rewrite(){
 			,'Runtime Error'
 		);
 
-	$_url='http://'.$_SERVER["SERVER_NAME"].'/';
-	
 	if($SETTINGS['index']==0){
 		$robots=
 		"# robots.txt - Furasta.Org\n".
 		"User-agent: *\n".
-		"Disallow: /admin\n".
-		"Disallow: /install\n".
-		"Disallow: /_user\n".
-		"Sitemap: ".$_url."sitemap.xml";
+		"Disallow: " . SITEURL . "admin\n".
+		"Disallow: " . SITEURL . "install\n".
+		"Disallow: " . SITEURL . "_user\n".
+		"Sitemap: " . SITEURL . "sitemap.xml";
 
 		$robots = $Plugins->filter( 'general', 'filter_robots', $robots );
 	}
@@ -244,7 +242,7 @@ function htaccess_rewrite(){
                 $robots=
                 "# robots.txt - Furasta.Org\n".
                 "User-agent: *\n".
-                "Disallow: /\n";
+                "Disallow: " . SITEURL . "\n";
                 $file=HOME.'sitemap.xml';
                 if(file_exists($file))
                         unlink($file);

@@ -115,11 +115,13 @@ class FileManager{
 	 */
 	private static function checkPath( $path ){
 
-		/**
+                /**
+                 * path is not in USER_FILES or
 		 * path contains "..", therefore it's invalid
-		 */
+                 */
 		if( strpos( '..', $path ) !== false )
 			return $this->setError( 4, $path ); 
+
 
 		return true;
 
@@ -545,13 +547,13 @@ class FileManager{
 	private static function _rreadDir( $path, $level, $current = 0 ){
 
 
-		$files = array( $path );
+		$files[ $path ] = array( );
 
 		/**
 		 * make sure maximum level isn't exceeded
 		 */
 		if( is_int( $level ) && $level == $current )
-			return $files;
+			return $path;
 
 		/**
 		 * scan directory
@@ -564,9 +566,9 @@ class FileManager{
 				continue;
 
 			if( is_dir( $file ) )
-				$files += self::_rreadDir( $file, $level, $current + 1 );
+                                array_push( $files[ $path ], self::_rreadDir( $file, $level, $current + 1 ) );
 			else
-				array_push( $files, $file );
+				array_push( $files[ $path ], $file );
 			
 		}
 
@@ -764,8 +766,8 @@ class FileManager{
 			return false;
 
 		// read files and dirs
-		$files = self::_rreadDir( $path, $level );
-
+		$files = self::_rreadDir( USER_FILES . $path, true );
+                die( print_r( $files ) );
 		/*
 		 * get file database data
 		 */
