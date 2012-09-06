@@ -91,6 +91,7 @@ define(\'PAGES\',\''.$pages.'\');
 define(\'USERS\',\''.$users.'\');
 define(\'TRASH\',\''.$trash.'\');
 define(\'GROUPS\',\''.$groups.'\');
+define(\'USERS_GROUPS\',\''.$users_groups.'\');
 define(\'OPTIONS\',\''.$options.'\');
 define(\'FILES\',\'' . $files . '\');
 define(\'TEMPLATE_DIR\',\''.HOME.'_www/vitruvius/\');

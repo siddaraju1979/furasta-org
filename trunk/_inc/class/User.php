@@ -255,7 +255,7 @@ class User{
 		}
 
 		// user not in db
-		if( !$user ){
+                if( !$user ){
 			$Template = Template::getInstance( );
 			$Template->runtimeError( '12' );
 			return false;
@@ -279,11 +279,11 @@ class User{
 			$groups = explode( ',', $user[ 'groups' ] );
 			$perm = array( );
 			$match = false;
-
+                        
 			/**
 			 * if super user, has permission
 			 */
-			if( in_array( 1, $groups ) )
+			if( in_array( SUPER_USER, $groups ) )
 				$match = true;
 	
 			foreach( $groups as $group ){
