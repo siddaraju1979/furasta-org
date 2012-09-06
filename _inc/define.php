@@ -17,6 +17,7 @@
 define( 'START_TIME', microtime( true ) );
 define( 'HOME', substr( dirname( __FILE__ ), 0, -4) );
 define( 'REVISION', 100 );
+define( 'SUPER_USER', '_superuser' );
 
 date_default_timezone_set( 'UTC' );
 
