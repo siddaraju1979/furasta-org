@@ -161,7 +161,10 @@ completed depending on its priority.</p></td>
  * @return bool
  */
 function htaccess_rewrite(){
-	global $SETTINGS;
+
+        global $SETTINGS;
+
+        require_once HOME . '_inc/function/defaults.php';
 
 	$Plugins = Plugins::getInstance( );
 
@@ -185,36 +188,11 @@ function htaccess_rewrite(){
 	 * build up array of rewrite rules and filter
 	 * through the plugin filter
 	 */
-	$rules = array(
-		'admin'         => 'RewriteRule ^admin[/]*$ ' . SITEURL . 'admin/index.php [L]',
-		'sitemap'       => 'RewriteRule ^sitemap.xml ' . SITEURL . '_inc/sitemap.php [L]',
-		'files'         => 'RewriteRule ^files/(.*)$ ' . SITEURL . '_inc/files.php?name=$1 [QSA,L]',
-		'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . SITEURL . 'index.php?page=$1 [QSA,L]',
-	);
-
+        $rules = defaults_htaccess_rules( SITEURL );
+        
 	$rules = $Plugins->filter( 'general', 'filter_htaccess', $rules );
 
-	$htaccess=
-		"# .htaccess - Furasta.Org\n".
-		"<IfModule mod_deflate.c>\n".
-        	"	SetOutputFilter DEFLATE\n".
-		"	Header append Vary User-Agent env=!dont-vary\n".
-        	"</IfModule>\n\n".
-
-        	"php_flag magic_quotes_gpc off\n\n".
-
-		"RewriteEngine on\n".
-		"RewriteCond %{SCRIPT_NAME} !\.php\n";
-
-	foreach( $rules as $rule ){
-		$htaccess .= $rule . "\n";
-	}
-
-	$htaccess .=
-		"\nAddCharset utf-8 .js\n".
-		"AddCharset utf-8 .xml\n".
-		"AddCharset utf-8 .css\n".
-                "AddCharset utf-8 .php";
+        $htaccess = defaults_htaccess_content( $rules );
 
 	/**
 	 * write htaccess file or throw error
@@ -227,22 +205,13 @@ function htaccess_rewrite(){
 			,'Runtime Error'
 		);
 
-	if($SETTINGS['index']==0){
-		$robots=
-		"# robots.txt - Furasta.Org\n".
-		"User-agent: *\n".
-		"Disallow: " . SITEURL . "admin\n".
-		"Disallow: " . SITEURL . "install\n".
-		"Disallow: " . SITEURL . "_user\n".
-		"Sitemap: " . SITEURL . "sitemap.xml";
+	if( $SETTINGS[ 'index' ] == 0 ){
+                $robots = defaults_robots_content( 0, SITEURL );
 
 		$robots = $Plugins->filter( 'general', 'filter_robots', $robots );
 	}
         else{
-                $robots=
-                "# robots.txt - Furasta.Org\n".
-                "User-agent: *\n".
-                "Disallow: " . SITEURL . "\n";
+                $robots = defaults_robots_content( 1, SITEURL );
                 $file=HOME.'sitemap.xml';
                 if(file_exists($file))
                         unlink($file);
@@ -274,25 +243,10 @@ function htaccess_rewrite(){
  */
 function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 
-	$default_constants = array(
-		'TEMPLATE_DIR' => TEMPLATE_DIR,
-		'VERSION' => VERSION,
-		'PREFIX' => PREFIX,
-		'PAGES' => PAGES,
-		'USERS' => USERS,
-		'TRASH' => TRASH,
-		'GROUPS' => GROUPS,
-		'USERS_GROUPS' => USERS_GROUPS,
-		'FILES' => FILES,
-		'OPTIONS' => OPTIONS,
-		'SITEURL' => SITEURL,
-		'USER_FILES' => USER_FILES,
-		'DIAGNOSTIC_MODE' => DIAGNOSTIC_MODE,
-		'LANG' => LANG,
-		'SET_REVISION' => REVISION,
-	);
+        require_once HOME . '_inc/function/defaults.php';
 
-	$constants = array_merge( $default_constants, $constants );
+        $default_constants = defaults_constants( $constants );
+
         $Plugins = Plugins::getInstance( );
 
 	/**
@@ -325,44 +279,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	$constants = $filter[ 1 ];
 	$PLUGINS = $filter[ 2 ];
 
-	$filecontents = '<?php' . "\n" .
-			'# Furasta.Org - .settings.php' . "\n\n";
-
-	foreach( $constants as $constant => $value )
-		$filecontents .= 'define( \'' . $constant . '\', \'' . $value . '\' );' . "\n"; 
-
-	$filecontents .= "\n" .
-			'$PLUGINS = array(' . "\n";
-
-
-	foreach( $PLUGINS as $plugin => $version )
-		$filecontents .= "\t" . '\'' . $plugin . '\' => \'' . $version . '\',' . "\n";
-
-	$filecontents .= ');' . "\n" . "\n" .
-			'$SETTINGS = array(' . "\n";
-
-	/**
-	 * print settings array, two layer deep array
-	 */
-	foreach( $SETTINGS as $setting => $value ){
-		if( is_array( $value ) ){
-			$filecontents .= "\t" . '\'' . $setting . '\' => array(' . "\n";
-			foreach( $value as $s => $v )
-				$filecontents .= '		\'' . $s . '\' => \'' . $v . '\',' . "\n";
-			$filecontents .= "\t" . '),' . "\n";
-			continue;
-		}
-		$filecontents .= "\t" . '\'' . $setting . '\' => \'' . addslashes( $value ) . '\',' . "\n";
-	}
-
-	$filecontents .= "\n" 
-			. ');' . "\n"
-			. '$DB = array(' . "\n"
-			. "\t" . '\'name\' => \'' . $DB[ 'name' ] . '\',' . "\n" 
-			. "\t" . '\'host\' => \'' . $DB[ 'host' ] . '\',' . "\n" 
-			. "\t" . '\'user\' => \'' . $DB[ 'user' ] . '\',' . "\n" 
-			. "\t" . '\'pass\' => \'' . $DB[ 'pass' ] . '\'' . "\n" 
-			. ');' . "\n";
+        $filecontents = defaults_settings_contents( $SETTINGS, $DB, $PLUGINS, $constants );
 
 	/**
 	 * write file or throw error

@@ -19,111 +19,67 @@ if(@$_SESSION['complete']!=1)
 	header('location: stage3.php');
 
 require 'header.php';
-require HOME . '_inc/function/system.php';
+require HOME . '_inc/function/system.php'; // this should be removed and all required functionality moved to defaults.php
+require HOME . '_inc/function/defaults.php';
 
 $connect=mysql_connect($_SESSION['db']['host'],$_SESSION['db']['user'],$_SESSION['db']['pass']);
 $select=mysql_select_db($_SESSION['db']['name'],$connect);
 
 $prefix=$_SESSION['db']['prefix'];
-$pages=$prefix.'pages';
-$users=$prefix.'users';
-$trash=$prefix.'trash';
-$groups=$prefix.'groups';
-$users_groups=$prefix.'users_groups';
-$options= $prefix . 'options';
-$files = $prefix . 'files';
 $hash=md5(mt_rand());
 $site_url=$_SESSION['settings']['site_url'];
-$user_files=$_SESSION['settings']['user_files'];
 
-$pagecontent='
-<h1>Welcome to Furasta.Org</h1>
-<p>Welcome to your new installation of Furasta.Org Content Management System.</p>
-<p>To log in to the administration area <a href=\'' . $site_url . '/admin\'>Click Here</a></p>
-';
+// constants for .settings.php
+$constants = array(
+        'PAGES'                 => $prefix . 'pages',
+        'USERS'                 => $prefix . 'users',
+        'TRASH'                 => $prefix . 'trash',
+        'GROUPS'                => $prefix . 'groups',
+        'USERS_GROUPS'          => $prefix . 'users_groups',
+        'OPTIONS'               => $prefix . 'options',
+        'FILES'                 => $prefix . 'files',
+        'TEMPLATE_DIR'          => HOME . '_www/vitruvius',     // @todo update
+        'PREFIX'                => $prefix,
+        'VERSION'               => '0.9.2',                     // @todo define version in install header
+        'SITEURL'               => $site_url,
+        'USER_FILES'            => $_SESSION[ 'settings' ][ 'user_files' ],
+        'DIAGNOSTIC_MODE'       => 0,
+        'LANG'                  => 'English',
+        'SET_REVISION'          => 100
+);
+$constants = defaults_constants( $constants );
 
-// pages
-mysql_query('drop table if exists '.$pages);
-mysql_query('create table '.$pages.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text, home int,display int)');
-mysql_query('insert into '.$pages.' values(0,"Home","'.$pagecontent.'","Home","Default","Normal","'.date('Y-m-d').'","Installer",1,0,"|",1,1)');
+// no plugins installed by default
+$plugins = array( );
 
-// user
-mysql_query('drop table if exists '.$users);
-mysql_query('create table '.$users.' (id int auto_increment primary key,name text,email text,password text,hash text,reminder text, data text)');
-mysql_query('insert into '.$users.' values(0,"'.$_SESSION['user']['name'].'","'.$_SESSION['user']['email'].'","'.$_SESSION['user']['pass'].'","'.$hash.'","","")');
-$user_id = mysql_insert_id( );
-
-// groups
-mysql_query( 'drop table if exists ' . $groups );
-mysql_query( 'create table ' . $groups . ' ( id int auto_increment primary key, name text, perm text, file_perm text )' );
-mysql_query( 'insert into ' . $groups . ' values ( "", "Users", "a,e,c,d,t,o,s,u,f", "|" )' );
-
-// users_groups
-mysql_query( 'drop table if exists ' . $users_groups );
-mysql_query( 'create table ' . $users_groups . ' ( user_id int, group_id text )' );
-mysql_query( 'insert into ' . $users_groups . ' values ( 1, "_superuser" )' );
-
-// trash
-mysql_query('drop table if exists '.$trash);
-mysql_query('create table '.$trash.' (id int auto_increment primary key,name text,content text,slug text,template text,type text,edited date,user text,position int,parent int,perm text,home int,display int)');
-mysql_query('insert into '.$trash.' values(0,"Example Page","Sample page content.","Example-Page","Default","Normal","'.date('Y-m-d').'","Installer",1,"","|",1,1)');
-
-// options
-mysql_query( 'drop table if exists ' . $options );
-mysql_query( 'create table ' . $options . ' (name text,value text,category text)' );
-
-// file manager
-// @todo this should be changed, i don't like how these values are hard coded
-mysql_query( 'drop table if exists ' . $files );
-mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
-// file manager add initial directory structure
-mysql_query( 'insert into ' . $files . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
-$fm_users_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
-$fm_users_su_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
-$fm_groups_id = mysql_insert_id( );
-mysql_query( 'insert into ' . $files . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
-$fm_groups_su_id = mysql_insert_id( );
-
-$filecontents='<?php
-define(\'PAGES\',\''.$pages.'\');
-define(\'USERS\',\''.$users.'\');
-define(\'TRASH\',\''.$trash.'\');
-define(\'GROUPS\',\''.$groups.'\');
-define(\'USERS_GROUPS\',\''.$users_groups.'\');
-define(\'OPTIONS\',\''.$options.'\');
-define(\'FILES\',\'' . $files . '\');
-define(\'TEMPLATE_DIR\',\''.HOME.'_www/vitruvius/\');
-define(\'PREFIX\',\''.$prefix.'\');
-define(\'VERSION\',\'0.9.2\');
-define(\'$site_url\',\''.$site_url.'\');
-define(\'USER_FILES\',\''.$user_files.'\');
-define(\'DIAGNOSTIC_MODE\', 0 );
-define(\'LANG\', \'English\' );
-define(\'SET_REVISION\', 100 );
-
-$PLUGINS=array();
-
-$SETTINGS=array(
-	\'site_title\'=>\''.addslashes( $_SESSION['settings']['title'] ).'\',
-        \'site_subtitle\'=>\''.addslashes( $_SESSION['settings']['sub_title'] ).'\',
-        \'index\'=>\''.$_SESSION['settings']['index'].'\',
-	\'maintenance\'=>\''.$_SESSION['settings']['maintenance'].'\',
-	\'system_alert\'=>\'\'
+/*
+ * settings array for .settings.php
+ */
+$settings = array(
+        'site_title'            => addslashes( $_SESSION[ 'settings' ][ 'title' ],
+        'site_subtitle'         => addslashes( $_SESSION[ 'settings' ][ 'sub_title' ],
+        'index'                 => ( int ) $_SESSION[ 'settings' ][ 'index' ],
+        'maintenance'           => $_SESSION[ 'settings' ][ 'maintenance' ],
+        'system_alert'          => ''
 );
 
-$DB=array(
-        \'name\'=>\''.$_SESSION['db']['name'].'\',
-        \'host\'=>\''.$_SESSION['db']['host'].'\',
-        \'user\'=>\''.$_SESSION['db']['user'].'\',
-        \'pass\'=>\''.$_SESSION['db']['pass'].'\'
+$db = array(
+        'name' => addslashes( $_SESSION[ 'db' ][ 'name' ] ),
+        'host' => addslashes( $_SESSION[ 'db' ][ 'host' ] ),
+        'user' => addslashes( $_SESSION[ 'db' ][ 'user' ] ),
+        'pass' => addslashes( $_SESSION[ 'db' ][ 'pass' ] )
 );
 
-?>
-';
+$filecontents = defaults_settings_content( $settings, $db, $plugins, $constants );
 
+
+/**
+ * write settings file
+ */
 file_put_contents(HOME.'.settings.php',$filecontents) or error('Please grant <i>0777</i> write access to the <i>'.HOME.'</i> directory then reload this page to complete installation.');
+
+
+install_db( $settings, $constants );
 
 // dirs to create
 $dirs = array(
@@ -152,63 +108,14 @@ foreach( $dirs as $dir ){
 if( $match == false )
 	die( 'could not create some of the required directories in the user dir. make sure your user dir is writable' );
 
-/**
- * taken from _inc/function/system.php
- * @todo find better way of doing this - causes
- * inconsistency in code when system.php is altered
- * and this isn't
- */
+$rules = defaults_htaccess_rules( $site_url );
 
-$rules = array(
-        'admin'         => 'RewriteRule ^admin[/]*$ ' . $site_url . 'admin/index.php [L]',
-        'sitemap'       => 'RewriteRule ^sitemap.xml ' . $site_url . '_inc/sitemap.php [L]',
-        'files'         => 'RewriteRule ^files/(.*)$ ' . $site_url . '_inc/files.php?name=$1 [QSA,L]',
-        'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . $site_url . 'index.php?page=$1 [QSA,L]',
-);
-
-$htaccess=
-        "# .htaccess - Furasta.Org\n".
-        "<IfModule mod_deflate.c>\n".
-        "	SetOutputFilter DEFLATE\n".
-        "	Header append Vary User-Agent env=!dont-vary\n".
-        "</IfModule>\n\n".
-
-        "php_flag magic_quotes_gpc off\n\n".
-
-        "RewriteEngine on\n".
-        "RewriteCond %{SCRIPT_NAME} !\.php\n";
-
-foreach( $rules as $rule ){
-        $htaccess .= $rule . "\n";
-}
-
-$htaccess .=
-        "\nAddCharset utf-8 .js\n".
-        "AddCharset utf-8 .xml\n".
-        "AddCharset utf-8 .css\n".
-        "AddCharset utf-8 .php";
+$htaccess = defaults_htaccess_content( $rules );
 
 file_put_contents(HOME.'.htaccess',$htaccess);
 
-if($_SESSION['settings']['index']=='0')
 
-        $robots=
-        "# robots.txt - Furasta.Org\n".
-        "User-agent: *\n".
-        "Disallow: " . $site_url . "admin\n".
-        "Disallow: " . $site_url . "install\n".
-        "Disallow: " . $site_url . "_user\n".
-        "Sitemap: " . $site_url . "sitemap.xml";
-
-}
-else{
-        $robots=
-        "# robots.txt - Furasta.Org\n".
-        "User-agent: *\n".
-        "Disallow: " . $site_url . "\n";
-        $file=HOME.'sitemap.xml';
-}
-
+$robots = defaults_robots_content( $index, $site_url );
 
 file_put_contents(HOME.'robots.txt',$robots);
 
