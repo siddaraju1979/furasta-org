@@ -134,7 +134,7 @@ function defaults_constants( $constants ){
 }
 
 /**
- * defaults_settings_contents
+ * defaults_settings_content
  *
  * returns the default layout of the settings
  * file, with the various settings passed as
@@ -146,7 +146,7 @@ function defaults_constants( $constants ){
  * @param array $constants
  * @return string
  */
-function defaults_settings_contents( $SETTINGS, $DB, $PLUGINS, $constants ){
+function defaults_settings_content( $SETTINGS, $DB, $PLUGINS, $constants ){
 
 	$filecontents = '<?php' . "\n" .
 			'# Furasta.Org - .settings.php' . "\n\n";
