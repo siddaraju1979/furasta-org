@@ -56,8 +56,8 @@ function install_settings( ){
          * settings array for .settings.php
          */
         $settings = array(
-                'site_title'            => addslashes( $_SESSION[ 'settings' ][ 'title' ],
-                'site_subtitle'         => addslashes( $_SESSION[ 'settings' ][ 'sub_title' ],
+                'site_title'            => addslashes( $_SESSION[ 'settings' ][ 'title' ] ),
+                'site_subtitle'         => addslashes( $_SESSION[ 'settings' ][ 'sub_title' ] ),
                 'index'                 => ( int ) $_SESSION[ 'settings' ][ 'index' ],
                 'maintenance'           => $_SESSION[ 'settings' ][ 'maintenance' ],
                 'system_alert'          => ''
@@ -84,7 +84,7 @@ function install_settings( ){
         /**
          * create htaccess file
          */
-        $rules = defaults_htaccess_rules( $site_url );
+        $rules = defaults_htaccess_rules( $_SESSION[ 'settings' ][ 'site_url' ] );
 
         $htaccess = defaults_htaccess_content( $rules );
 
@@ -94,7 +94,7 @@ function install_settings( ){
         /**
          * create robots file
          */
-        $robots = defaults_robots_content( $index, $site_url );
+        $robots = defaults_robots_content( $settings[ 'index' ], $_SESSION[ 'settings' ][ 'site_url' ] );
 
         file_put_contents( HOME . 'robots.txt', $robots );
 
@@ -124,7 +124,7 @@ function install_db( ){
                 . '<p>Welcome to your new installation of Furasta.Org'
                 . 'Content Management System.</p>'
                 . '<p>To log in to the administration area <a href=\''
-                . $constants[ 'SITE_URL' ] . '/admin\'>Click Here</a></p>';
+                . $constants[ 'SITEURL' ] . '/admin\'>Click Here</a></p>';
         mysql_query( 'drop table if exists ' . $constants[ 'PAGES' ] );
         mysql_query( 'create table ' . $constants[ 'PAGES' ] . ' ('
                 . 'id int auto_increment primary key,' 
@@ -267,16 +267,16 @@ function install_db( ){
          *
          * @todo this should be changed, i don't like how these values are hard coded
          */
-        mysql_query( 'drop table if exists ' . $files );
-        mysql_query( 'create table ' . $files . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
+        mysql_query( 'drop table if exists ' . $constants[ 'FILES' ] );
+        mysql_query( 'create table ' .  $constants[ 'FILES' ]  . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
         // file manager add initial directory structure
-        mysql_query( 'insert into ' . $files . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
+        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
         $fm_users_id = mysql_insert_id( );
-        mysql_query( 'insert into ' . $files . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_users_su_id = mysql_insert_id( );
-        mysql_query( 'insert into ' . $files . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_id = mysql_insert_id( );
-        mysql_query( 'insert into ' . $files . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_su_id = mysql_insert_id( );
 
 }
@@ -291,7 +291,9 @@ function install_db( ){
  */
 function install_dirs( ){
 
+        global $constants;
         global $user_id;
+        $user_files = $constants[ 'USER_FILES' ];
 
         // dirs to create
         $dirs = array(
@@ -339,11 +341,12 @@ function install_email( ){
                 . '<br/>'
                 . 'Please activate your new user by clicking on the link below:<br/>'
                 . '<br/>'
-                . '<a href="' . $constants[ 'SITE_URL' ] . '/admin/users/activate.php?hash='
-                . $hash . '">' . $constants[ 'SITE_URL' ] . '/admin/users/activate.php?hash='
+                . '<a href="' . $constants[ 'SITEURL' ] . '/admin/users/activate.php?hash='
+                . $hash . '">' . $constants[ 'SITEURL' ] . '/admin/users/activate.php?hash='
                 . $hash . '</a><br/>'
                 . '<br/>'
                 . 'If you are not the person stated above please ignore this email.<br/>';
+
         email( $_SESSION[ 'user' ][ 'email' ], $subject, $message );
 
 }

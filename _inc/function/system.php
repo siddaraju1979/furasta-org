@@ -279,7 +279,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	$constants = $filter[ 1 ];
 	$PLUGINS = $filter[ 2 ];
 
-        $filecontents = defaults_settings_contents( $SETTINGS, $DB, $PLUGINS, $constants );
+        $filecontents = defaults_settings_content( $SETTINGS, $DB, $PLUGINS, $constants );
 
 	/**
 	 * write file or throw error
@@ -292,7 +292,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 			,'Runtime Error'
 		);
 
-	return htaccess_rewrite();
+	return htaccess_rewrite( );
 }
 
 /**

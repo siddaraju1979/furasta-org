@@ -21,6 +21,7 @@ if(@$_SESSION['complete']!=1)
 require 'header.php';
 require HOME . '_inc/function/system.php'; // this should be removed and all required functionality moved to defaults.php
 require HOME . '_inc/function/defaults.php';
+require HOME . 'install/install-core.php';
 
 /**
  * connect to mysql database
