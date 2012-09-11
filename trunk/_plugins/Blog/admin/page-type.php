@@ -11,14 +11,14 @@
 $Template = Template::getInstance( );
 $Template->loadJavascript( '_plugins/Blog/admin/page-type.js' );
 
-$Page = row( 'select * from ' . PAGES . ' where id=' . $id );
+$Page = row( 'select * from ' . DB_PAGES . ' where id=' . $id );
 
 $options = options( 'page_' . $id );
 $title = ( empty( $options[ 'blog_title' ] ) ) ? $Page[ 'name' ] : $options[ 'blog_title' ];
 $items = ( empty( $options[ 'blog_items_per_page' ] ) ) ? 5 : $options[ 'blog_items_per_page' ];
 $summary = ( empty( $options[ 'blog_full_summary' ] ) ) ? 'summary' : $options[ 'blog_full_summary' ];
 
-$Posts = rows( 'select * from ' . PREFIX . 'blog_posts where blog_id=' . $Page[ 'id' ] );
+$Posts = rows( 'select * from ' . DB_PREFIX . 'blog_posts where blog_id=' . $Page[ 'id' ] );
 
 $content = '
 <div id="tabs">
@@ -29,7 +29,7 @@ $content = '
 	<div id="tabs-1">
 		<div class="tabs-content">		
 			<a class="right" href="plugin.php?p_name=Blog&blog_id=' . $Page[ 'id' ] . '">
-				<span class="header-img"><img src="' . SITEURL . '_plugins/Blog/img/post.png"/></span>
+				<span class="header-img"><img src="' . SITE_URL . '_plugins/Blog/img/post.png"/></span>
 				<h1 class="image-left">' . $Template->e( 'blog_admin_add_post' ) . '</h1>
 			</a>
 			<br style="clear:both"/>
@@ -49,7 +49,7 @@ $content = '
 				else{
 					foreach( $Posts as $post ){
 						$link = '<a href="plugin.php?p_name=Blog&blog_id=' . $Page[ 'id' ] . '&post=' . $post[ 'id' ] . '" class="list-link">';
-						$user = single( 'select name from ' . USERS . ' where id=' . $post[ 'user' ], 'name' );
+						$user = single( 'select name from ' . DB_USERS . ' where id=' . $post[ 'user' ], 'name' );
 						$content .= '<tr>
 							<td>' . $link . $post[ 'title' ] . '</a></td>
 							<td>' . $link . date( "d/m/y", strtotime( $post[ 'post_date' ] ) ) . '</a></td>

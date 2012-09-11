@@ -22,12 +22,12 @@ $id= addslashes( @$_GET['id'] );
 if($id=='')
 	exit;
 
-$user=row('select name,email from '.USERS.' where id='.$id);
+$user=row('select name,email from '.DB_USERS.' where id='.$id);
 
 $subject='User Suspended | Furasta.Org';
 $message=$user['name'].',
 	<br/>
-	<p>Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITEURL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.</p>
+	<p>Your user account at '. $SETTINGS[ 'site_title' ] . ' ( ' . SITE_URL .' ) has been suspended by another user. You will no longer be able to login to this website or perform any privileged actions.</p>
 	<br/>
 	<p>If you are not the person stated above please ignore this email.</p>';
 
@@ -36,7 +36,7 @@ email( $user[ 'email' ], $subject, $message );
 // delete user dir
 User::removeUserDirs( $id );
 
-query('delete from '.USERS.' where id='.$id);
+query('delete from '.DB_USERS.' where id='.$id);
 
-cache_clear( 'USERS' );
+cache_clear( 'DB_USERS' );
 ?>

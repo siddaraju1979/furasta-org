@@ -77,14 +77,14 @@ foreach($templates as $template){
 
 $i=0;
 foreach( $validated as $array ){
-	$screenshot=(file_exists(HOME.'_www/'.$array[ 'slug' ].'/screenshot.png'))?'<img src="' . SITEURL . '_www/'.$array[ 'slug' ].'/screenshot.png" width="300px"/>': '<p>No Screenshot</p>';
+	$screenshot=(file_exists(HOME.'_www/'.$array[ 'slug' ].'/screenshot.png'))?'<img src="' . SITE_URL . '_www/'.$array[ 'slug' ].'/screenshot.png" width="300px"/>': '<p>No Screenshot</p>';
 	if( TEMPLATE_DIR == HOME . '_www/' . $array[ 'slug' ] . '/'){
 		$class = ' activated';
 		$status = 'Activated';
 	}
 	else{
-		$activate = '<a href="' . SITEURL . 'admin/settings/template/activate.php?name=' . $array[ 'slug' ] . '" class="activate-link">Activate</a>';
-		$activate .= ' | <a href="' . SITEURL . '?preview=' . $array[ 'Name' ] . '" target="_blank">Preview</a>';
+		$activate = '<a href="' . SITE_URL . 'admin/settings/template/activate.php?name=' . $array[ 'slug' ] . '" class="activate-link">Activate</a>';
+		$activate .= ' | <a href="' . SITE_URL . '?preview=' . $array[ 'Name' ] . '" target="_blank">Preview</a>';
 		$activate .= ' | <a class="delete-link link" id="'.$array[ 'slug' ].'">Delete</a>';
 		$class = '';
 		$status = '';

@@ -3,7 +3,7 @@
 /**
  * List Groups, Furasta.Org
  *
- * Lists all the groups from the GROUPS table.
+ * Lists all the groups from the DB_GROUPS table.
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -74,11 +74,11 @@ $content .= '
 	<tr class="top_bar"><th>Name</th><th>Members</th><th>Delete</th></tr>
 ';
 
-$query = query( 'select id,name from ' . GROUPS . ' order by id' );
+$query = query( 'select id,name from ' . DB_GROUPS . ' order by id' );
 
 while($row=mysql_fetch_array($query)){
 	$id=$row['id'];
-	$num = num( 'select * from ' . USERS . ' where user_group="' . $id .'"' );
+	$num = num( 'select * from ' . DB_USERS . ' where user_group="' . $id .'"' );
 	$href='<a href="users.php?page=edit-group&id='.$id.'" class="list-link">';
 	$delete = '<a id="'.$id.'" class="delete link"><span class="admin-menu-img" id="delete-img" title="Delete Group" alt="Delete Group"/></a>';
 	$content.='<tr>

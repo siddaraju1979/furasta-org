@@ -75,10 +75,10 @@ if( !cache_is_good( $cache_file, '60*60*24*3', 'RSS' ) ){
 */
 $cache_file = md5( 'FURASTA_ADMIN_MENU_' . $_SESSION[ 'user' ][ 'id' ] );
 
-if( cache_exists( $cache_file, 'USERS' ) )
-	$menu = json_decode( cache_get( $cache_file, 'USERS' ) );
+if( cache_exists( $cache_file, 'DB_USERS' ) )
+	$menu = json_decode( cache_get( $cache_file, 'DB_USERS' ) );
 else{
-	$url = SITEURL . 'admin/';
+	$url = SITE_URL . 'admin/';
 
 	$menu_items = array(
 		'menu_overview' => array(
@@ -150,7 +150,7 @@ else{
 	$menu = display_menu( $menu_items );
 
         $menu_items_cache = json_encode( $menu );
-        cache( $cache_file, $menu_items_cache, 'USERS' );
+        cache( $cache_file, $menu_items_cache, 'DB_USERS' );
 }
 
 $Template->add('menu',$menu);
@@ -158,7 +158,7 @@ $Template->add('menu',$menu);
 $javascript='
 window.furasta = {
 	site : {
-		url : "' . SITEURL . '"
+		url : "' . SITE_URL . '"
 	},
 	lang : ' . json_encode( $Template->lang ) . ',
 	lang_errors : ' . json_encode( $Template->lang_errors ) . '
@@ -169,6 +169,6 @@ $Template->loadJavascript( '_inc/js/admin.js' );
 $Template->loadJavascript( 'FURASTA_ADMIN_HEADER_SCRIPT', $javascript );
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
 // @todo find a way to cache this without breaking tinymce
-$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
+$Template->add( 'head', '<script type="text/javascript" src="' . SITE_URL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
 ?>

@@ -18,7 +18,7 @@ $page_id = addslashes( @$_POST[ 'forum_id' ] );
 if( empty( $name ) || empty( $page_id ) )
 	exit;
 
-query( 'insert into ' . PREFIX . 'forums values ( "", ' . $page_id . ', "' . $name . '", "' . $desc . '", "" )' );
+query( 'insert into ' . DB_PREFIX . 'forums values ( "", ' . $page_id . ', "' . $name . '", "' . $desc . '", "" )' );
 
 echo mysql_insert_id( );
 exit;

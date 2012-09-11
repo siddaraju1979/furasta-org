@@ -145,7 +145,7 @@ function blog_overview_item( ){
  */
 function blog_filter_htaccess( $old_rules ){
 	$rules = array( );
-	$blogs = rows( 'select id, slug from ' . PAGES . ' where type="Blog"' );
+	$blogs = rows( 'select id, slug from ' . DB_PAGES . ' where type="Blog"' );
 
 	// add new rules if blogs exist
 	if( count( $blogs ) != 0 ){

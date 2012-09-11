@@ -31,20 +31,20 @@ if( empty( $name ) )
 /**
  * check if group name is used already 
  */
-if( num( 'select name from ' . GROUPS . ' where name="' . $name .'"' ) != 0 )
+if( num( 'select name from ' . DB_GROUPS . ' where name="' . $name .'"' ) != 0 )
 	die( 'error' ); 
 
 /**
  * add group to database 
  */
-mysql_query( 'insert into ' . GROUPS . ' values( "", "' . $name . '", "' . $perms . '" )' );
+mysql_query( 'insert into ' . DB_GROUPS . ' values( "", "' . $name . '", "' . $perms . '" )' );
 $id = mysql_insert_id( );
 
 // make group dirs
 Group::createGroupDirs( $id );
 
 // clear caches
-cache_clear( 'USERS' );
+cache_clear( 'DB_USERS' );
 
 die( print( $id ) );
 ?>

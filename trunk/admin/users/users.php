@@ -3,7 +3,7 @@
 /**
  * List Users, Furasta.Org
  *
- * Lists all the users from the USERS table.
+ * Lists all the users from the DB_USERS table.
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -45,7 +45,7 @@ $content='
 			/**
 			 * iterate through groups and print checkboxes 
 			 */
-			$groups = rows( 'select id,name from ' . GROUPS );
+			$groups = rows( 'select id,name from ' . DB_GROUPS );
 			for( $i = 0; $i < count( $groups ); $i++ ){
 
 			        $content .= '<td><input type="checkbox" class="checkbox" name="groups" value="' . $groups[ $i ][ 'id' ] . '"/> ' . $groups[ $i ][ 'name' ] . '</td>';
@@ -85,7 +85,7 @@ $content .= '
 /**
  * get users from database and create instances of the user class
  */
-$users = rows( 'select id from ' . USERS );
+$users = rows( 'select id from ' . DB_USERS );
 $ids = array( );
 foreach( $users as $user )
 	array_push( $ids, $user[ 'id' ] );

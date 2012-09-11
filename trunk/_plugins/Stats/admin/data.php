@@ -23,11 +23,11 @@ switch( $query ){
 	case 'today-total':
 		$data = array( );
 		$views = rows(
-			'select ip,day(viewed) from ' . PREFIX .
+			'select ip,day(viewed) from ' . DB_PREFIX .
 			'stats where day(viewed)>(day(now())-10) and month(viewed)=month(now()) and year(viewed)=year(now())'
 		);
 		$unique = rows(
-			'select distinct ip,day(viewed) from ' . PREFIX .
+			'select distinct ip,day(viewed) from ' . DB_PREFIX .
 			'stats where day(viewed)>(day(now())-10) and month(viewed)=month(now()) and year(viewed)=year(now())'
 		);
 

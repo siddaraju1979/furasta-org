@@ -18,7 +18,7 @@ switch( $qstring ){
 		// assume its a post title for now
 		$name = addslashes( str_replace( '-', ' ', $qstring[ ( count( $qstring ) - 1 ) ] ) );
 
-		$post_id = single( 'select id from ' . PREFIX . 'blog_posts where title="' . $name . '"', 'id' );
+		$post_id = single( 'select id from ' . DB_PREFIX . 'blog_posts where title="' . $name . '"', 'id' );
 		if( $post_id )
 			require HOME . '_plugins/Blog/frontend/post.php';
 		else{

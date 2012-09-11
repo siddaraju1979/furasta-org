@@ -45,10 +45,10 @@ switch( $overview_item ){
 
 		$content .= '
 		<table class="row-color">
-		        <tr><td>' . $Template->e( 'pages' ) . ':</td><td>' . single( 'select count(id) from ' . PAGES, 'count(id)' ) . '</td></tr>
-		        <tr><td>' . $Template->e( 'trash' ) . ':</td><td>' . single( 'select count(id) from ' . TRASH, 'count(id)' ) . '</td></tr>
-		        <tr><td>' . $Template->e( 'users' ) . ':</td><td>' . single( 'select count(id) from ' . USERS, 'count(id)' ) . '</td></tr>
-			<tr><td>' . $Template->e( 'groups' ) . ':</td><td>' . single( 'select count(id) from ' . GROUPS, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'pages' ) . ':</td><td>' . single( 'select count(id) from ' . DB_PAGES, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'trash' ) . ':</td><td>' . single( 'select count(id) from ' . DB_TRASH, 'count(id)' ) . '</td></tr>
+		        <tr><td>' . $Template->e( 'users' ) . ':</td><td>' . single( 'select count(id) from ' . DB_USERS, 'count(id)' ) . '</td></tr>
+			<tr><td>' . $Template->e( 'groups' ) . ':</td><td>' . single( 'select count(id) from ' . DB_GROUPS, 'count(id)' ) . '</td></tr>
 		        <tr><td>' . $Template->e( 'template' ) . ':</td><td>' . $template[ 'Name' ] . '</td></tr>
 		        <tr><td>Furasta.Org ' . $Template->e( 'version' ) . ':</td><td>' . VERSION . '</td></tr>
 		</table>';
@@ -56,7 +56,7 @@ switch( $overview_item ){
 	case 'recently-edited':
 		$content .= '<table class="row-color">';
 
-		$pages = rows( 'select id,name,content,edited,perm from ' . PAGES . ' order by edited desc limit 5' );
+		$pages = rows( 'select id,name,content,edited,perm from ' . DB_PAGES . ' order by edited desc limit 5' );
 
 		if( count( $pages ) == 0 ){
 			$content .= '<p><i>No items recently edited!</i></p>';
@@ -84,7 +84,7 @@ switch( $overview_item ){
 	break;
 	case 'recently-trashed':
 		$content .= '<table class="row-color">';
-		$pages = rows( 'select id,name,content,edited from ' . TRASH . ' order by edited desc limit 5' );
+		$pages = rows( 'select id,name,content,edited from ' . DB_TRASH . ' order by edited desc limit 5' );
 		
 		if( count( $pages ) == 0 ){
 			$content .= '<p><i>No items in trash!</i></p>';

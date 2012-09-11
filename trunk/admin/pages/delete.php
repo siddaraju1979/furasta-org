@@ -3,8 +3,8 @@
 /**
  * Delete Page, Furasta.Org
  *
- * Deletes a page from the PAGES table and adds it to
- * TRASH
+ * Deletes a page from the DB_PAGES table and adds it to
+ * DB_TRASH
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -29,18 +29,18 @@ $id=addslashes(@$_GET['id']);
 if($id=='')
 	exit;
 
-$parent=single('select parent from '.PAGES.' where id='.$id,'parent');
+$parent=single('select parent from '.DB_PAGES.' where id='.$id,'parent');
 
-$children=rows('select id from '.PAGES.' where parent='.$id);
+$children=rows('select id from '.DB_PAGES.' where parent='.$id);
 
 if(count($children)!=0){
 	foreach($children as $child)
-		query('update '.PAGES.' set parent='.$parent.' where id='.$child['id']);
+		query('update '.DB_PAGES.' set parent='.$parent.' where id='.$child['id']);
 }
 
-query('insert into '.TRASH.' select NULL,name,content,slug,template,type,edited,user,position,parent,perm,home,display from '.PAGES.' where id='.$id);
+query('insert into '.DB_TRASH.' select NULL,name,content,slug,template,type,edited,user,position,parent,perm,home,display from '.DB_PAGES.' where id='.$id);
 
-query('delete from '.PAGES.' where id='.$id);
+query('delete from '.DB_PAGES.' where id='.$id);
 
-cache_clear('PAGES');
+cache_clear('DB_PAGES');
 ?>

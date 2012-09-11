@@ -16,9 +16,9 @@ $id=@$_GET['id'];
 if($id==0)
 	exit;
 
-mysql_query('insert into '.PAGES.' select NULL,name,content,slug,"Default","Normal",edited,user,position,"0",perm,"0",display from '.TRASH.' where id='.$id) or die('1');
+mysql_query('insert into '.DB_PAGES.' select NULL,name,content,slug,"Default","Normal",edited,user,position,"0",perm,"0",display from '.DB_TRASH.' where id='.$id) or die('1');
 
-mysql_query('delete from '.TRASH.' where id='.$id);
+mysql_query('delete from '.DB_TRASH.' where id='.$id);
 
-cache_clear('PAGES');
+cache_clear('DB_PAGES');
 ?>

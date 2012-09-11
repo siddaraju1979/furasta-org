@@ -33,5 +33,5 @@ if( !$User ){
 /**
  * redirect to admin overview area
  */
-header( 'location: ' . SITEURL . 'admin/index.php' );
+header( 'location: ' . SITE_URL . 'admin/index.php' );
 ?>

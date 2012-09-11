@@ -85,12 +85,12 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid ){
 		 * tag from previous home page
 		 */
 		if( $home == 1 )
-			query( 'update ' . PAGES . ' set home=0 where home=1' );
+			query( 'update ' . DB_PAGES . ' set home=0 where home=1' );
 
 		/**
 		 * update database with edited page 
 		 */
-		query('update '.PAGES.' set
+		query('update '.DB_PAGES.' set
 		name="'.$name.'",content="'.$content.'",slug="'.$slug.'",template="'.$template.'",type="'.$type.'",edited="'.date('Y-m-d
 		G:i:s').'",user="'.$User->name( ).'",parent='.$parent.',perm="'.$perm.'",home='.@$home.',display='.$navigation.'
 		where id='.$id,true);
@@ -98,7 +98,7 @@ if( isset( $_POST[ 'edit-save' ] ) && $valid ){
 		/**
 		 * clear pages cache and set status as edited 
 		 */
-		cache_clear( 'PAGES' );
+		cache_clear( 'DB_PAGES' );
 
 		$Template->runtimeError( '1' );
 	}
@@ -134,7 +134,7 @@ $content='
 <div id="page-permissions-dialog" title="Page Permissions" style="display:none">
         <div id="complete-message" style="display:none"></div>
         <form id="page-permissions-content">
-		<p>' . $Template->e( 'loading' ) . '<img src="' . SITEURL . '_inc/img/loading.gif"/></p>
+		<p>' . $Template->e( 'loading' ) . '<img src="' . SITE_URL . '_inc/img/loading.gif"/></p>
         </form>
 </div>
 
@@ -150,7 +150,7 @@ $content='
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><a href="' . SITEURL . $Page[ 'slug' ] . '" id="slug-url">' . SITEURL . $Page[ 'slug' ] . '</a></td>
+			<td><a href="' . SITE_URL . $Page[ 'slug' ] . '" id="slug-url">' . SITE_URL . $Page[ 'slug' ] . '</a></td>
 			<td>&nbsp;</td>
 		</tr>
 	</table>
@@ -211,7 +211,7 @@ $content.='
 ';
 
 $pages=array();
-$query=query('select id,name,parent from '.PAGES.' order by position,name desc');
+$query=query('select id,name,parent from '.DB_PAGES.' order by position,name desc');
 while($row=mysql_fetch_assoc($query)){
 	if( $row[ 'id' ] != $Page['id'] )
         	$pages[$row['parent']][]=$row;

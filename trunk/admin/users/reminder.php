@@ -26,7 +26,7 @@ require HOME . '_inc/function/db.php';
 
 $email = addslashes( @$_GET[ 'email' ] );
 
-$rows = rows( 'select id,name from ' . USERS . ' where email="' . $email . '"' );
+$rows = rows( 'select id,name from ' . DB_USERS . ' where email="' . $email . '"' );
 $num = count( $rows );
 
 if( $num != 1 )
@@ -34,11 +34,11 @@ if( $num != 1 )
 
 $hash = md5( mt_rand( ) );
 
-query( 'update ' . USERS . ' set reminder="' . $hash . '" where id="' . $rows[ 0 ][ 'name' ] . '"');
+query( 'update ' . DB_USERS . ' set reminder="' . $hash . '" where id="' . $rows[ 0 ][ 'name' ] . '"');
 
 $message = 'Hi ' . $rows[ 0 ][ 'name' ] . '<br/>
 You have requested a new password. Please follow the link below to reset your password:<br/>
-' . SITEURL . 'admin/users/reset_password.php?reminder=' . $hash . '<br/>
+' . SITE_URL . 'admin/users/reset_password.php?reminder=' . $hash . '<br/>
 If you have not requested a new password please ignore this email.<br/>
 ';
 

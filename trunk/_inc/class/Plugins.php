@@ -292,7 +292,7 @@ class Plugins{
 
 		foreach( $this->plugins as $plugin ){
 
-			$url = SITEURL . 'admin/plugin.php?p_name=' . str_replace( ' ', '-', $plugin[ 'name' ] ) . '&';
+			$url = SITE_URL . 'admin/plugin.php?p_name=' . str_replace( ' ', '-', $plugin[ 'name' ] ) . '&';
 
 			if( isset( $plugin[ 'admin' ][ 'filter_menu' ] ) ){
 				/**

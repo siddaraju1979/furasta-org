@@ -31,13 +31,13 @@ $(function(){
 $Template->add( 'javascript', $javascript );
 
 $content = '
-<span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/send-large.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Mailing-List/img/send-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_send_mail' ) . '</h1>
 <div id="contents-mail" style="display:none">' . $contents . '</div>
 <div style="margin:10px">
 	<p>
 		<b>' . $Template->e( 'mailing_list_sending_email' ) . ' </b>
-		<span class="loading"><img src="' . SITEURL . '_inc/img/loading.gif"/></span>
+		<span class="loading"><img src="' . SITE_URL . '_inc/img/loading.gif"/></span>
 	</p>
 	<div id="sending-content"></div>
 </div>

@@ -14,6 +14,6 @@ require '../_inc/define.php';
 
 User::logout( );
 
-header('location: ' . SITEURL);
+header('location: ' . SITE_URL);
 
 ?>

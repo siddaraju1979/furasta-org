@@ -32,7 +32,7 @@ $content .= '
 	</form>
 </div>
 
-<span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/list-large.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Mailing-List/img/list-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_list_subscribers' ) . '</h1>
 
 <a class="link add-subscriber right">
@@ -41,7 +41,7 @@ $content .= '
 </a>
 ';
 
-$subs = rows( 'select * from ' . PREFIX . 'mailing_list' );
+$subs = rows( 'select * from ' . DB_PREFIX . 'mailing_list' );
 
 if( count( $subs ) == 0 ){
 	$content .= '<p><i>' . $Template->e( 'mailing_list_no_subscribers' ) . '</i></p>';

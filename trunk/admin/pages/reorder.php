@@ -21,10 +21,10 @@ if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
 
 $pages = addslashes_array( $_POST[ 'node' ] );
 foreach( $pages as $position => $page ){
-	query( 'update ' . PAGES . ' set position=' . $position . ', parent=' . $page[ 'parent' ] . ' where id=' . $page[ 'id' ] );
+	query( 'update ' . DB_PAGES . ' set position=' . $position . ', parent=' . $page[ 'parent' ] . ' where id=' . $page[ 'id' ] );
 }
 
-cache_clear( 'PAGES' );
+cache_clear( 'DB_PAGES' );
 
 exit;
 

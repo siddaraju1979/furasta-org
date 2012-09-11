@@ -27,7 +27,7 @@ function dm_admin_page_type( $page_id ){
 }
 
 function dm_admin_overview_item( ){
-	$downloads=rows('select name,count from '.PREFIX.'downloadManager');
+	$downloads=rows('select name,count from '.DB_PREFIX.'downloadManager');
 
 	if(count($downloads)==0)
 		return 'No download items yet.';
@@ -42,7 +42,7 @@ function dm_admin_overview_item( ){
 
 function dm_frontend_page_type( $page ){
 
-	$downloads=rows('select name,filename,count from '.PREFIX.'downloadManager where page_id='.$page[ 'id' ]);
+	$downloads=rows('select name,filename,count from '.DB_PREFIX.'downloadManager where page_id='.$page[ 'id' ]);
 
 	$page_content = stripslashes( $page[ 'content' ] );
 
@@ -56,7 +56,7 @@ function dm_frontend_page_type( $page ){
                 <tr><th colspan="2">Downloads</th></tr>';
 
 	foreach($downloads as $download)
-		$content.='<tr><td><a href="' . SITEURL . '_plugins/Download-Manager/frontend/download.php?filename='.$download['filename'].'">'.$download['name'].'</a></td><td><strong>'
+		$content.='<tr><td><a href="' . SITE_URL . '_plugins/Download-Manager/frontend/download.php?filename='.$download['filename'].'">'.$download['name'].'</a></td><td><strong>'
 .$download['count'].'</strong> Downloads</td></tr>';
 
 	$content.='<tr><th colspan="2">&nbsp;</th></tr>

@@ -11,7 +11,7 @@
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
  * @package    file_management
- * @todo	make sure paths are used correctly everywhere - USER_FILES . 'files/' . $path
+ * @todo	make sure paths are used correctly everywhere - USERS_FILES . 'files/' . $path
  */
 
 /**
@@ -40,7 +40,7 @@
  * 	   and this string is correctly added to the URL the file will be displayed.
  *
  *
- * ==== FILES DATABSE ====
+ * ==== DB_FILES DATABSE ====
  *
  * The file manager class keeps a record of all files in the database.
  * The files are then named according to their unique identifier in the db,
@@ -102,6 +102,20 @@ class FileManager{
 	 */
 	private $error = array( );
 
+        /**
+         * _rexec_fn
+         *
+         * default _rexecDir function - ls
+         *
+         * @access private
+         * @var function
+         */
+        private $_rexec_fn = function( &$path, &$file, &$return ){
+
+                array_push( $file, $return );
+
+        }
+
 	/**
 	 * checkPath
 	 *
@@ -116,7 +130,7 @@ class FileManager{
 	private static function checkPath( $path ){
 
                 /**
-                 * path is not in USER_FILES or
+                 * path is not in USERS_FILES or
 		 * path contains "..", therefore it's invalid
                  */
 		if( strpos( '..', $path ) !== false )
@@ -171,7 +185,7 @@ class FileManager{
 	private function updateInfo( $data, $new = false ){
 
 		if( $new ){ // insert db and files array
-			$query = 'insert into ' . FILES . ' values ( '
+			$query = 'insert into ' . DB_FILES . ' values ( '
 				. '"",'
 				. '"' . $data[ 'name' ] . '",'
 				. '"' . $data[ 'path' ] . '",'
@@ -191,7 +205,7 @@ class FileManager{
 			$this->files{ $data[ 'path' ] } = $data;
 		}
 		else{ // update db and files array
-			$query = 'update ' . FILES . ' set ';
+			$query = 'update ' . DB_FILES . ' set ';
 			foreach( $data as $name => $value ){
 				$query .= $name . '="' . $value . '",';
 				$this->files{ $data[ 'path' ] }{ $name } = $value;
@@ -221,7 +235,7 @@ class FileManager{
 		/**
 		 * delete from db
 		 */		
-		query( 'delete from ' . FILES . ' where path=' . addslashes( $path ) );
+		query( 'delete from ' . DB_FILES . ' where path=' . addslashes( $path ) );
 
 		/**
 		 * remove from files array
@@ -248,7 +262,7 @@ class FileManager{
 	public function getFile( $path ){
 
 		if( !isset( $this->files{ $path } ) ){
-			$file = row( 'select * from ' . FILES . ' where path="' . addslashes( $path ) . '"' );
+			$file = row( 'select * from ' . DB_FILES . ' where path="' . addslashes( $path ) . '"' );
 			if( !$file ) // file is not in db
 				return $this->setError( 11, $path );
 			$this->files{ $path } = $file;
@@ -491,7 +505,7 @@ class FileManager{
 			2	=>	'You have insufficient privilege to write "%1"',
 			3	=>	'You have insufficient privilege to view "%1"',
 			4	=>	'The path "%1" is invalid',
-			5	=>	'You have insufficient system permissions to perform that action. Please grant write access to the "' . USER_FILES . '/files" directory',
+			5	=>	'You have insufficient system permissions to perform that action. Please grant write access to the "' . USERS_FILES . '/files" directory',
 			6	=>	'The "%1" at "%2" cannot be created as it already exists',
 			7	=>	'There was a problem querying the database. The following query caused the error: %1',
 			8	=>	'The path "%1" contains a Furasta.Org system file which cannot be written',
@@ -583,41 +597,37 @@ class FileManager{
 	 * function $fn on all files in a directory.
 	 * this uses anonymous functions
 	 *
-	 * $dest is used for specifying a destination in
-	 * the case of copy or move functions
-	 *
 	 * @param string $path
 	 * @param function $fn
-	 * @param string $dest
+         * @param array $return
 	 * @access private
 	 * @return bool
 	 */
-	private function _rexecDir( $path, $fn, $dest = false  ){
+	private function _rexecDir( $path, $fn, $return = array( ) ){
 
 		/**
 		 * scan directory
 		 */
-		$dir = scandir( USER_FILES . 'files/' . $path );
+		$dir = scandir( USERS_FILES . 'files/' . $path );
 		foreach( $dir as $file ){
 
 			// exclude current dir and previous dir
 			if( $file == '.' || $file == '..' )
 				continue;
 
-			$new = $dest . '/' . $file;
 			if( is_dir( $file ) )
-				$this->_rreadDir( $file, $fn, $new );
+				$this->_rreadDir( $file, $fn, $return );
 
 			/**
 			 * call $fn on the file/directory, check
 			 * for errors
 			 */	
-			$success = $fn( $file, $new );
+			$success = $fn( $path, $file, $return );
 			if( !$success )
-				return $this->setError( 5 ); 
+                                return $this->setError( 5 );
 		}
 
-		return false;
+		return $return;
 
 	}
 
@@ -656,7 +666,7 @@ class FileManager{
 
 
 		// file exists, return false
-		if( file_exists( USER_FILES . 'files/' . $path ) )
+		if( file_exists( USERS_FILES . 'files/' . $path ) )
 			return $this->setError( 6, array( 'dir', $path ) );
 
 		/**
@@ -720,7 +730,7 @@ class FileManager{
 		 * directory
 		 */
 //		$fn = function( $file, $dest ){
-//			return rename( $file, USER_FILES . '/' . $dest );
+//			return rename( $file, USERS_FILES . '/' . $dest );
 //		}
 		
 		/**
@@ -766,7 +776,7 @@ class FileManager{
 			return false;
 
 		// read files and dirs
-		$files = self::_rreadDir( USER_FILES . $path, true );
+		$files = self::_rreadDir( USERS_FILES . $path, true );
                 die( print_r( $files ) );
 		/*
 		 * get file database data
@@ -963,7 +973,7 @@ class FileManager{
 		 * directory
 		 */
 //		$fn = function( $file, $dest ){
-//			return rename( $file, USER_FILES . '/' . $dest );
+//			return rename( $file, USERS_FILES . '/' . $dest );
 //		}
 		
 		/**

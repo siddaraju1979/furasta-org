@@ -34,7 +34,7 @@ if( $type != 'Normal' ){
 }
 if( $type == 'Normal' || !$normal ){
 	if( $id != 0 )
-		$content = stripslashes( single( 'select content from ' . PAGES . ' where id= ' . $id, 'content' ) );
+		$content = stripslashes( single( 'select content from ' . DB_PAGES . ' where id= ' . $id, 'content' ) );
 
 	$Template = Template::getInstance( );
 
@@ -43,7 +43,7 @@ if( $type == 'Normal' || !$normal ){
 		tinymce_changeConfig( "#page-content", "Normal" );
 	});';
 
-	$Template->loadJavascript( 'FURASTA_ADMIN_PAGES' . $id, $javascript );
+	$Template->loadJavascript( 'FURASTA_ADMIN_DB_PAGES' . $id, $javascript );
 
 	$content = '
 	<textarea id="page-content" name="PageContent" class="tinymce" style="width:100%;display:block">

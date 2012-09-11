@@ -12,7 +12,7 @@
 switch( $version ){ 
 	case 0:
 		// add content areas table to database
-		query( 'create table if not exists ' . PREFIX . 'content_areas ('
+		query( 'create table if not exists ' . DB_PREFIX . 'content_areas ('
 			. 'id int auto_increment primary key,'
 			. 'name text,'
 			. 'content text,'
@@ -20,7 +20,7 @@ switch( $version ){
 		. ')' );
 
 		// add widgets table
-		query( 'create table if not exists ' . PREFIX . 'widgets ('
+		query( 'create table if not exists ' . DB_PREFIX . 'widgets ('
 			. 'id int auto_increment primary key,'
 			. 'name text,'
 			. 'area_name text,'

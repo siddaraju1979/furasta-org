@@ -27,7 +27,7 @@ $os = empty( $data[ 'os' ] ) ? 'other' : addslashes( $data[ 'os' ] );
 $country = 'unknown';
 
 // add info to db
-query( 'insert into ' . PREFIX . 'stats values(
+query( 'insert into ' . DB_PREFIX . 'stats values(
 	"",
 	"' . $ip . '",
 	"' . $page . '",

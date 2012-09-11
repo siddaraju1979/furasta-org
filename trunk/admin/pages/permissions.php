@@ -20,7 +20,7 @@ if( !defined( 'AJAX_LOADED' ) || !defined( 'AJAX_VERIFIED' ) )
 
 if( ( int ) @$_GET[ 'id' ] != 0 ){
 	$id = $_GET[ 'id' ];
-	$perms = single( 'select perm from ' . PAGES . ' where id=' . $id, 'perm' );
+	$perms = single( 'select perm from ' . DB_PAGES . ' where id=' . $id, 'perm' );
 	$perms = explode( '|', $perms );
 
 	if( isset( $perms[ 0 ] ) && !empty( $perms[ 0 ] ) ){
@@ -65,8 +65,8 @@ if( ( int ) @$_GET[ 'id' ] != 0 ){
 
 }
 
-$groups = rows( 'select id,name from ' . GROUPS );
-$users = rows( 'select id,name,user_group from ' . USERS );
+$groups = rows( 'select id,name from ' . DB_GROUPS );
+$users = rows( 'select id,name,user_group from ' . DB_USERS );
 
 for( $n = 0; $n < count( $groups ); $n++ ){
 
@@ -215,7 +215,7 @@ $( document ).ready( function( ){
 
 });';
 
-$Template->loadJavascript( 'FURASTA_ADMIN_PAGES_PERMISSIONS', $javascript );
+$Template->loadJavascript( 'FURASTA_ADMIN_DB_PAGES_PERMISSIONS', $javascript );
 
 $content = '
 <div id="tabbed">

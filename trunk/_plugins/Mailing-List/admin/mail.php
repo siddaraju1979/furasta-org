@@ -11,16 +11,16 @@
 $Template->add( 'title', $Template->e( 'menu_mailing_send_mail' ) . ' - ' . $Template->e( 'menu_mailing_list' ) );
 $Template->loadJavascript( '_plugins/Mailing-List/admin/admin.js' );
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
-$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
+$Template->add( 'head', '<script type="text/javascript" src="' . SITE_URL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 
-$emails = rows( 'select email from ' . PREFIX . 'mailing_list' );
+$emails = rows( 'select email from ' . DB_PREFIX . 'mailing_list' );
 $bcc = array( );
 foreach( $emails as $email )
 	array_push( $bcc, $email[ 'email' ] );
 $bcc = implode( '; ', $bcc );
 
 $content = '
-<span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/send-large.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Mailing-List/img/send-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_send_mail' ) . '</h1>
 <br style="clear:both"/>
 

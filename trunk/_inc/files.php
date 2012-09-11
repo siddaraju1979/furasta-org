@@ -36,7 +36,7 @@ if( empty( $filename ) || $id == 0 )
 if( $status == 'private' && !User::verify( ) )
 	error( 'You do not have sufficient privellages to view this item.', 'Permissions Error', false );
 
-$path = USER_FILES . 'files/' . $section . '/' . $id . '/' . $status . '/' . $filename;
+$path = USERS_FILES . 'files/' . $section . '/' . $id . '/' . $status . '/' . $filename;
 if( !file_exists( $path ) )
 	error( 'The requested file does not exist.', '404 - File Not Found', false );
 

@@ -35,12 +35,12 @@ if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
         $name = addslashes( $_POST[ 'Name' ] );
         $perm = addslashes( $_POST[ 'perm' ] );
 
-        query( 'update ' . GROUPS . ' set name="' . $name . '",perm="' . $perm . '" where id=' . $id );
+        query( 'update ' . DB_GROUPS . ' set name="' . $name . '",perm="' . $perm . '" where id=' . $id );
 
 	if( $User->group == $id )
 		$_SESSION[ 'user' ][ 'perm' ] = explode( ',', $perm );
 
-	cache_clear( 'USERS' );
+	cache_clear( 'DB_USERS' );
 }
 
 $Template->loadJavascript( 'admin/users/edit-group.js' );
@@ -48,7 +48,7 @@ $Template->loadJavascript( 'admin/users/edit-group.js' );
 // get default permissions
 require_once HOME . 'admin/users/permissions.php';
 
-$group = row( 'select name,perm from ' . GROUPS . ' where id=' . $id . ' limit 1' );
+$group = row( 'select name,perm from ' . DB_GROUPS . ' where id=' . $id . ' limit 1' );
 
 $group_perm = explode( ',', $group[ 'perm' ] );
 

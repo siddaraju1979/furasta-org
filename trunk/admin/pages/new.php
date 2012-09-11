@@ -4,7 +4,7 @@
  * New Page, Furasta.Org
  *
  * A facility through which the user can create a new
- * page in the PAGES table.
+ * page in the DB_PAGES table.
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -55,18 +55,18 @@ if( isset( $_POST[ 'new-save' ] ) && $valid ){
 		 * home tag from previous home page
 		 */
 		if( $home == 1 )
-			query( 'update ' . PAGES . ' set home=0 where home=1' );
+			query( 'update ' . DB_PAGES . ' set home=0 where home=1' );
 
 		/**
 		 * save page to database 
 		 */
-        	query('insert into '.PAGES.' values ("","'.$name.'","'.$content.'","'.$slug.'","'.$template.'","'.$type.'","'.date("Y-m-d
+        	query('insert into '.DB_PAGES.' values ("","'.$name.'","'.$content.'","'.$slug.'","'.$template.'","'.$type.'","'.date("Y-m-d
 		").'","'.$User->name( ).'","10000","'.$parent.'","'.$perm.'","'.$home.'","'.$navigation.'")');
 
 		/**
 		 * clear pages cache and redirect to edit pages
 		 */	
-        	cache_clear( 'PAGES' );
+        	cache_clear( 'DB_PAGES' );
 
 		$id = mysql_insert_id( );
 
@@ -262,7 +262,7 @@ $(document).ready(function(){
 		 */
 		if( !$( "#page-permissions-content" ).hasClass( "loaded" ) ){
 
-			$( "#page-permissions-content" ).load( "' . SITEURL . '_inc/ajax.php?file=admin/pages/permissions.php", function( ){
+			$( "#page-permissions-content" ).load( "' . SITE_URL . '_inc/ajax.php?file=admin/pages/permissions.php", function( ){
 
 				$( this ).addClass( "loaded" );
 
@@ -279,18 +279,18 @@ $(document).ready(function(){
 /**
  * Load javascript files 
  */
-$Template->loadJavascript( 'FURASTA_ADMIN_PAGES_NEW', $javascript );
+$Template->loadJavascript( 'FURASTA_ADMIN_DB_PAGES_NEW', $javascript );
 
 /**
  * create base url 
  */
-$url = substr( SITEURL, 0, -1 );
+$url = substr( SITE_URL, 0, -1 );
 
 $content = '
 <div id="page-permissions-dialog" title="Page Permissions" style="display:none">
         <div id="complete-message" style="display:none"></div>
         <form id="page-permissions-content">
-		<p>Loading.. <img src="' . SITEURL . '_inc/img/loading.gif"/></p>
+		<p>Loading.. <img src="' . SITE_URL . '_inc/img/loading.gif"/></p>
 	</form>
 </div>
 
@@ -367,7 +367,7 @@ $content .= '
  * load possible page parents and display in an indented list 
  */
 $pages = array( );
-$query = query( 'select id,name,parent from ' . PAGES . ' order by position,name desc' );
+$query = query( 'select id,name,parent from ' . DB_PAGES . ' order by position,name desc' );
 while( $row = mysql_fetch_assoc( $query ) )
         $pages[ $row[ 'parent' ] ][ ] = $row;
 

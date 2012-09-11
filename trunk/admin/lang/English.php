@@ -125,7 +125,7 @@ $lang = array(
 	'users_user_added' => 'An email has been sent to your address for validation. This user will not be able to login until the email is validated.',
 
 	// Groups
-	'groups_delete_prompt' => 'Are you sure you want to delete this group? <br/><b>ALL USERS IN THE GROUP WILL BE DELETED</b>',
+	'groups_delete_prompt' => 'Are you sure you want to delete this group? <br/><b>ALL DB_USERS IN THE GROUP WILL BE DELETED</b>',
 	'groups_invalid_details' => 'The details you provided are not valid. Please try creating a group again. The group name may already be taken.',
 	
 	// Configuration

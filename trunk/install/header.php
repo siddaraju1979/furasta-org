@@ -15,7 +15,7 @@
  * get the home dir 
  */
 define( 'HOME', substr( dirname( __FILE__ ), 0, -7) );
-define( 'SITEURL', calculate_url( ) );
+define( 'SITE_URL', calculate_url( ) );
 
 /**
  * cannot install if .settings.php exists
@@ -88,7 +88,5 @@ function calculate_url( ){
 
         return $url;
 }
-
-define( 'SITE_URL', calculate_url( ) );
 
 ?>
