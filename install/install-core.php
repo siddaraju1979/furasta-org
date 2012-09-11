@@ -31,18 +31,18 @@ function install_settings( ){
 
         // constants for .settings.php
         $constants = array(
-                'PAGES'                 => $prefix . 'pages',
-                'USERS'                 => $prefix . 'users',
-                'TRASH'                 => $prefix . 'trash',
-                'GROUPS'                => $prefix . 'groups',
-                'USERS_GROUPS'          => $prefix . 'users_groups',
-                'OPTIONS'               => $prefix . 'options',
-                'FILES'                 => $prefix . 'files',
-                'TEMPLATE_DIR'          => HOME . '_www/vitruvius',     // @todo update
-                'PREFIX'                => $prefix,
+                'DB_PAGES'                 => $prefix . 'pages',
+                'DB_USERS'                 => $prefix . 'users',
+                'DB_TRASH'                 => $prefix . 'trash',
+                'DB_GROUPS'                => $prefix . 'groups',
+                'DB_USERS_GROUPS'          => $prefix . 'users_groups',
+                'DB_OPTIONS'               => $prefix . 'options',
+                'DB_FILES'                 => $prefix . 'files',
+                'TEMPLATE_DIR'          => HOME . '_www/vitruvius/',     // @todo update
+                'DB_PREFIX'                => $prefix,
                 'VERSION'               => '0.9.2',                     // @todo define version in install header
-                'SITEURL'               => $_SESSION[ 'settings' ][ 'site_url' ],
-                'USER_FILES'            => $_SESSION[ 'settings' ][ 'user_files' ],
+                'SITE_URL'               => $_SESSION[ 'settings' ][ 'site_url' ],
+                'USERS_FILES'            => $_SESSION[ 'settings' ][ 'user_files' ],
                 'DIAGNOSTIC_MODE'       => 0,
                 'LANG'                  => 'English',
                 'SET_REVISION'          => 100
@@ -124,9 +124,9 @@ function install_db( ){
                 . '<p>Welcome to your new installation of Furasta.Org'
                 . 'Content Management System.</p>'
                 . '<p>To log in to the administration area <a href=\''
-                . $constants[ 'SITEURL' ] . '/admin\'>Click Here</a></p>';
-        mysql_query( 'drop table if exists ' . $constants[ 'PAGES' ] );
-        mysql_query( 'create table ' . $constants[ 'PAGES' ] . ' ('
+                . $constants[ 'SITE_URL' ] . '/admin\'>Click Here</a></p>';
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_PAGES' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_PAGES' ] . ' ('
                 . 'id int auto_increment primary key,' 
                 . 'name text,' 
                 . 'content text,' 
@@ -141,7 +141,7 @@ function install_db( ){
                 . 'home int,' 
                 . 'display int' 
         . ')' );
-        mysql_query( 'insert into ' . $constants[ 'PAGES' ] . ' values('
+        mysql_query( 'insert into ' . $constants[ 'DB_PAGES' ] . ' values('
                 . '0,'
                 . '"Home",'
                 . '"' . $pagecontent . '",'
@@ -161,8 +161,8 @@ function install_db( ){
          * users tables, where user information
          * is stored
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'USERS' ] );
-        mysql_query( 'create table ' . $constants[ 'USERS' ] . ' ('
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_USERS' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_USERS' ] . ' ('
                 . 'id int auto_increment primary key,'
                 . 'name text,'
                 . 'email text,'
@@ -171,7 +171,7 @@ function install_db( ){
                 . 'reminder text,'
                 . 'data text'
         . ')' );
-        mysql_query( 'insert into ' . $constants[ 'USERS' ] . ' values('
+        mysql_query( 'insert into ' . $constants[ 'DB_USERS' ] . ' values('
                 . '0,'
                 . '"' . $_SESSION[ 'user' ][ 'name' ] . '",'
                 . '"' . $_SESSION[ 'user' ][ 'email' ] . '",'
@@ -186,14 +186,14 @@ function install_db( ){
          * groups table, permissions for groups and
          * group information
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'GROUPS' ] );
-        mysql_query( 'create table ' . $constants[ 'GROUPS' ] . ' ('
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_GROUPS' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_GROUPS' ] . ' ('
                 . 'id int auto_increment primary key,'
                 . 'name text,'
                 . 'perm text,'
                 . 'file_perm text'
         . ')' );
-        mysql_query( 'insert into ' . $constants[ 'GROUPS' ] . ' values ( '
+        mysql_query( 'insert into ' . $constants[ 'DB_GROUPS' ] . ' values ( '
                 . '"",'
                 . '"Users",'
                 . '"a,e,c,d,t,o,s,u,f",'
@@ -204,12 +204,12 @@ function install_db( ){
          * users groups, this table identifies which
          * groups a user is a member of
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'USERS_GROUPS' ] );
-        mysql_query( 'create table ' . $constants[ 'USERS_GROUPS' ] . ' ('
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_USERS_GROUPS' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_USERS_GROUPS' ] . ' ('
                 . 'user_id int,'
                 . 'group_id text'
         . ')' );
-        mysql_query( 'insert into ' . $constants[ 'USERS_GROUPS' ] . ' values ( '
+        mysql_query( 'insert into ' . $constants[ 'DB_USERS_GROUPS' ] . ' values ( '
                 . '1,'
                 . '"_superuser"'
         . ')' );
@@ -218,8 +218,8 @@ function install_db( ){
          * trash table, keeps copies of deleted pages
          * note: not all page information is retained
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'TRASH' ] );
-        mysql_query( 'create table ' . $constants[ 'TRASH' ] . ' ('
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_TRASH' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_TRASH' ] . ' ('
                 . 'id int auto_increment primary key,'
                 . 'name text,'
                 . 'content text,'
@@ -234,7 +234,7 @@ function install_db( ){
                 . 'home int,'
                 . 'display int'
         . ')' );
-        mysql_query( 'insert into ' . $constants[ 'TRASH' ] . ' values('
+        mysql_query( 'insert into ' . $constants[ 'DB_TRASH' ] . ' values('
                 . '0,'
                 . '"Example Page",'
                 . '"Sample page content.",'
@@ -255,8 +255,8 @@ function install_db( ){
          * seperated by category. used as general
          * purpose database storage
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'OPTIONS' ] );
-        mysql_query( 'create table ' . $constants[ 'OPTIONS' ] . ' ( '
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_OPTIONS' ] );
+        mysql_query( 'create table ' . $constants[ 'DB_OPTIONS' ] . ' ( '
                 . 'name text,'
                 . 'value text,'
                 . 'category text'
@@ -267,16 +267,16 @@ function install_db( ){
          *
          * @todo this should be changed, i don't like how these values are hard coded
          */
-        mysql_query( 'drop table if exists ' . $constants[ 'FILES' ] );
-        mysql_query( 'create table ' .  $constants[ 'FILES' ]  . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
+        mysql_query( 'drop table if exists ' . $constants[ 'DB_FILES' ] );
+        mysql_query( 'create table ' .  $constants[ 'DB_FILES' ]  . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
         // file manager add initial directory structure
-        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
         $fm_users_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_users_su_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'FILES' ]  . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_su_id = mysql_insert_id( );
 
 }
@@ -293,7 +293,7 @@ function install_dirs( ){
 
         global $constants;
         global $user_id;
-        $user_files = $constants[ 'USER_FILES' ];
+        $user_files = $constants[ 'USERS_FILES' ];
 
         // dirs to create
         $dirs = array(
@@ -341,8 +341,8 @@ function install_email( ){
                 . '<br/>'
                 . 'Please activate your new user by clicking on the link below:<br/>'
                 . '<br/>'
-                . '<a href="' . $constants[ 'SITEURL' ] . '/admin/users/activate.php?hash='
-                . $hash . '">' . $constants[ 'SITEURL' ] . '/admin/users/activate.php?hash='
+                . '<a href="' . $constants[ 'SITE_URL' ] . '/admin/users/activate.php?hash='
+                . $hash . '">' . $constants[ 'SITE_URL' ] . '/admin/users/activate.php?hash='
                 . $hash . '</a><br/>'
                 . '<br/>'
                 . 'If you are not the person stated above please ignore this email.<br/>';

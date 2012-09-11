@@ -16,5 +16,5 @@ $id = (int) @$_POST[ 'id' ];
 if( empty( $id ) )
 	exit;
 
-query( 'delete from ' . PREFIX . 'mailing_list where id=' . $id );
+query( 'delete from ' . DB_PREFIX . 'mailing_list where id=' . $id );
 ?>

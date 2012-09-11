@@ -19,16 +19,16 @@ $boxes=explode(',',$boxes);
 switch($function){
 	case 'Restore':
 		foreach($boxes as $id){
-			query('insert into '.PAGES.' select NULL,name,content,slug,"Default","Normal",edited,user,position,"0",perm,"0",display from '.TRASH.' where id='.$id,true);
-			query('delete from '.TRASH.' where id='.$id,true);
+			query('insert into '.DB_PAGES.' select NULL,name,content,slug,"Default","Normal",edited,user,position,"0",perm,"0",display from '.DB_TRASH.' where id='.$id,true);
+			query('delete from '.DB_TRASH.' where id='.$id,true);
 		}
-		cache_clear('PAGES');
+		cache_clear('DB_PAGES');
 
 		$error = '16';
 	break;
 	case 'Delete':
 		foreach($boxes as $id)
-                        query('delete from '.TRASH.' where id='.$id,true);
+                        query('delete from '.DB_TRASH.' where id='.$id,true);
 
 		$error = '17';
 	break;

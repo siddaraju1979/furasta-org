@@ -36,7 +36,7 @@
  * at admin/layout/ajax.php. echo or print can still be used
  * as output is captured and added to the Template class.
  *
- * ========= OPTIONS ==========
+ * ========= DB_OPTIONS ==========
  * 
  * The no_config option can be used to load a minimal
  * enviornment with only the .settings.php file loaded

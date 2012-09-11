@@ -63,8 +63,8 @@ if( isset( $_POST[ 'settings_general' ] ) && $valid == true ){
 	 * if the siteurl has changes, then add the new
 	 * value to the constants array
 	 */
-	if( $url != SITEURL )
-		$constants[ 'SITEURL' ] = $url;
+	if( $url != SITE_URL )
+		$constants[ 'SITE_URL' ] = $url;
 
 	$lang = @$_POST[ 'lang' ];
 	if( $lang != LANG && file_exists( HOME . 'admin/lang/' . $lang . '.php' ) ){
@@ -140,7 +140,7 @@ else{
 $maintenance = ( $SETTINGS[ 'maintenance' ] == 1 ) ? 'checked="checked"' : '';
 $index = ( $SETTINGS[ 'index' ] == 1 ) ? 'checked="checked"' : '';
 $diagnostic = ( $Template->diagnosticMode == 1 ) ? 'checked="checked"' : '';
-$url = ( isset( $url ) ) ? $url : SITEURL;
+$url = ( isset( $url ) ) ? $url : SITE_URL;
 $lang = ( isset( $lang ) ) ? $lang : LANG;
 $maintenance_message = ( isset( $options[ 'maintenance_message' ] ) ) ?
 	$options[ 'maintenance_message' ] :
@@ -167,7 +167,7 @@ $content='
 	</tr>
 	<tr>
 		<td>' . $Template->e( 'configuration_website_url' ) . ': <a class="help link" id="help-url">&nbsp;</a></td>
-		<td><input type="text" name="URL" value="' . SITEURL . '" class="input" /></td>
+		<td><input type="text" name="URL" value="' . SITE_URL . '" class="input" /></td>
 	</tr>
 	<tr>
 		<td>' . $Template->e( 'configuration_maintenance_mode' ) . ': <a class="help link" id="help-maintenance">&nbsp;</a></td>

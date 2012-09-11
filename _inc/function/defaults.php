@@ -114,16 +114,16 @@ function defaults_constants( $constants ){
 	$defaults = array(
 		'TEMPLATE_DIR'          => defined( 'TEMPLATE_DIR' )    ? TEMPLATE_DIR          : '',
 		'VERSION'               => defined( 'VERSION' )         ? VERSION               : '',
-		'PREFIX'                => defined( 'PREFIX' )          ? PREFIX                : '',
-		'PAGES'                 => defined( 'PAGES' )           ? PAGES                 : '',
-		'USERS'                 => defined( 'USERS' )           ? USERS                 : '',
-		'TRASH'                 => defined( 'TRASH' )           ? TRASH                 : '',
-		'GROUPS'                => defined( 'GROUPS' )          ? GROUPS                : '',
-		'USERS_GROUPS'          => defined( 'USERS_GROUPS' )    ? USERS_GROUPS          : '',
-		'FILES'                 => defined( 'FILES' )           ? FILES                 : '',
-		'OPTIONS'               => defined( 'OPTIONS' )         ? OPTIONS               : '',
-		'SITEURL'               => defined( 'SITEURL' )         ? SITEURL               : '',
-		'USER_FILES'            => defined( 'USER_FILES' )      ? USER_FILES            : '',
+		'DB_PREFIX'                => defined( 'DB_PREFIX' )          ? DB_PREFIX                : '',
+		'DB_PAGES'                 => defined( 'DB_PAGES' )           ? DB_PAGES                 : '',
+		'DB_USERS'                 => defined( 'DB_USERS' )           ? DB_USERS                 : '',
+		'DB_TRASH'                 => defined( 'DB_TRASH' )           ? DB_TRASH                 : '',
+		'DB_GROUPS'                => defined( 'DB_GROUPS' )          ? DB_GROUPS                : '',
+		'DB_USERS_GROUPS'          => defined( 'DB_USERS_GROUPS' )    ? DB_USERS_GROUPS          : '',
+		'DB_FILES'                 => defined( 'DB_FILES' )           ? DB_FILES                 : '',
+		'DB_OPTIONS'               => defined( 'DB_OPTIONS' )         ? DB_OPTIONS               : '',
+		'SITE_URL'               => defined( 'SITE_URL' )         ? SITE_URL               : '',
+		'USERS_FILES'            => defined( 'USERS_FILES' )      ? USERS_FILES            : '',
 		'DIAGNOSTIC_MODE'       => defined( 'DIAGNOSTIC_MODE' ) ? DIAGNOSTIC_MODE       : '',
 		'LANG'                  => defined( 'LANG' )            ? LANG                  : '',
 		'SET_REVISION'          => defined( 'REVISION' )        ? REVISION              : '',
@@ -148,43 +148,52 @@ function defaults_constants( $constants ){
  */
 function defaults_settings_content( $SETTINGS, $DB, $PLUGINS, $constants ){
 
-	$filecontents = '<?php' . "\n" .
-			'# Furasta.Org - .settings.php' . "\n\n";
+       $filecontents = "<?php \n\n"
+                . "/**\n"
+                . " * Settings File, Furasta.Org\n"
+                . " * \n"
+                . " * Contains settings created by the installer.\n"
+                . " * This file is also altered during the running\n"
+                . " * system.\n"
+                . " * \n"
+                . " * @author\tInstaller\n"
+                . " * @version\t1.0\n"
+                . " */\n\n";
 
 	foreach( $constants as $constant => $value )
-		$filecontents .= 'define( \'' . $constant . '\', \'' . $value . '\' );' . "\n"; 
+		$filecontents .= "define( '" . $constant . "', '" . $value . "' );\n"; 
 
 	$filecontents .= "\n" .
-			'$PLUGINS = array(' . "\n";
+			'$PLUGINS' . " = array( \n";
 
 
 	foreach( $PLUGINS as $plugin => $version )
-		$filecontents .= "\t" . '\'' . $plugin . '\' => \'' . $version . '\',' . "\n";
+		$filecontents .= "\t'" . $plugin . "' => '" . $version . "',\n";
 
-	$filecontents .= ');' . "\n" . "\n" .
-			'$SETTINGS = array(' . "\n";
+	$filecontents .= ");\n\n" .
+			'$SETTINGS' . " = array( \n";
 
 	/**
 	 * print settings array, two layer deep array
 	 */
 	foreach( $SETTINGS as $setting => $value ){
 		if( is_array( $value ) ){
-			$filecontents .= "\t" . '\'' . $setting . '\' => array(' . "\n";
+			$filecontents .= "\t'" . $setting . "' => array(\n";
 			foreach( $value as $s => $v )
-				$filecontents .= '		\'' . $s . '\' => \'' . $v . '\',' . "\n";
-			$filecontents .= "\t" . '),' . "\n";
+				$filecontents .= "\t\t" . $s . "' => '" . $v . "',\n";
+			$filecontents .= "\t),\n";
 			continue;
 		}
-		$filecontents .= "\t" . '\'' . $setting . '\' => \'' . addslashes( $value ) . '\',' . "\n";
+		$filecontents .= "\t'" . $setting . "' => '" . addslashes( $value ) . "',\n";
 	}
 
-	$filecontents .= "\n" 
-			. ');' . "\n"
+	$filecontents .= "\n\n" 
+                        . ');' . "\n"
 			. '$DB = array(' . "\n"
-			. "\t" . '\'name\' => \'' . $DB[ 'name' ] . '\',' . "\n" 
-			. "\t" . '\'host\' => \'' . $DB[ 'host' ] . '\',' . "\n" 
-			. "\t" . '\'user\' => \'' . $DB[ 'user' ] . '\',' . "\n" 
-			. "\t" . '\'pass\' => \'' . $DB[ 'pass' ] . '\'' . "\n" 
+			. "\t'name'\t=>\t'" . $DB[ 'name' ] . "',\n" 
+			. "\t'host'\t=>\t'" . $DB[ 'host' ] . "',\n" 
+			. "\t'user'\t=>\t'" . $DB[ 'user' ] . "',\n" 
+			. "\t'pass'\t=>\t'" . $DB[ 'pass' ] . "'\n" 
 			. ');' . "\n";
 
         return $filecontents;

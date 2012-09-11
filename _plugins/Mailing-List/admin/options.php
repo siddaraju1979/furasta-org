@@ -27,13 +27,13 @@ if( isset( $_POST[ 'options-form-save' ] ) && $valid ){
 	$template = addslashes( @$_POST[ 'template' ] );
 
 	if( $from != $mailing_list_options[ 'from' ] )
-		query( 'update ' . OPTIONS . ' set value="' . $from . '" where name="from" && category="mailing_list_options"' );
+		query( 'update ' . DB_OPTIONS . ' set value="' . $from . '" where name="from" && category="mailing_list_options"' );
 
 	if( $reply_to != $mailing_list_options[ 'reply_to' ] )
-		query( 'update ' . OPTIONS . ' set value="' . $reply_to . '" where name="reply_to" && category="mailing_list_options"' );
+		query( 'update ' . DB_OPTIONS . ' set value="' . $reply_to . '" where name="reply_to" && category="mailing_list_options"' );
 
 	if( $template != $mailing_list_options[ 'template' ] )
-		query( 'update ' . OPTIONS . ' set value="' . $template . '" where name="template" && category="mailing_list_options"' );
+		query( 'update ' . DB_OPTIONS . ' set value="' . $template . '" where name="template" && category="mailing_list_options"' );
 
 	$Template->runtimeError( '13' ); 
 	$mailing_list_options = options( 'mailing_list_options' );
@@ -48,12 +48,12 @@ $(function(){
 });
 ';
 
-$Template->add( 'head', '<script type="text/javascript" src="' . SITEURL . '_inc/tiny_mce/tiny_mce.js"></script>' );
+$Template->add( 'head', '<script type="text/javascript" src="' . SITE_URL . '_inc/tiny_mce/tiny_mce.js"></script>' );
 $Template->add( 'javascript', $javascript );
 $Template->loadJavascript( '_inc/js/tiny_mce.js' );
 
 $content = '
-<span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/options-large.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Mailing-List/img/options-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_options' ) . '</h1>
 
 <form method="post" id="options-form">

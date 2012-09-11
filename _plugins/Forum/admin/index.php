@@ -12,15 +12,15 @@ $Template = Template::getInstance( );
 $Template->loadJavascript( '_plugins/Forum/admin/admin.js' );
 
 $users = single( 
-	'select count(id) from ' . USERS . ' where user_group=( select id from ' . GROUPS . ' where name="Forum Users" )',
+	'select count(id) from ' . DB_USERS . ' where user_group=( select id from ' . DB_GROUPS . ' where name="Forum Users" )',
 	'count(id)'
 );
 $moderators = single( 
-	'select count(id) from ' . USERS . ' where user_group=( select id from ' . GROUPS . ' where name="Forum Moderators" )',
+	'select count(id) from ' . DB_USERS . ' where user_group=( select id from ' . DB_GROUPS . ' where name="Forum Moderators" )',
 	'count(id)'
 );
 $forums = single(
-	'select count(id) from ' . PREFIX . 'forums',
+	'select count(id) from ' . DB_PREFIX . 'forums',
 	'count(id)'
 );
 
@@ -80,11 +80,11 @@ $content = '
 				</tr>
 	';
 
-$forums = rows( 'select id, name, description from ' . PREFIX . 'forums' );
+$forums = rows( 'select id, name, description from ' . DB_PREFIX . 'forums' );
 if( count( $forums ) == 0 )
 	$content .= '<tr class="empty-table"><td colspan="4">No forums yet! <a class="link add-forum">Add one</a>.</td></tr>';
 foreach( $forums as $forum ){
-	$posts = single( 'select count(id) from ' . PREFIX . 'forum_posts where id=' . $forum[ 'id' ], 'count(id)' );
+	$posts = single( 'select count(id) from ' . DB_PREFIX . 'forum_posts where id=' . $forum[ 'id' ], 'count(id)' );
 	$content .= '<tr>
 		<td>' . $forum[ 'name' ] . '</td>
 		<td>' . $forum[ 'description' ] . '</td>

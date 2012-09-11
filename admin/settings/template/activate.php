@@ -36,5 +36,5 @@ if(!file_exists(HOME.'_www/'.$name.'/index.html'))
 
 settings_rewrite($SETTINGS,$DB,$PLUGINS,array( 'TEMPLATE_DIR' => HOME.'_www/'.$name.'/' ) );
 
-header( 'location: ' . SITEURL . 'admin/settings.php?page=template' );
+header( 'location: ' . SITE_URL . 'admin/settings.php?page=template' );
 ?>

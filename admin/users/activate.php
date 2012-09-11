@@ -19,12 +19,12 @@ $hash=addslashes(@$_GET['hash']);
 if($hash=='')
 	die();
 
-$details=rows('select name from '.USERS.' where hash="'.$hash.'"');
+$details=rows('select name from '.DB_USERS.' where hash="'.$hash.'"');
 
 if(count($details)!=1)
 	error('The activation hash provied has not matched any users.','Activation Failure');
 
-query('update '.USERS.' set hash="activated" where hash="'.$hash.'"');
+query('update '.DB_USERS.' set hash="activated" where hash="'.$hash.'"');
 
 error($details[0]['name'].', your account has been activated successfully. Please continue to the <a href="/admin/index.php">login area.</a>','User Activated');
 ?>

@@ -38,10 +38,10 @@ if( $date ){
 		break;
 	}
 
-	$posts = rows( 'select * from ' . PREFIX . 'blog_posts where post_date > "' . $min . '" and post_date < "' . $max . '" order by post_date asc limit ' . $limit );
+	$posts = rows( 'select * from ' . DB_PREFIX . 'blog_posts where post_date > "' . $min . '" and post_date < "' . $max . '" order by post_date asc limit ' . $limit );
 }
 else // else display most recent posts
-	$posts = rows( 'select * from ' . PREFIX . 'blog_posts where blog_id=' . addslashes( $id ) . ' order by post_date asc limit ' . $limit );
+	$posts = rows( 'select * from ' . DB_PREFIX . 'blog_posts where blog_id=' . addslashes( $id ) . ' order by post_date asc limit ' . $limit );
 
 echo '<div id="blog-content">';
 
@@ -49,11 +49,11 @@ if( count( $posts ) == 0 ){
 	echo '<p><b>' . $Template->e( 'blog_no_posts' ) . '</b></p>';
 }
 else{
-	$b_name = single( 'select slug from ' . PAGES . ' where id=' . $id, 'slug' );
+	$b_name = single( 'select slug from ' . DB_PAGES . ' where id=' . $id, 'slug' );
 	foreach( $posts as $post ){
 		$date = date( '/Y/m/d/', strtotime( $post[ 'post_date' ] ) );
 		$name = str_replace( ' ', '-', $post[ 'title' ] );
-		$link = '<a href="' . SITEURL . $b_name . $date . $name . '">';
+		$link = '<a href="' . SITE_URL . $b_name . $date . $name . '">';
 		$content = ( @$options[ 'blog_full_summary' ] == 'full' ) ? $post[ 'body' ] : substr( $post[ 'body' ], 0, 400 ) . ' [..]';
 		echo '<div class="blog-post" id="blog_post_' . $post[ 'id' ] . '">';
 		echo '<div class="blog-post-title">

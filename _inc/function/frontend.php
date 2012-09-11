@@ -50,18 +50,18 @@ function frontend_error( $error, $title = 'Error' ){
 function frontend_menu(){
         $cache_file=md5( 'FURASTA_FUNCTION_FRONTEND_MENU' );
 
-        if(cache_is_good($cache_file,'120*60*12','PAGES'))
-                $order=json_decode(cache_get($cache_file,'PAGES'));
+        if(cache_is_good($cache_file,'120*60*12','DB_PAGES'))
+                $order=json_decode(cache_get($cache_file,'DB_PAGES'));
         else{
 		$pages=array();
-		$query=query('select id,name,parent,slug,home from '.PAGES.' where display=1 order by position,name desc');
+		$query=query('select id,name,parent,slug,home from '.DB_PAGES.' where display=1 order by position,name desc');
 
 		while($row=mysql_fetch_assoc($query))
 		        $pages[$row['parent']][]=$row;
 
-		$order=frontend_list_pages(0,$pages,0,SITEURL);
+		$order=frontend_list_pages(0,$pages,0,SITE_URL);
 
-                cache($cache_file,json_encode($order),'PAGES');
+                cache($cache_file,json_encode($order),'DB_PAGES');
         }
         return $order;
 }
@@ -100,7 +100,7 @@ function frontend_breadcrumbs( $params ){
                 array_pop( $array );
 
 	if( count( $array ) == 0 ){
-		$home = single( 'select slug from ' . PAGES . ' where home=1 limit 1', 'slug' );
+		$home = single( 'select slug from ' . DB_PAGES . ' where home=1 limit 1', 'slug' );
 		$array[ 0 ] = $home;
 	}
 
@@ -113,7 +113,7 @@ function frontend_breadcrumbs( $params ){
 	for( $i = 0; $i < count( $array ); $i++ ){
 		$name = str_replace( '-', ' ', $array[ $i ] );
 
-		$url = SITEURL;
+		$url = SITE_URL;
 		for( $n = 0; $n < ( $i + 1 ); $n++ )
 			$url .= $array[ $n ] . '/';
 
@@ -132,7 +132,7 @@ function frontend_breadcrumbs( $params ){
 	 * generate html
 	 */
 	$content = '<ul id="page-tree" style="list-style-type:none">
-			<li style="display:inline"><a href="' . SITEURL . '">' . $SETTINGS[ 'site_title' ] . '</a></li>';
+			<li style="display:inline"><a href="' . SITE_URL . '">' . $SETTINGS[ 'site_title' ] . '</a></li>';
 
 	$i = 0;
 	foreach( $breadcrumbs as $name => $url ){
@@ -175,11 +175,11 @@ function frontend_metadata( $params, $smarty ){
 	<meta name="generator" content="Furasta.Org ' . VERSION . '" />
 	<meta name="description" content="' . $description . '" />
 	<meta name="keywords" content="' . $keywords . '" />
-	<link rel="shortcut icon" href="' . SITEURL . '_inc/img/favicon.ico" />
+	<link rel="shortcut icon" href="' . SITE_URL . '_inc/img/favicon.ico" />
 	<script type="text/javascript">
 		window.furasta = {
 			site : { 
-				url : "' . SITEURL . '",
+				url : "' . SITE_URL . '",
 				title : "' . $smarty->getTemplateVars( 'site_title' ) . '",
 				subtitle : "' . $smarty->getTemplateVars( 'site_subtitle' ) . '"
 			},

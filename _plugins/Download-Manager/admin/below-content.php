@@ -3,7 +3,7 @@
 
 
 if($id!=0){
-        $Page=row( 'select content from ' . PAGES . ' where id=' . $id );
+        $Page=row( 'select content from ' . DB_PAGES . ' where id=' . $id );
         $page_content=$Page['content'];
 }
 

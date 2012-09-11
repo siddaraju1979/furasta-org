@@ -187,7 +187,7 @@ function options( $category ){
 
 	$opts = array( );
 
-	$options = rows( 'select name, value from ' . OPTIONS . ' where category="' . $category . '"' );
+	$options = rows( 'select name, value from ' . DB_OPTIONS . ' where category="' . $category . '"' );
 
 	foreach( $options as $option ){
 		$opts[ $option[ 'name' ] ] = $option[ 'value' ];
@@ -214,8 +214,8 @@ function update_options( $options, $category ){
 	$options = addslashes_array( $options );
 	
 	if( count( $options ) != 0 ){
-		query( 'delete from ' . OPTIONS . ' where category="' . $category . '"' );
-		$query = 'insert into ' . OPTIONS . ' values ';
+		query( 'delete from ' . DB_OPTIONS . ' where category="' . $category . '"' );
+		$query = 'insert into ' . DB_OPTIONS . ' values ';
 		$i = 0;
 		foreach( $options as $option => $value ){
 			++$i;

@@ -61,17 +61,17 @@ function mailing_list_filter_menu( $items, $url ){
 					'menu_mailing_list_subscribers' => array(
 						'name' => $Template->e( 'menu_mailing_list_subscribers' ),
 						'url' => $url . 'page=list',
-						'image' => SITEURL . '_plugins/Mailing-List/img/list.png'
+						'image' => SITE_URL . '_plugins/Mailing-List/img/list.png'
 					),
 					'menu_mailing_send_mail' => array(
 						'name' => $Template->e( 'menu_mailing_send_mail' ),
 						'url' => $url . 'page=mail',
-						'image' => SITEURL . '_plugins/Mailing-List/img/send.png'
+						'image' => SITE_URL . '_plugins/Mailing-List/img/send.png'
 					),
 					'menu_mailing_options' => array(
 						'name' => $Template->e( 'menu_mailing_options' ),
 						'url' => $url . 'page=options',	
-						'image' => SITEURL . '_plugins/Mailing-List/img/options.png'
+						'image' => SITE_URL . '_plugins/Mailing-List/img/options.png'
 					)
 				)
 			);

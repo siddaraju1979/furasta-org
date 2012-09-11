@@ -16,6 +16,6 @@ $id = (int) @$_POST[ 'id' ];
 if( $id == 0 )
 	exit;
 
-query( 'delete from ' . PREFIX . 'blog_posts where id=' . $id );
+query( 'delete from ' . DB_PREFIX . 'blog_posts where id=' . $id );
 die( 'ok' );
 ?>

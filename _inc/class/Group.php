@@ -100,7 +100,7 @@ class Group{
 		/**
 		 * get groups info from db
 		 */
-		$query = 'select * from ' . GROUPS . ' where id=';
+		$query = 'select * from ' . DB_GROUPS . ' where id=';
 		$query .= implode( ' or id=', $ids );
 		$groups = rows( $query );
 
@@ -143,7 +143,7 @@ class Group{
 	private function __construct( $group ){
 
 		if( !is_array( $group ) )
-			$group = row( 'select * from ' . GROUPS . ' where id=' . $id );
+			$group = row( 'select * from ' . DB_GROUPS . ' where id=' . $id );
 
 		$this->id = $id;
 		$this->name = $group[ 'name' ];
@@ -187,9 +187,9 @@ class Group{
 	 */
 	public static function createGroupDirs( $id ){
 		$dirs = array(
-			USER_FILES . 'files/groups/' . $id,
-			USER_FILES . 'files/groups/' . $id . '/public',
-			USER_FILES . 'files/groups/' . $id . '/private'
+			USERS_FILES . 'files/groups/' . $id,
+			USERS_FILES . 'files/groups/' . $id . '/public',
+			USERS_FILES . 'files/groups/' . $id . '/private'
 		);
 
 		$mkdir = true;
@@ -211,7 +211,7 @@ class Group{
 	 * @access public
 	 */
 	public static function removeGroupDirs( $id ){
-		$dir = USER_FILES . 'files/groups/' . $id;
+		$dir = USERS_FILES . 'files/groups/' . $id;
 		$rmdir = true;
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;

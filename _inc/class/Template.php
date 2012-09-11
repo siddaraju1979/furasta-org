@@ -51,8 +51,8 @@
  * available in CSS but this may be expanded on
  * in the future.
  *
- * %SITEURL%
- * to load images properly the %SITEURL% var
+ * %SITE_URL%
+ * to load images properly the %SITE_URL% var
  * should be used. The CSS will be parsed by
  * this class and that var will be replaced
  * with the value of the site url if present.
@@ -420,7 +420,7 @@ class Template {
 	 *
 	 * The unique name above will be used to create the
 	 * unique URL later. The names should follow the
-	 * scripts purpose, such as FURASTA_ADMIN_PAGES_LIST
+	 * scripts purpose, such as FURASTA_ADMIN_DB_PAGES_LIST
          * 
          * @param string $name 
          * @param string $content optional
@@ -459,7 +459,7 @@ class Template {
 			if( $cache == 'true' )
 				array_push( $urls, cache_js( $file, $file ) );
 			else
-				array_push( $urls, SITEURL . $file );
+				array_push( $urls, SITE_URL . $file );
 		}
 
 		foreach( $this->javascriptSources as $file => $name )

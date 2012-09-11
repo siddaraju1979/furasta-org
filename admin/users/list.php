@@ -25,7 +25,7 @@ $content='
 	<tr class="top_bar"><th>Name</th><th>Email</th><th>Status</th><th>Delete</th></tr>
 ';
 
-$query=query('select id,name,email,user_group from '.USERS.' order by id');
+$query=query('select id,name,email,user_group from '.DB_USERS.' order by id');
 while($row=mysql_fetch_array($query)){
 	$id=$row['id'];
 	$perm=$row['user_group'];

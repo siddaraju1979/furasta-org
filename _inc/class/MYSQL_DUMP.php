@@ -6,7 +6,7 @@
 	define("HAR_DROP_TABLE",4);
 	define("HAR_NO_STRUCT",8);
 	define("HAR_NO_DATA",16);
-	define("HAR_ALL_OPTIONS",HAR_LOCK_TABLE | HAR_FULL_SYNTAX | HAR_DROP_TABLE );
+	define("HAR_ALL_DB_OPTIONS",HAR_LOCK_TABLE | HAR_FULL_SYNTAX | HAR_DROP_TABLE );
 	
 	define("HAR_ALL_DB",1);
 	define("HAR_ALL_TABLES",1);
@@ -63,7 +63,7 @@
 		}
 		
 		
-		function dumpDB($database = HAR_ALL_DB, $tables = HAR_ALL_TABLES,$options = HAR_ALL_OPTIONS) 
+		function dumpDB($database = HAR_ALL_DB, $tables = HAR_ALL_TABLES,$options = HAR_ALL_DB_OPTIONS) 
 		{
 			$this->_connect();
 			

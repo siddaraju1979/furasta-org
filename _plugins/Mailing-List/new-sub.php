@@ -17,7 +17,7 @@ $email = addslashes( @$_POST[ 'email' ] );
 if( empty( $email ) )
 	die ( 'email' );
 
-query( 'insert into ' . PREFIX . 'mailing_list values ( "", "' . $name . '", "' . $email . '")' );
+query( 'insert into ' . DB_PREFIX . 'mailing_list values ( "", "' . $name . '", "' . $email . '")' );
 
 echo mysql_insert_id( );
 

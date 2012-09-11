@@ -9,7 +9,7 @@
 
 switch( $version ){
 	case 0:
-		query( 'create table ' . PREFIX . 'stats ('
+		query( 'create table ' . DB_PREFIX . 'stats ('
 			. 'id int auto_increment primary key,'
 			. 'ip text,'
 			. 'page text,'
@@ -24,7 +24,7 @@ switch( $version ){
 		/**
 		 * mkdir for stats files
 		 */
-		$sdir = USER_FILES . 'stats';
+		$sdir = USERS_FILES . 'stats';
 		if( !is_dir( $sdir ) )
 			mkdir( $sdir );
 	break;

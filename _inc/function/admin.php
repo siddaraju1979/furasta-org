@@ -195,16 +195,16 @@ function display_menu($menu_items){
  */
 function pages_array( ){
 
-	$cache_file = md5( 'FURASTA_ADMIN_PAGES_ARRAY' );
+	$cache_file = md5( 'FURASTA_ADMIN_DB_PAGES_ARRAY' );
 
-	if( cache_is_good( $cache_file, 'PAGES' ) )
-		return json_decode( cache_get( $cache_file, 'PAGES' ) );	
+	if( cache_is_good( $cache_file, 'DB_PAGES' ) )
+		return json_decode( cache_get( $cache_file, 'DB_PAGES' ) );	
 
 	/**
 	 * get page names from database 
 	 */
 	$pages = array( );
-	$query = mysql_query( 'select id,name from ' . PAGES );
+	$query = mysql_query( 'select id,name from ' . DB_PAGES );
 
 	while( $row = mysql_fetch_array( $query ) ){
 		$pages[ $row[ 'id' ] ] = $row[ 'name' ];	
@@ -223,7 +223,7 @@ function pages_array( ){
 	/**
 	 * cache and return pages array
 	 */
-	cache( $cache_file, json_encode( $pages ), 'PAGES' ); 
+	cache( $cache_file, json_encode( $pages ), 'DB_PAGES' ); 
 
 	return $pages;
 }

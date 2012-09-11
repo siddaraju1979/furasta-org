@@ -27,11 +27,11 @@ function cache($name,$content,$dir=''){
         if($dir!=''){
 		if(substr($dir,-1)!='/')
 	                $dir=$dir.'/';
-		if(!is_dir(USER_FILES.'cache/'.$dir))
-			mkdir(USER_FILES.'cache/'.$dir);
+		if(!is_dir(USERS_FILES.'cache/'.$dir))
+			mkdir(USERS_FILES.'cache/'.$dir);
 	}
 
-	$file=USER_FILES.'cache/'.$dir.$name;
+	$file=USERS_FILES.'cache/'.$dir.$name;
 	return file_put_contents($file,$content);
 }
 
@@ -49,7 +49,7 @@ function cache_get($name,$dir=''){
         if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 
-	$file=USER_FILES.'cache/'.$dir.$name;
+	$file=USERS_FILES.'cache/'.$dir.$name;
 	return file_get_contents($file);
 }
 
@@ -71,7 +71,7 @@ function cache_is_good($name,$length,$dir=''){
 	if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 	
-	$file=USER_FILES.'cache/'.$dir.$name;
+	$file=USERS_FILES.'cache/'.$dir.$name;
 
 	if(!file_exists($file))
 		return false;
@@ -96,7 +96,7 @@ function cache_clear($dir=''){
 	if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
-	$dir=USER_FILES.'cache/'.$dir;
+	$dir=USERS_FILES.'cache/'.$dir;
 
 	if(!is_dir($dir))
 		return false;
@@ -135,7 +135,7 @@ function cache_exists($file,$dir=''){
 	if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
-	return (file_exists(USER_FILES.'cache/'.$dir.$file));
+	return (file_exists(USERS_FILES.'cache/'.$dir.$file));
 }
 
 
@@ -166,22 +166,22 @@ function cache_css( $name, $file ){
 	if( DIAGNOSTIC_MODE == 1 ){
 
 		/**
-		 * makes the SITEURL constant available
+		 * makes the SITE_URL constant available
 		 * in CSS so that files etc can
 		 * be loaded properly
 		 */
-		$content = str_replace( '%SITEURL%', SITEURL, $content );
+		$content = str_replace( '%SITE_URL%', SITE_URL, $content );
 
 		cache( $cache_file, $content, 'CSS' );
 	}
 	elseif( !cache_exists( $cache_file, 'CSS' ) ){
 
 		/**
-		 * makes the SITEURL constant available
+		 * makes the SITE_URL constant available
 		 * in CSS so that files etc can
 		 * be loaded properly
 		 */
-		$content = str_replace( '%SITEURL%', SITEURL, $content );
+		$content = str_replace( '%SITE_URL%', SITE_URL, $content );
 
 		/**
 		 * remove comments
@@ -196,7 +196,7 @@ function cache_css( $name, $file ){
 		cache( $cache_file, $content, 'CSS');
 	}
 
-	return SITEURL . '_inc/css/css.php?' . $cache_file;
+	return SITE_URL . '_inc/css/css.php?' . $cache_file;
 
 }
 
@@ -231,7 +231,7 @@ function cache_js( $name, $file ){
 
 	}
 
-	return SITEURL . '_inc/js/js.php?' . $cache_file;
+	return SITE_URL . '_inc/js/js.php?' . $cache_file;
 
 }
 
@@ -248,7 +248,7 @@ function cache_js( $name, $file ){
  * @return bool
  */
 function cache_image( $name, $image, $path ){
-	$image_dir = USER_FILES . 'cache/IMAGES/';
+	$image_dir = USERS_FILES . 'cache/IMAGES/';
 	if( !is_dir( $image_dir ) )
 		mkdir( $image_dir );
 	$image_dir = $image_dir . md5( $path ) . '/';
@@ -268,7 +268,7 @@ function cache_image( $name, $image, $path ){
  * @return bool
  */
 function cache_get_image( $name, $path ){
-	$file = USER_FILES . 'cache/IMAGES/' . md5( $path ) . '/' . md5( $name );
+	$file = USERS_FILES . 'cache/IMAGES/' . md5( $path ) . '/' . md5( $name );
 	return imagecreatefrompng( $file );
 }
 

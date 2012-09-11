@@ -16,7 +16,7 @@ $id = (int) @$_POST[ 'id' ];
 if( $id == 0 )
 	exit;
 
-query( 'delete from ' . PREFIX . 'forums where id=' . $id );
+query( 'delete from ' . DB_PREFIX . 'forums where id=' . $id );
 
 exit;
 ?>

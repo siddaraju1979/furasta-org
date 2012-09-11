@@ -17,7 +17,7 @@ require HOME . '_inc/Smarty/libs/Smarty.class.php';
 
 $Smarty = new Smarty( );
 
-$smarty_dir = USER_FILES . 'smarty/';
+$smarty_dir = USERS_FILES . 'smarty/';
 $Smarty->template_dir = $smarty_dir . 'templates';
 $Smarty->compile_dir = $smarty_dir . 'templates_c';
 
@@ -63,7 +63,7 @@ $Smarty->assign( 'home', HOME );
 /**
  * assign site vars
  */
-$Smarty->assign( 'site_url', SITEURL );
+$Smarty->assign( 'site_url', SITE_URL );
 $Smarty->assign( 'site_title', $SETTINGS[ 'site_title' ] );
 $Smarty->assign( 'site_subtitle', $SETTINGS[ 'site_subtitle' ] );
 

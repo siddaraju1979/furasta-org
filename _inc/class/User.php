@@ -95,7 +95,7 @@
  * permissions as well internally, so there is no need
  * to run hasPerm if pagePerm is run.
  *
- * === DATA & OPTIONS ===
+ * === DATA & DB_OPTIONS ===
  * 
  * Not all required data on users can be stored in the users table.
  * This class provides two alternatives to storing data for users:
@@ -356,9 +356,9 @@ class User{
 		/**
 		 * get users info from db
 		 */
-		$query = 'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups  from ' . USERS . ',' . USERS_GROUPS . ' where (' . USERS . '.id=';
-		$query .= implode( ' or ' . USERS . '.id=', $ids );
-		$query .= ') and ' . USERS_GROUPS . '.user_id=' . USERS . '.id group by ' . USERS . '.id';
+		$query = 'select *,group_concat(' . DB_USERS_GROUPS . '.group_id) as groups  from ' . DB_USERS . ',' . DB_USERS_GROUPS . ' where (' . DB_USERS . '.id=';
+		$query .= implode( ' or ' . DB_USERS . '.id=', $ids );
+		$query .= ') and ' . DB_USERS_GROUPS . '.user_id=' . DB_USERS . '.id group by ' . DB_USERS . '.id';
 		$users = rows( $query );
 
 		/**
@@ -412,7 +412,7 @@ class User{
 	private function __construct( $user ){
 
 		if( !is_array( $user ) )
-			$user = row( 'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS . ' where ' . USERS_GROUPS . '.user_id=' . $user . ' group by ' . USERS . '.id' );
+			$user = row( 'select *,group_concat(' . DB_USERS_GROUPS . '.group_id) as groups from ' . DB_USERS . ',' . DB_USERS_GROUPS . ' where ' . DB_USERS_GROUPS . '.user_id=' . $user . ' group by ' . DB_USERS . '.id' );
 			
 		// user doesn't exist
 		if( count( $user ) == 0 )
@@ -474,9 +474,9 @@ class User{
 	public static function login( $email, $password, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS
-			. ' where ' . USERS . '.email="' . $email . '" and ' . USERS . '.password="' . $password . '"'
-			. ' and ' . USERS_GROUPS . '.user_id=' . USERS . '.id group by ' . USERS . '.id limit 1'
+			'select *,group_concat(' . DB_USERS_GROUPS . '.group_id) as groups from ' . DB_USERS . ',' . DB_USERS_GROUPS
+			. ' where ' . DB_USERS . '.email="' . $email . '" and ' . DB_USERS . '.password="' . $password . '"'
+			. ' and ' . DB_USERS_GROUPS . '.user_id=' . DB_USERS . '.id group by ' . DB_USERS . '.id limit 1'
 		);
 	
 		return self::performLogin( $user, $permissions, $instance );
@@ -500,9 +500,9 @@ class User{
 	public static function loginHash( $userid, $hash, $permissions = array( ), $instance = false ){
 
 		$user = row(
-			'select *,group_concat(' . USERS_GROUPS . '.group_id) as groups from ' . USERS . ',' . USERS_GROUPS
-			. ' where ' . USERS . '.password="' . $hash . '"'
-			. ' and ' . USERS_GROUPS . '.user_id=' . $userid . '.id group by ' . USERS . '.id limit 1'
+			'select *,group_concat(' . DB_USERS_GROUPS . '.group_id) as groups from ' . DB_USERS . ',' . DB_USERS_GROUPS
+			. ' where ' . DB_USERS . '.password="' . $hash . '"'
+			. ' and ' . DB_USERS_GROUPS . '.user_id=' . $userid . '.id group by ' . DB_USERS . '.id limit 1'
 		);
 
 		return self::performLogin( $user, $permissions, $instance );
@@ -790,9 +790,9 @@ class User{
 	 */
 	public static function createUserDirs( $id ){
 		$dirs = array(
-			USER_FILES . 'files/users/' . $id,
-			USER_FILES . 'files/users/' . $id . '/public',
-			USER_FILES . 'files/users/' . $id . '/private'
+			USERS_FILES . 'files/users/' . $id,
+			USERS_FILES . 'files/users/' . $id . '/public',
+			USERS_FILES . 'files/users/' . $id . '/private'
 		);
 
 		$mkdir = true;
@@ -815,7 +815,7 @@ class User{
 	 * @todo update to file manager
 	 */
 	public static function removeUserDirs( $id ){
-		$dir = USER_FILES . 'files/users/' . $id;
+		$dir = USERS_FILES . 'files/users/' . $id;
 		$rmdir = true;
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;
@@ -833,7 +833,7 @@ class User{
 	 */
 	public function getOptions( ){
 
-		$options = rows( 'select * from ' . OPTIONS . ' where category="user_' . $this->id . '"' );
+		$options = rows( 'select * from ' . DB_OPTIONS . ' where category="user_' . $this->id . '"' );
 
 		$this->options = array( );		
 		foreach( $options as $name => $value ){
@@ -882,9 +882,9 @@ class User{
 		$value = addslashes( $value );
 
 		if( isset( $this->options{ $name } ) ) // if isset, update db
-			query( 'update ' . OPTIONS . ' set value="' . $value . '" where name="' . $name . '" and category="user_' . $this->id . '"' );
+			query( 'update ' . DB_OPTIONS . ' set value="' . $value . '" where name="' . $name . '" and category="user_' . $this->id . '"' );
 		else // else create db entry
-			query( 'insert into ' . OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $this->id . '" )' );
+			query( 'insert into ' . DB_OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $this->id . '" )' );
 
 		$this->options{ $name } = $value;
 

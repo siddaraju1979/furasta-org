@@ -105,7 +105,7 @@ function stats_update_geoip( ){
 	/**
 	 * part 1, download zip
 	 */
-	$zip = USER_FILES . 'stats/IpToCountry.zip';
+	$zip = USERS_FILES . 'stats/IpToCountry.zip';
 	if( !file_exists( $zip ) ){
 		$contents = file_get_contents( 'http://software77.net/geo-ip/?DL=2' );
 		file_put_contents( $zip, $contents );
@@ -115,7 +115,7 @@ function stats_update_geoip( ){
 	/**
 	 * part 2, unzip
 	 */
-	$file = USER_FILES . 'stats/IpToCountry.csv';
+	$file = USERS_FILES . 'stats/IpToCountry.csv';
 	if( !file_exists( $file ) ){
 		$unzip = new dUnzip2( $zip );
 		$unzip->unzip( 'IpToCountry.csv', $file );
@@ -125,7 +125,7 @@ function stats_update_geoip( ){
 	/**
 	 * part3, parse file and put output in temp file
 	 */
-	$newfile = USER_FILES . 'stats/IpToCountry.tmp';
+	$newfile = USERS_FILES . 'stats/IpToCountry.tmp';
 	if( !file_exists( $newfile ) ){
 		$handle = @fopen( $file, 'r' );
 		$new = @fopen( $newfile, 'w' );
@@ -155,7 +155,7 @@ function stats_update_geoip( ){
 	 * with each file containing ips starting with
 	 * the appropriate number
 	 */
-	$dir = USER_FILES . 'stats/';
+	$dir = USERS_FILES . 'stats/';
 
 	/**
 	 * files to be created

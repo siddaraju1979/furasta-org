@@ -8,12 +8,12 @@ $file=addslashes(@$_GET['filename']);
 if($file=='')
 	exit;
 
-$file_loc=USER_FILES.'files/downloads/'.$file.'.zip';
+$file_loc=USERS_FILES.'files/downloads/'.$file.'.zip';
 if(!file_exists($file_loc))
 	exit;
 
-$file_info=row('select name,count from '.PREFIX.'downloadManager where filename="'.$file.'"',true);
-query('update '.PREFIX.'downloadManager set count='.($file_info['count']+1).' where filename="'.$file.'"',true);
+$file_info=row('select name,count from '.DB_PREFIX.'downloadManager where filename="'.$file.'"',true);
+query('update '.DB_PREFIX.'downloadManager set count='.($file_info['count']+1).' where filename="'.$file.'"',true);
 
 header("Content-type: application/force-download");
 header("Content-Transfer-Encoding: Binary");

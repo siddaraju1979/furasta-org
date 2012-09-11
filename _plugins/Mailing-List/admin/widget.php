@@ -17,7 +17,7 @@ $widget_options = options( 'mailing_list_widget_' . $id );
 $opts = array( 'yes', 'no' );
 
 $content = '
-<span class="header-img"><img src="' . SITEURL . '_plugins/Mailing-List/img/options-large.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Mailing-List/img/options-large.png"/></span>
 <h1 class="image-left">' . $Template->e( 'menu_mailing_options' ) . '</h1>
 
 <form method="post" id="options-form">

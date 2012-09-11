@@ -3,7 +3,7 @@
 /**
  * List Pages, Furasta.Org
  *
- * Lists pages in the PAGES table.
+ * Lists pages in the DB_PAGES table.
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -73,7 +73,7 @@ $content = '
  */
 
 $pages=array();
-$query=query('select id,name,type,edited,user,parent,home,perm from '.PAGES.' order by position,name asc');
+$query=query('select id,name,type,edited,user,parent,home,perm from '.DB_PAGES.' order by position,name asc');
 while($row=mysql_fetch_assoc($query)){
 	$pages[$row['parent']][]=$row;
 }

@@ -59,7 +59,7 @@ if( isset( $_POST[ 'blog-submit' ] ) && $valid ){
 	}
 	elseif( $id == 0 ){ // create new page
 
-		query( 'insert into ' . PREFIX . 'blog_posts values'
+		query( 'insert into ' . DB_PREFIX . 'blog_posts values'
 			. '( "", ' . $blog . ', "' . $title . '", "' . $body . '", "' . $date . '", ' . $user . ',"' . $tags . '")'
 		);
 
@@ -69,22 +69,22 @@ if( isset( $_POST[ 'blog-submit' ] ) && $valid ){
 
 	}
 	else{
-		query( 'update ' . PREFIX . 'blog_posts set title="' . $title . '", body="' . $body . '", tags="' . $tags . '" where id=' . $id );
+		query( 'update ' . DB_PREFIX . 'blog_posts set title="' . $title . '", body="' . $body . '", tags="' . $tags . '" where id=' . $id );
 		htaccess_rewrite( );
 		$Template->runtimeError( '13' );
 	}
 }
 
 if( $id != 0 ){
-	$post = row( 'select * from ' . PREFIX . 'blog_posts where id=' . $id ); 
+	$post = row( 'select * from ' . DB_PREFIX . 'blog_posts where id=' . $id ); 
 	if( $blog_id == 0 )
 		$blog_id = $post[ 'blog_id' ];
 }
 
-$blogs = rows( 'select id, name from ' . PAGES . ' where type="Blog"' );
+$blogs = rows( 'select id, name from ' . DB_PAGES . ' where type="Blog"' );
 
 $content = '
-<span class="header-img"><img src="' . SITEURL . '_plugins/Blog/img/post.png"/></span>
+<span class="header-img"><img src="' . SITE_URL . '_plugins/Blog/img/post.png"/></span>
 <h1 class="image-left">' . $Template->e( 'blog_admin_post' ) . '</h1>
 <br style="clear:both"/>
 <form id="blog-form" method="post">

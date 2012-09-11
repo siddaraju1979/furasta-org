@@ -39,14 +39,14 @@ function user_create( $name, $email, $password, $groups, $data = array( ), $opti
 	 * if email is in use, return false
 	 * note; one account per email
 	 */
-	if( num( 'select id from ' . USERS . ' where email="' . $email .'"' ) != 0 )
+	if( num( 'select id from ' . DB_USERS . ' where email="' . $email .'"' ) != 0 )
 		return false;
 
 	/**
 	 * add to users table
 	 */
 	$hash = md5( mt_rand( ) );
-	query( 'insert into ' . USERS . ' values ('
+	query( 'insert into ' . DB_USERS . ' values ('
 		. '"",'
 		. '"' . $name . '",'
 		. '"' . $email . '",'
@@ -61,7 +61,7 @@ function user_create( $name, $email, $password, $groups, $data = array( ), $opti
 	 * add to groups table for each group
 	 */
 	foreach( $groups as $group )
-		query( 'insert into ' . USERS_GROUPS . ' values( ' . $id . ', ' . $group . ' )' );	
+		query( 'insert into ' . DB_USERS_GROUPS . ' values( ' . $id . ', ' . $group . ' )' );	
 
         /**
          * create user files directory
@@ -74,7 +74,7 @@ function user_create( $name, $email, $password, $groups, $data = array( ), $opti
 	 */
 	if( !empty( $options ) ){
 		foreach( $options as $name => $value ){
-			query( 'insert into ' . OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $id . '"' );
+			query( 'insert into ' . DB_OPTIONS . ' values( "' . $name . '", "' . $value . '", "user_' . $id . '"' );
 		}
 	}
 
@@ -86,7 +86,7 @@ function user_create( $name, $email, $password, $groups, $data = array( ), $opti
 		<br/>
 		Please activate your new user by clicking on the link below:<br/>
 		<br/>
-		<a href="' . SITEURL . 'admin/users/activate.php?hash=' . $hash . '">'
+		<a href="' . SITE_URL . 'admin/users/activate.php?hash=' . $hash . '">'
 		    . $url . '/admin/users/activate.php?hash=' . $hash . '</a><br/>
 		<br/>
 		If you are not the person stated above please ignore this email.<br/>
@@ -95,7 +95,7 @@ function user_create( $name, $email, $password, $groups, $data = array( ), $opti
         
         // send notification email to user
         email( $email, $mail[ 'subject' ], $mail[ 'message' ] );
-        cache_clear( 'USERS' );
+        cache_clear( 'DB_USERS' );
 
 	return $id;
 }

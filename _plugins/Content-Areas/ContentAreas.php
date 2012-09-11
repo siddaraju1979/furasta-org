@@ -82,7 +82,7 @@ class ContentAreas{
 	 * info from the db
 	 */
 	public function __construct( ){
-		$registered = rows( 'select * from ' . PREFIX . 'content_areas' );
+		$registered = rows( 'select * from ' . DB_PREFIX . 'content_areas' );
 		$reg = array( );
 
 		/**
@@ -228,14 +228,14 @@ class ContentAreas{
 			$id = $this->registered{ $name }{ 'id' };
 			$content = addslashes( json_encode( $content ) );
 			// add widgets for this area to widget options database
-			query( 'update ' . PREFIX . 'content_areas set content="' . $content . '" where id=' . $id );
+			query( 'update ' . DB_PREFIX . 'content_areas set content="' . $content . '" where id=' . $id );
 			$this->registered{ $name }{ 'content' } = $content;
 		}
 		else{
 			// create new area
 			$this->registered{ $name }{ 'content' } = $content;
 			$content = addslashes( json_encode( array( 'all' => array() ) ) );
-			query( 'insert into ' . PREFIX . 'content_areas values ( "", "' . $name . '", "' . $content . '", "" )' );
+			query( 'insert into ' . DB_PREFIX . 'content_areas values ( "", "' . $name . '", "' . $content . '", "" )' );
 			$this->registered{ $name }{ 'id' } = mysql_insert_id( );
 		}
 	}

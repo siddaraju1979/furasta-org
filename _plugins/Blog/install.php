@@ -12,7 +12,7 @@
 switch( $version ){
 	case 1:
 		// add blog_posts table to database
-		query( 'create table if not exists ' . PREFIX . 'blog_posts ('
+		query( 'create table if not exists ' . DB_PREFIX . 'blog_posts ('
 			. 'id int auto_increment primary key,'
 			. 'blog_id int,'
 			. 'title text,'

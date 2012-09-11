@@ -66,7 +66,7 @@ function error( $error, $title = 'Error', $report = true ){
 		if( $report ){
 			generate_error_report( @$error_id, $error, $title );
 			if( User::verify( ) )
-				echo '<br /><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a>';
+				echo '<br /><a href="' . SITE_URL . 'files/error-report.txt">Download Error Report</a>';
 		}
 		exit;	
 	}
@@ -78,7 +78,7 @@ function error( $error, $title = 'Error', $report = true ){
 	if( $report ){
 		generate_error_report( @$error_id, $error, $title );
 		if( User::verify( ) )
-			$Template->add( 'content', '<br/><p><a href="' . SITEURL . 'files/error-report.txt">Download Error Report</a></p>' );
+			$Template->add( 'content', '<br/><p><a href="' . SITE_URL . 'files/error-report.txt">Download Error Report</a></p>' );
 	}
 	require HOME . 'admin/layout/error.php';
 	exit;
@@ -188,7 +188,7 @@ function htaccess_rewrite(){
 	 * build up array of rewrite rules and filter
 	 * through the plugin filter
 	 */
-        $rules = defaults_htaccess_rules( SITEURL );
+        $rules = defaults_htaccess_rules( SITE_URL );
         
 	$rules = $Plugins->filter( 'general', 'filter_htaccess', $rules );
 
@@ -206,12 +206,12 @@ function htaccess_rewrite(){
 		);
 
 	if( $SETTINGS[ 'index' ] == 0 ){
-                $robots = defaults_robots_content( 0, SITEURL );
+                $robots = defaults_robots_content( 0, SITE_URL );
 
 		$robots = $Plugins->filter( 'general', 'filter_robots', $robots );
 	}
         else{
-                $robots = defaults_robots_content( 1, SITEURL );
+                $robots = defaults_robots_content( 1, SITE_URL );
                 $file=HOME.'sitemap.xml';
                 if(file_exists($file))
                         unlink($file);
@@ -269,7 +269,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 			)
 		);
 	}
-	resolve_dependencies( $plugins, $PLUGINS );
+        $PLUGINS = resolve_dependencies( $plugins, $PLUGINS );
 
 	/**
          * plugins - filter the settings, constants and plugins arrays 
@@ -293,6 +293,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 		);
 
 	return htaccess_rewrite( );
+
 }
 
 /**
@@ -588,7 +589,7 @@ function generate_error_report( $error_id, $error, $name ){
 	mysql : ' . $mysql . '
 	';
 
-	file_put_contents( USER_FILES . 'files/error-report.txt', $report );	
+	file_put_contents( USERS_FILES . 'files/error-report.txt', $report );	
 }
 
 /**
@@ -620,7 +621,7 @@ function validate_file( $file ){
  * @return void
  */
 function maintenance_message( ){
-	$message = single( 'select value from ' . OPTIONS . ' where category="configuration_page_options" and name="maintenance_message"', 'value' );
+	$message = single( 'select value from ' . DB_OPTIONS . ' where category="configuration_page_options" and name="maintenance_message"', 'value' );
 	if( empty( $message ) ){
 		global $SETTINGS;
 		$message = $SETTINGS[ 'site_title' ] . ' is currently undergoing maintenance. Please try again later.';
@@ -728,7 +729,7 @@ function merge_perm( $one, $two ){
  *
  * @param array $plugins
  * @param array $NEWPLUGINS
- * @return arrray
+ * @return array
  */
 function resolve_dependencies( $plugins, $NEWPLUGINS ){
 

@@ -25,7 +25,7 @@ $content='
 <span><span class="header-img" id="header-Trash">&nbsp;</span> <h1 class="image-left">' . $Template->e( 'menu_trash' ) . '</h1></span>
 <br/>';
 
-$rows=rows('select id,name,type,edited,user from '.TRASH);
+$rows=rows('select id,name,type,edited,user from '.DB_TRASH);
 if(count($rows)==0)
 	$content.='<br/><h2>' . $Template->e( 'trash_empty' ) . '<h2>';
 else{

@@ -16,5 +16,5 @@ $id=@$_GET['id'];
 if($id==0)
 	exit;
 
-mysql_query('delete from '.TRASH.' where id="'.$id.'"') or die('1');
+mysql_query('delete from '.DB_TRASH.' where id="'.$id.'"') or die('1');
 ?>

@@ -23,7 +23,7 @@ $( document ).ready( function() {
                 <div id="tabs-content">
 			<table class="row-color">
 			<tr><th>Items</th><th>Downloads</th></tr>';
-			$downloads=rows('select name,count from '.PREFIX.'downloadManager where page_id='.$page_id);
+			$downloads=rows('select name,count from '.DB_PREFIX.'downloadManager where page_id='.$page_id);
 			if(count($downloads)==0)
 				echo 'No download items.';
 			else{
@@ -39,12 +39,12 @@ echo '		</table>
 		<div id="tabs-content">';
 
 		if($page_id!=0){
-		        $Page=row( 'select content from ' . PAGES . ' where id=' . $page_id );
+		        $Page=row( 'select content from ' . DB_PAGES . ' where id=' . $page_id );
         		$page_content=stripslashes($Page['content']);
 		}
 
-echo '<script type="text/javascript" src="' . SITEURL .'_inc/js/tinymce.jquery.min.js"></script>
-		<script type="text/javascript" src="' . SITEURL . '_inc/js/tiny_mce.js"></script>
+echo '<script type="text/javascript" src="' . SITE_URL .'_inc/js/tinymce.jquery.min.js"></script>
+		<script type="text/javascript" src="' . SITE_URL . '_inc/js/tiny_mce.js"></script>
 
 		<p><textarea id="page-content" name="PageContent" class="tinymce" style="width:100%">'.@$page_content.'</textarea></p>
 		</div>

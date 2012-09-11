@@ -34,7 +34,7 @@ echo'
 <html>
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-<noscript><meta http-equiv="refresh" content="0;url=' . SITEURL . '_inc/noscript.php"></noscript>';
+<noscript><meta http-equiv="refresh" content="0;url=' . SITE_URL . '_inc/noscript.php"></noscript>';
 
 foreach( $Template->cssUrls( ) as $url )
 	echo '<link rel="stylesheet" href="' . $url . '"/>' . "\n";
@@ -72,8 +72,8 @@ echo '
 				</div>
 			</div>
 			<div id="footer">
-				<img src="' . SITEURL . '_inc/img/footer-right.png" style="float:right"/>
-				<img src="' . SITEURL . '_inc/img/footer-left.png"/>
+				<img src="' . SITE_URL . '_inc/img/footer-right.png" style="float:right"/>
+				<img src="' . SITE_URL . '_inc/img/footer-left.png"/>
 			</div>
 		</div>
 		<div id="bottom">

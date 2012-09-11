@@ -433,7 +433,7 @@ class Validate{
 		foreach( $this->file_f as $selector => $value ){
 			if( !empty( $value[ 'extensions' ] ) ){
 				$val = $value[ 'extensions' ];
-				$file = $_FILES[ $selector ][ 'name' ];
+				$file = $_DB_FILES[ $selector ][ 'name' ];
 				$extension = end( explode( '.', $file ) );
 				$allowed_extensions = ( strpos( ',', $val ) == -1 ) ? array( $val ) : explode( ',', $val );
 				if( !in_array( $extension, $allowed_extensions ) ){
@@ -443,7 +443,7 @@ class Validate{
 				}
 			}
 			if( !empty( $value[ 'size' ] ) ){
-				$size = $_FILES[ $selector ][ 'size' ];
+				$size = $_DB_FILES[ $selector ][ 'size' ];
 				if( $size > $value[ 'size' ] ){
 					$this->error = 21; 
 					$this->errorHandler( htmlspecialchars( $value[ 'size' ] ) );

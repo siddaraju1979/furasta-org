@@ -10,7 +10,7 @@
 
 $Template = Template::getInstance( );
 
-$recent = rows( 'select id, blog_id, title, body, post_date from ' . PREFIX . 'blog_posts order by post_date desc limit 5' ); 
+$recent = rows( 'select id, blog_id, title, body, post_date from ' . DB_PREFIX . 'blog_posts order by post_date desc limit 5' ); 
 
 if( count( $recent ) == 0 )
 	$content = '<p><i>No recent posts</i></p>';

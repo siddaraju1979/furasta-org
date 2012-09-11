@@ -2,8 +2,8 @@
 
 
 
-query('drop table if exists '.PREFIX.'downloadManager');
+query('drop table if exists '.DB_PREFIX.'downloadManager');
 
-remove_dir(USER_FILES.'files/downloads');
+remove_dir(USERS_FILES.'files/downloads');
 
 ?>
