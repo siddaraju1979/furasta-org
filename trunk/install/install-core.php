@@ -42,7 +42,7 @@ function install_settings( ){
                 'DB_PREFIX'                => $prefix,
                 'VERSION'               => '0.9.2',                     // @todo define version in install header
                 'SITE_URL'               => $_SESSION[ 'settings' ][ 'site_url' ],
-                'USERS_FILES'            => $_SESSION[ 'settings' ][ 'user_files' ],
+                'USERS_DIR'            => $_SESSION[ 'settings' ][ 'user_files' ],
                 'DIAGNOSTIC_MODE'       => 0,
                 'LANG'                  => 'English',
                 'SET_REVISION'          => 100
@@ -270,13 +270,13 @@ function install_db( ){
         mysql_query( 'drop table if exists ' . $constants[ 'DB_FILES' ] );
         mysql_query( 'create table ' .  $constants[ 'DB_FILES' ]  . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
         // file manager add initial directory structure
-        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "users", "users/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "users", "/users", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
         $fm_users_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "1", "users/1/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "1", "/users/1", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_users_su_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "groups", "groups/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "groups", "/groups", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_id = mysql_insert_id( );
-        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "_superuser", "groups/_superuser/", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
+        mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "_superuser", "/groups/_superuser", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )' );
         $fm_groups_su_id = mysql_insert_id( );
 
 }
@@ -293,7 +293,7 @@ function install_dirs( ){
 
         global $constants;
         global $user_id;
-        $user_files = $constants[ 'USERS_FILES' ];
+        $user_files = $constants[ 'USERS_DIR' ];
 
         // dirs to create
         $dirs = array(

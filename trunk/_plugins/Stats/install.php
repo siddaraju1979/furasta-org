@@ -24,7 +24,7 @@ switch( $version ){
 		/**
 		 * mkdir for stats files
 		 */
-		$sdir = USERS_FILES . 'stats';
+		$sdir = USERS_DIR . 'stats';
 		if( !is_dir( $sdir ) )
 			mkdir( $sdir );
 	break;

@@ -13,12 +13,12 @@ $Template = Template::getInstance( );
 
 if( isset( $_POST[ 'create' ] ) ){ // create backup
 	$type = $_POST[ 'backup_type' ];
-	$dir = ( $type == 'all' ) ? HOME : USERS_FILES . 'files/';
+	$dir = ( $type == 'all' ) ? HOME : USERS_DIR . 'files/';
 
 	// increase memory limit
 	ini_set( 'memory_limit', '64M' );
 
-	$backup_dir = USERS_FILES . 'backup/';
+	$backup_dir = USERS_DIR . 'backup/';
 	if( !is_dir( $backup_dir ) )
 		mkdir( $backup_dir );
 
@@ -53,7 +53,7 @@ if( isset( $_POST[ 'create' ] ) ){ // create backup
 	$zdir = ( $type == 'all' ) ? '' : '_user/files/';
 	zip_files($files,$dir,$zdir,$zip);
 	if( $type == 'all' ){
-		zip_files( $files, USERS_FILES, '_user/files', $zip ); 
+		zip_files( $files, USERS_DIR, '_user/files', $zip ); 
 	}
 	$zip->addFile( $settings, '.settings.php' );
 	$zip->addFile( $sql, 'database-backup.sql' );
@@ -88,7 +88,7 @@ if( isset( $_DB_FILES[ 'backup_file' ] ) && $_DB_FILES[ 'backup_file' ][ 'error'
 			break;
 		}
 	}
-	$constants = array( 'USERS_FILES', HOME . '_user' ); 
+	$constants = array( 'USERS_DIR', HOME . '_user' ); 
 	settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants ); 
 
 	// reinstall database from dump

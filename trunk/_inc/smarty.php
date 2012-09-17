@@ -17,7 +17,7 @@ require HOME . '_inc/Smarty/libs/Smarty.class.php';
 
 $Smarty = new Smarty( );
 
-$smarty_dir = USERS_FILES . 'smarty/';
+$smarty_dir = USERS_DIR . 'smarty/';
 $Smarty->template_dir = $smarty_dir . 'templates';
 $Smarty->compile_dir = $smarty_dir . 'templates_c';
 

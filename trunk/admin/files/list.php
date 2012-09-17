@@ -16,19 +16,32 @@ $Template = Template::getInstance( );
 $Template->loadJavascript( 'admin/files/list.js' );
 
 $FileManager = FileManager::getInstance( );
-$FileManager->readDir( '/' );
+$files = $FileManager->readDir( '/users/' );
 
 $content = '
 <h1>Files</h1>
 <div id="file-manager">
 	<div id="files">
-		<div id="filecrumbs">
-			<p>this is where the breadcrumbs go</p>
-		</div>
-		<p>this is where the files go</p>
+		<h3 id="filecrumbs"></h3>
+                <ul id="directory-list">
+                ';
+
+foreach( $files as $file => $sub ){
+        $img = ( is_dir( $FileManager->users_files . $file ) ) ? '_inc/img/folder.png' : '_inc/img/file.png';
+        $content .= '<li><img src="' . SITE_URL . $img . '"/>' . $file . '</li>';
+}
+
+$files = $FileManager->readDir( '/', 2 );
+
+$content .= '
+	        </ul>	
 	</div>
 	<div id="shortcuts">
-		<p>this is where the shortcut links to home, groups etc go</p>
+        <ul>';
+foreach( $files as $file => $sub )
+        $content .= '<li>' . $file . '</li>';
+
+$content .= '
 	</div>
 </div>';
 $Template->add( 'content', $content );

@@ -589,7 +589,7 @@ function generate_error_report( $error_id, $error, $name ){
 	mysql : ' . $mysql . '
 	';
 
-	file_put_contents( USERS_FILES . 'files/error-report.txt', $report );	
+	file_put_contents( USERS_DIR . 'files/error-report.txt', $report );	
 }
 
 /**
