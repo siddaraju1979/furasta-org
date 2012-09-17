@@ -187,9 +187,9 @@ class Group{
 	 */
 	public static function createGroupDirs( $id ){
 		$dirs = array(
-			USERS_FILES . 'files/groups/' . $id,
-			USERS_FILES . 'files/groups/' . $id . '/public',
-			USERS_FILES . 'files/groups/' . $id . '/private'
+			USERS_DIR . 'files/groups/' . $id,
+			USERS_DIR . 'files/groups/' . $id . '/public',
+			USERS_DIR . 'files/groups/' . $id . '/private'
 		);
 
 		$mkdir = true;
@@ -211,7 +211,7 @@ class Group{
 	 * @access public
 	 */
 	public static function removeGroupDirs( $id ){
-		$dir = USERS_FILES . 'files/groups/' . $id;
+		$dir = USERS_DIR . 'files/groups/' . $id;
 		$rmdir = true;
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;

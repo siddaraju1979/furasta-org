@@ -123,7 +123,7 @@ function defaults_constants( $constants ){
 		'DB_FILES'                 => defined( 'DB_FILES' )           ? DB_FILES                 : '',
 		'DB_OPTIONS'               => defined( 'DB_OPTIONS' )         ? DB_OPTIONS               : '',
 		'SITE_URL'               => defined( 'SITE_URL' )         ? SITE_URL               : '',
-		'USERS_FILES'            => defined( 'USERS_FILES' )      ? USERS_FILES            : '',
+                'USERS_DIR'            => defined( 'USERS_DIR' )      ? USERS_DIR            : '',
 		'DIAGNOSTIC_MODE'       => defined( 'DIAGNOSTIC_MODE' ) ? DIAGNOSTIC_MODE       : '',
 		'LANG'                  => defined( 'LANG' )            ? LANG                  : '',
 		'SET_REVISION'          => defined( 'REVISION' )        ? REVISION              : '',

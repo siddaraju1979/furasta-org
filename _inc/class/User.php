@@ -790,9 +790,9 @@ class User{
 	 */
 	public static function createUserDirs( $id ){
 		$dirs = array(
-			USERS_FILES . 'files/users/' . $id,
-			USERS_FILES . 'files/users/' . $id . '/public',
-			USERS_FILES . 'files/users/' . $id . '/private'
+			USERS_DIR . 'files/users/' . $id,
+			USERS_DIR . 'files/users/' . $id . '/public',
+			USERS_DIR . 'files/users/' . $id . '/private'
 		);
 
 		$mkdir = true;
@@ -815,7 +815,7 @@ class User{
 	 * @todo update to file manager
 	 */
 	public static function removeUserDirs( $id ){
-		$dir = USERS_FILES . 'files/users/' . $id;
+		$dir = USERS_DIR . 'files/users/' . $id;
 		$rmdir = true;
 		if( is_dir( $dir ) )
 			remove_dir( $dir ) || $rmdir = false;

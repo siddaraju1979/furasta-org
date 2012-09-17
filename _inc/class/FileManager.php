@@ -11,7 +11,7 @@
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
  * @package    file_management
- * @todo	make sure paths are used correctly everywhere - USERS_FILES . 'files/' . $path
+ * @todo	make sure paths are used correctly everywhere - USERS_DIR . 'files/' . $path
  */
 
 /**
@@ -107,12 +107,16 @@ class FileManager{
          *
          * default _rexecDir function - ls
          *
+         * @param string &$path
+         * @param string &$file
+         * @param array $return
          * @access private
-         * @var function
+         * @static
          */
-        private $_rexec_fn = function( &$path, &$file, &$return ){
+        private static function _rexec_fn( &$path, &$file, $return ){
 
-                array_push( $file, $return );
+                $key = str_replace( USERS_DIR . '/', $path );
+                return $return[ $key ] = $file;
 
         }
 
@@ -130,7 +134,7 @@ class FileManager{
 	private static function checkPath( $path ){
 
                 /**
-                 * path is not in USERS_FILES or
+                 * path is not in USERS_DIR or
 		 * path contains "..", therefore it's invalid
                  */
 		if( strpos( '..', $path ) !== false )
@@ -272,6 +276,84 @@ class FileManager{
 
 	}
 
+        /**
+         * getFiles
+         *
+         * accepts an array of files in the format returned
+         * by readDir. fetches all the database info on the
+         * files at once
+         *
+         * @param array $files
+         * @access public
+         * @return bool
+         */
+        public function getFiles( $files ){
+
+                $names = $this->getFileNames( $files );
+
+                /**
+                 * build query
+                 */
+                $query = 'select * from ' . DB_FILES . ' where';
+                $c = 0;         // count hits, make sure query is nessecary
+                foreach( $names as $name ){
+                        if( isset( $this->files{ $name } ) )
+                                continue;
+                        $c++;
+                        $query .= ' path="' . addslashes( $name ) . '" or';
+                }
+
+                if( $c == 0 ) // query not required
+                        return true;
+                
+                $query = trim( $query, ' or' );
+                
+                /**
+                 * perform query
+                 */
+                $files = rows( $query );
+
+                if( !$files )
+                        return $this->setError( 11, $names[ 0 ] );
+        
+                for( $i = 0; $i < count( $files ); ++$i ){
+                        $this->files{ $files[ $i ][ 'path' ] } = $files[ $i ];
+                }
+
+                return true;
+
+        }
+
+        /**
+         * getFileNames
+         *
+         * reformats the array returned by readDir to a 1D array
+         * of files and directory names as they are in the database
+         *
+         * @param array $files
+         * @access public
+         * @return array
+         */
+        public function getFileNames( $files ){
+                
+                $return = array( );
+                
+                foreach( $files as $file => $sub ){
+                
+                        if( is_dir( $file ) && is_array( $sub ) )
+                                $return += $this->getFileNames( $sub );
+                
+                        /**
+                         * extract name from path
+                         */
+                        $name = str_replace( USERS_DIR . 'files', '', $file );
+                        array_push( $return, $name );
+                }
+                
+                return $return;
+
+        }
+
 	/**
 	 * hasPerm
 	 *
@@ -284,7 +366,8 @@ class FileManager{
 	 * r - read
 	 * w - write
 	 * v - view (checks if the file is public/private)
-	 *
+         *
+         *
 	 * checks can be performed on a specific user using
 	 * $id, defaults to current user
 	 *
@@ -301,7 +384,7 @@ class FileManager{
 		 */
 		if( !self::checkPath( $file ) )
 			return false;
-
+                
 		/**
 		 * get user and file info
 		 */
@@ -318,12 +401,12 @@ class FileManager{
 		 * split file permissions string from db into
 		 * different arrays for easy processing
 		 */
-		list( $read, $write ) = split_perms( $file[ 'perm' ] );
+		list( $read, $write ) = split_perm( $file[ 'perm' ] );
 
 		/**
 		 * switch between different permissions checks
 		 */
-		switch( $check ){
+		switch( $rw ){
 			case 'v': // check if is public
 				/**
 				 * if super user, return true
@@ -476,6 +559,35 @@ class FileManager{
 
 	}
 
+        /**
+         * filesHavePerm
+         *
+         * parses an array of files and removes the
+         * files which the user does not have permission
+         * to view, returns resulting array
+         *
+         * @param array $files
+         * @param string $rw
+         * @param int $id
+         * @access private
+         * @return array
+         */
+        private function filesHavePerm( $files, $rw = 'w', $id = false ){
+
+                $return = array( );
+                
+                foreach( $files as $file => $sub ){
+                        if( is_array( $file ) && $this->hasPerm( $file, $rw, $id ) ){
+                                $return[ $file ] = $this->filesHavePerm( $sub, $rw, $id );
+                        }
+                        else{
+                                if( $this->hasPerm( $file, $rw, $id ) )
+                                        $return[ $file ] = $sub;
+                        }
+                }
+                
+                return $return;
+        }
 
 	/**
  	 * setError
@@ -505,7 +617,7 @@ class FileManager{
 			2	=>	'You have insufficient privilege to write "%1"',
 			3	=>	'You have insufficient privilege to view "%1"',
 			4	=>	'The path "%1" is invalid',
-			5	=>	'You have insufficient system permissions to perform that action. Please grant write access to the "' . USERS_FILES . '/files" directory',
+			5	=>	'You have insufficient system permissions to perform that action. Please grant write access to the "' . USERS_DIR . '/files" directory',
 			6	=>	'The "%1" at "%2" cannot be created as it already exists',
 			7	=>	'There was a problem querying the database. The following query caused the error: %1',
 			8	=>	'The path "%1" contains a Furasta.Org system file which cannot be written',
@@ -530,13 +642,15 @@ class FileManager{
 				$params = array_combine( range( 1, count( $params ) ), array_values( $params ) );
 
 				for( $i = 1; $i <= count( $params ); $i++ )
-				$this->error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $error );
+				        $this->error{ 'desc' } = str_replace( '%' . $i, $params[ $i ], $errors[ $id ] );
 
 			}
 			else
-				$this->error{ 'desc' } = str_replace( '%1', $params, $error );
+				$this->error{ 'desc' } = str_replace( '%1', $params, $errors[ $id ] );
 
 		}
+
+                //die( print_r( $this->error{ 'desc' } ) );
 
 		return false;
 
@@ -560,14 +674,14 @@ class FileManager{
 	 */
 	private static function _rreadDir( $path, $level, $current = 0 ){
 
-
-		$files[ $path ] = array( );
+                $path = trim( $path, '/' );
+		$files = array( );
 
 		/**
 		 * make sure maximum level isn't exceeded
 		 */
 		if( is_int( $level ) && $level == $current )
-			return $path;
+			return 0;
 
 		/**
 		 * scan directory
@@ -579,10 +693,12 @@ class FileManager{
 			if( $file == '.' || $file == '..' )
 				continue;
 
-			if( is_dir( $file ) )
-                                array_push( $files[ $path ], self::_rreadDir( $file, $level, $current + 1 ) );
-			else
-				array_push( $files[ $path ], $file );
+                        $rel = str_replace( USERS_DIR . 'files', '', $path );
+			if( is_dir( $path . '/' . $file ) )
+                                $files[ $rel . '/' . $file ] = self::_rreadDir( $path . '/' . $file, $level, $current + 1 );
+
+                        else
+				$files[ $rel . '/' . $file ] = 0;
 			
 		}
 
@@ -603,12 +719,12 @@ class FileManager{
 	 * @access private
 	 * @return bool
 	 */
-	private function _rexecDir( $path, $fn, $return = array( ) ){
+	private function _rexecDir( $path, $fn = false, $return = array( ) ){
 
 		/**
 		 * scan directory
 		 */
-		$dir = scandir( USERS_FILES . 'files/' . $path );
+		$dir = scandir( $path );
 		foreach( $dir as $file ){
 
 			// exclude current dir and previous dir
@@ -622,9 +738,13 @@ class FileManager{
 			 * call $fn on the file/directory, check
 			 * for errors
 			 */	
-			$success = $fn( $path, $file, $return );
-			if( !$success )
+                        if( !$fn )
+                                $return = self::_rexec_fn( $path, $file, $return );
+                        else
+                                $return = $fn( $path, $file, $return );
+			if( !$return )
                                 return $this->setError( 5 );
+
 		}
 
 		return $return;
@@ -651,6 +771,18 @@ class FileManager{
 
 	}
 
+        /**
+         * __construct
+         *
+         * sets the users files directory
+         *
+         * @access public
+         * @return void
+         */
+        public function __construct( ){
+                $this->users_files = USERS_DIR . 'files';
+        }
+
 	/**
 	 * addDir
 	 *
@@ -666,7 +798,7 @@ class FileManager{
 
 
 		// file exists, return false
-		if( file_exists( USERS_FILES . 'files/' . $path ) )
+		if( file_exists( USERS_DIR . 'files/' . $path ) )
 			return $this->setError( 6, array( 'dir', $path ) );
 
 		/**
@@ -730,7 +862,7 @@ class FileManager{
 		 * directory
 		 */
 //		$fn = function( $file, $dest ){
-//			return rename( $file, USERS_FILES . '/' . $dest );
+//			return rename( $file, USERS_DIR . '/' . $dest );
 //		}
 		
 		/**
@@ -759,7 +891,22 @@ class FileManager{
 	 * $rw		- 	specifies what permissions to check for,
 	 * 			see the hasPerm method. this way, readDir
 	 * 			can be used to recursively check permissions
-	 *
+         *
+         * example return for readDir( '/' ) :
+         *      
+         * array(
+         *      '/' => array(
+         *              '/file1' => 0,
+         *              '/file2' => 0,
+         *              '/users' => array(
+         *                      '/users/1' => array(
+         *                              '/users/1/file3' => 0,
+         *                              '/users/1/file4' => 0
+         *                      ),
+         *                      ...
+         *              }, 
+         * );
+         *
 	 * @param string $path
 	 * @param string $rw
 	 * @param int/bool $level
@@ -767,7 +914,7 @@ class FileManager{
 	 * @access public
 	 * @return array
 	 */
-	public function readDir( $path, $rw = 'r', $level = 1, $strict = false ){
+	public function readDir( $path = '/', $rw = 'r', $level = 1, $strict = false ){
 
 		/**
 		 * make sure path is valid
@@ -776,25 +923,20 @@ class FileManager{
 			return false;
 
 		// read files and dirs
-		$files = self::_rreadDir( USERS_FILES . $path, true );
-                die( print_r( $files ) );
-		/*
+		$files = self::_rreadDir( $this->users_files . $path, $level );
+
+                /*
 		 * get file database data
 		 */
 		$this->getFiles( $files );
-
+                
 		/**
-		 * check read permission on all files
+                 * exclude items with insufficient
+                 * privellages
 		 */
-		for( $i < 0; $i < count( $files ); $i++ ){
-			if( !$this->hasPerm( $files[ $i ], $rw ) ){
-				if( $strict )
-					return false;
-				unset( $files[ $i ] );
-			}
-		}
+                $files = $this->filesHavePerm( $files, 'r' );
 
-		return $files;
+                return $files;
 	}
 
 	/**
@@ -973,7 +1115,7 @@ class FileManager{
 		 * directory
 		 */
 //		$fn = function( $file, $dest ){
-//			return rename( $file, USERS_FILES . '/' . $dest );
+//			return rename( $file, USERS_DIR . '/' . $dest );
 //		}
 		
 		/**

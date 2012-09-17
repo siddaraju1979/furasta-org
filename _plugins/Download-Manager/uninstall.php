@@ -4,6 +4,6 @@
 
 query('drop table if exists '.DB_PREFIX.'downloadManager');
 
-remove_dir(USERS_FILES.'files/downloads');
+remove_dir(USERS_DIR.'files/downloads');
 
 ?>

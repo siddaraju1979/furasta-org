@@ -23,7 +23,7 @@ require $script;
 
 cache_clear();
 
-unlink(USERS_FILES.'update.zip');
+unlink(USERS_DIR.'update.zip');
 
 die('ok');
 ?>
