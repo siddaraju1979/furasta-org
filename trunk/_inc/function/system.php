@@ -245,7 +245,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 
         require_once HOME . '_inc/function/defaults.php';
 
-        $default_constants = defaults_constants( $constants );
+        $constants = defaults_constants( $constants );
 
         $Plugins = Plugins::getInstance( );
 
@@ -274,10 +274,7 @@ function settings_rewrite( $SETTINGS, $DB, $PLUGINS, $constants = array( ) ){
 	/**
          * plugins - filter the settings, constants and plugins arrays 
          */
-        $filter = $Plugins->filter( 'general', 'filter_settings', array( $SETTINGS, $constants, $PLUGINS ) );
-	$SETTINGS = $filter[ 0 ];
-	$constants = $filter[ 1 ];
-	$PLUGINS = $filter[ 2 ];
+        list( $SETTINGS, $constants, $PLUGINS ) = $Plugins->filter( 'general', 'filter_settings', array( $SETTINGS, $constants, $PLUGINS ) );
 
         $filecontents = defaults_settings_content( $SETTINGS, $DB, $PLUGINS, $constants );
 
