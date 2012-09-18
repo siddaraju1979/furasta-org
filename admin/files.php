@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Files Switch, Furasta.Org
+ * Files List, Furasta.Org
  *
- * Switches between possible files actions.
+ * Lists Files in the user files dir that the user has access to
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -13,16 +13,32 @@
 
 require 'header.php';
 
-$action = addslashes( @$_GET[ 'action' ] );
+$Template->loadJavascript( 'admin/files/files.js' );
+$Template->add( 'title', 'Files' );
+$FileManager = FileManager::getInstance( );
+$files = $FileManager->readDir( '/users/1/' );
 
-switch( $action ){
-	default:
-		if( !$User->hasPerm( 'f' ) )
-		        error( 'You have insufficient privelages to view this page. Please contact one of the administrators.', 'Permissions Error' );
+$content = '
+<h1>Files</h1>
+<div id="file-manager">
+	<div id="files">
+		<h3 id="filecrumbs"></h3>
+                <ul id="directory-list">
+                ';
 
-		$Template->add('title','List Files');
-		require 'files/list.php';
+foreach( $files as $file => $sub ){
+        $img = ( is_dir( $FileManager->users_files . $file ) ) ? '_inc/img/folder.png' : '_inc/img/file.png';
+        $content .= '<li><img src="' . SITE_URL . $img . '"/>' . $file . '</li>';
 }
+
+$files = $FileManager->readDir( '/', 2 );
+
+$content .= '
+	        </ul>	
+	</div>
+</div>
+<br style="clear:both"/>';
+$Template->add( 'content', $content );
 
 require 'footer.php';
 ?>

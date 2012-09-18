@@ -907,6 +907,17 @@ class FileManager{
          *              }, 
          * );
          *
+         * // new proposed format below
+         * array(
+         *      '/' => array(
+         *              'type'  =>      'mimetype',
+         *              'files' =>      array( ... ),   // if is dir and $level is greater than 1 then file list is included
+         *              ..
+         *              ..                              // other database properties
+         *              ..
+         *      )
+         * );
+         *
 	 * @param string $path
 	 * @param string $rw
 	 * @param int/bool $level
