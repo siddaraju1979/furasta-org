@@ -199,7 +199,8 @@ ul#pages li.top_bar{ color:#fff }
 ul#pages li span{ padding:0 10px }
 
 /* Admin Area Files */
-#files
+#directory-list{ list-style-type:none }
+#directory-list li{ float:left;margin:10px }
 
 /* Admin Area Settings */
 
