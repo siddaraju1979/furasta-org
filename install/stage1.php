@@ -35,44 +35,45 @@ require 'header.php';
 echo '
 <script type="text/javascript">
 $( document ).ready( function( ){
-	$( "#install" ).validate({
-		"DatabaseName" : {
-			"name" : "database name",
-			"required" : true
-		},
-		"Hostname" : {
-			"name" : "hostname",
-			"required" : true
-		},
-		"Username" : {
-			"name" : "username",
-			"required" : true
-		}
-	},
-		function( error ){
-			fAlert( error );
-		}
-	);
-	$( "#install" ).submit( function( ){
-		$("#check_connection").html("<img src=\"' . SITE_URL . '/_inc/img/loading.gif\"/> Checking Details...");
-		var connection=checkConnection(["Hostname","Username","DatabaseName","Password"]);
-		$("input[name=DatabaseName]").removeClass("error");
-		$("input[name=Hostname]").removeClass("error");
-		$("input[name=Username]").removeClass("error");
-		$("input[name=Password]").removeClass("error");
-		if(connection=="ok")
-			return true;
-		if(connection=="database")
-			$("input[name=DatabaseName]").addClass("error");
-		else{
-			$("input[name=Hostname]").addClass("error");
-			$("input[name=Username]").addClass("error");
-			$("input[name=Password]").addClass("error");
-		}
-		fAlert("The details that you have supplied are invalid. Please correct them to continue.");
-		$("#check_connection").html("&nbsp;");
 
-		return false;
+        $( "#install" ).submit( function( ){
+
+                name = $("input[name=DatabaseName]");
+                host = $("input[name=Hostname]");
+                user = $("input[name=Username]");
+                pass = $("input[name=Password]");
+
+                // check fields are non-empty
+                if( name.val( ) == "" || host.val( ) == "" || user.val( ) == "" ){
+                        name.addClass( "error" );
+                        host.addClass( "error" );
+                        user.addClass( "error" );
+                        fAlert( "The Database Name, Host Name and User Name fields are required." );
+                }
+
+                // check details are correct
+                $("#check_connection").html("<img src=\"' . SITE_URL . '/_inc/img/loading.gif\"/> Checking Details...");
+		var connection=checkConnection(["Hostname","Username","DatabaseName","Password"]);
+
+                name.removeClass("error");
+		host.removeClass("error");
+		user.removeClass("error");
+                pass.removeClass("error");
+
+                if(connection!="ok"){
+                        if(connection=="database")
+                                name.addClass("error");
+                        else{
+                                host.addClass("error");
+                                user.addClass("error");
+                                pass.addClass("error");
+                        }
+                        fAlert("The details that you have supplied are invalid. Please correct them to continue.");
+                        $("#check_connection").html("&nbsp;");
+
+                        return false;
+                }
+
 	} );
 } );
 </script>

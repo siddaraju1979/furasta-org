@@ -38,7 +38,7 @@ echo '
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../_inc/js/jquery/validate.js"></script>
 <script type="text/javascript" src="install.js"></script>
-<link rel="stylesheet" href="../_inc/css/admin.css" type="text/css"/>
+<link rel="stylesheet" href="install.css" type="text/css"/>
 </head>
 <body>
 <div id="dialog">&nbsp;</div>
