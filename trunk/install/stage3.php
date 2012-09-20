@@ -24,7 +24,8 @@ if(isset($_POST['submit'])){
         $_SESSION['settings']['maintenance']=(@$_POST['Maintenance']==1)?'1':'0';
         $_SESSION['settings']['user_files']=$_POST['User-Files'];
         $_SESSION['settings']['site_url']=$_POST['Website-URL'];
-
+        $_SESSION['settings']['database_install']=(@$_POST['Install-Database']==1)?1:0;
+        
 	if( empty( $_SESSION['settings']['title'] ) || empty( $_SESSION['settings']['sub_title'] )
 		|| empty( $_SESSION['settings']['user_files'] ) || empty( $_SESSION['settings']['site_url'] ) )
 		$error = 'The Site Title, Site Sub Title, User Files and Site URL fields are required';
@@ -38,10 +39,23 @@ require 'header.php';
 
 $index_checked=(@$_SESSION['settings']['index']==1)?'CHECKED':'';
 $maintenance_checked=(@$_SESSION['settings']['maintenance']==1)?'CHECKED':'';
+$database_install_checked=(@$_SESSION['settings']['database_install']==1)?'CHECKED':'';
 
 echo '
 <script type="text/javascript">
 $(function(){
+        $( "#show-hide" ).click(function( ){
+                $this = $( this );
+                if( $this.hasClass( "show" ) ){
+                        $this.removeClass( "show" ).addClass( "hide" ).html( "Hide" );
+                        $( ".hide-row" ).show( );
+                        rowColor( );                
+                }
+                else{
+                        $this.removeClass( "hide" ).addClass( "show" ).html( "Show" );
+                        $( ".hide-row" ).hide( );
+                }
+        });
 	$( "#install" ).validate({
 		"Title" : {
 			"name" : "title",
@@ -74,12 +88,15 @@ $(function(){
 	});
         $("#help-files").click(function(){
                 fHelp("The user files folder is where all of the users personal files are stored. The default location is inside the web root, thought it is reccomended to change this location to somewhere outside the web root if you wish to keep your files totally secure. If your files are all going to be made available publically then the default location is ok.");
-	});
+        });
+        $("#help-database").click(function(){
+                fHelp("This option stops the installer from re-installing the database. Use this if your .settings.php file has somehow become corrupt and you wish to restore the system while keeping the database.");
+        });
 });
 </script>
 ';
 
-$url=(isset($_SESSION['settings']['website_url']))?$_SESSION['settings']['site_url']:calculate_url();
+$url=(isset($_SESSION['settings']['website_url']))?$_SESSION['settings']['site_url']:SITE_URL;
 $user_files=(isset($_SESSION['settings']['user_files']))?$_SESSION['settings']['user_files']:HOME.'_user/';
 
 echo '
@@ -93,9 +110,13 @@ echo '
                         <tr><td>Sub Title:</td><td><input type="text" name="SubTitle" value="'.@$_SESSION['settings']['sub_title'].'" class="input right" /></td></tr>
 			<tr><td>Website URL: <a id="help-url" class="help link">&nbsp;</a></td><td><input type="text" name="Website-URL" value="'.$url.'" class="input right" /></td></tr>
                         <tr><td>User Files Location: <a id="help-files" class="help link">&nbsp;</a></td><td><input type="text" name="User-Files" value="'.$user_files.'" class="input right" /></td></tr>
-			<tr><td>Don\'t Index Website: <a id="help-index" class="help link">&nbsp;</a></td><td><input type="checkbox" name="Index" value="1" class="checkbox right" style="margin:0 10px 0 28%" '.$index_checked.'/></td></tr>
-		        <tr><td>Enable Maintenance Mode: <a id="help-maintenance" class="help link">&nbsp;</a></td><td><input type="checkbox" name="Maintenance" value="1" class="checkbox right" style="margin:0 10px 0 28%"/ '.$maintenance_checked.'></td></tr>
-		</table>
+                </table>
+                <table class="row-color">
+			<tr><th colspan="2">Advanced <a class="link right hide" id="show-hide">Show</a></th></tr>
+                        <tr class="hide-row"><td>Don\'t Index Website: <a id="help-index" class="help link">&nbsp;</a></td><td><input type="checkbox" name="Index" value="1" class="checkbox right" style="margin:0 10px 0 28%" '.$index_checked.'/></td></tr>
+		        <tr class="hide-row"><td>Enable Maintenance Mode: <a id="help-maintenance" class="help link">&nbsp;</a></td><td><input type="checkbox" name="Maintenance" value="1" class="checkbox right" style="margin:0 10px 0 28%"/ '.$maintenance_checked.'></td></tr>
+                        <tr class="hide-row"><td>Don\'t Install Database: <a id="help-database" class="help link">&nbsp;</a></td><td><input type="checkbox" name="Install-Database" value="1" class="checkbox right" style="margin:0 10px 0 28%"/ '.$database_install_checked.'></td></tr>
+                </table>
 	        <br/>
         	<input type="submit" name="submit" id="form-submit" class="submit right" value="Next"/>
 	        </form>

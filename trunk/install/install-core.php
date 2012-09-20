@@ -111,6 +111,12 @@ function install_settings( ){
  */
 function install_db( ){
 
+        /**
+         * if this setting is enabled, skip the db install
+         */
+        if( $_SESSION[ 'settings' ][ 'database_install' ] == 1 )
+                return;
+
         global $settings;
         global $constants;
         global $hash;
