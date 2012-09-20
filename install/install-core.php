@@ -342,6 +342,12 @@ function install_email( ){
         global $constants;
         global $hash;
 
+        // email headers
+        $headers  = 'From: Support - Furasta.Org <support@furasta.org>'."\r\n".'Reply-To: support@furasta.org'."\r\n";
+        $headers .= 'X-Mailer: PHP/' .phpversion()."\r\n";
+        $headers .= 'MIME-Version: 1.0'."\r\n";
+        $headers .= 'Content-Type: text/html; charset=ISO-8859-1'."\r\n";
+
         $subject = 'User Activation - Furasta.Org';
         $message = 'Hi ' . $_SESSION[ 'user' ][ 'name' ] . ',<br/>'
                 . '<br/>'
@@ -353,7 +359,8 @@ function install_email( ){
                 . '<br/>'
                 . 'If you are not the person stated above please ignore this email.<br/>';
 
-        email( $_SESSION[ 'user' ][ 'email' ], $subject, $message );
+        // send mail
+        mail( $_SESSION[ 'user' ][ 'email' ], $subject, $message, $headers );
 
 }
 

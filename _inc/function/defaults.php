@@ -198,3 +198,48 @@ function defaults_settings_content( $SETTINGS, $DB, $PLUGINS, $constants ){
 
         return $filecontents;
 }
+
+/**
+ * defaults_email_template
+ *
+ * returns the default furasta email template, given the
+ * message as a parameter
+ *
+ * @param string $message
+ * @return string
+ */
+function defaults_email_template( $message ){
+
+        return '
+        <div style="margin:0;text-align:center;background:#eee;font:1em Myriad Pro,Arial,Sans Serif;color:#333;border:1px solid transparent">
+        <div id="container" style="width:92%;background:#fff;border:1px solid #999;margin:20px auto 0 auto">                <div id="container-top" style="border-top:1px solid transparent">
+                        <div id="header" style="margin:25px auto 0 auto;height:100px;width:92%;background:#2a2a2a">                                <img style="float:left;max-width:100%" src="http://files.furasta.org/images/email/email-header-logo.png"/>                        </div>
+                </div>
+                <div id="container-right" style="border-top:1px solid transparent;border-bottom:1px solid transparent">
+                        <div id="main" style="text-align:left;margin:25px auto;width:92%;border-top:1px solid transparent">
+                               <div id="right">
+
+                                        ' . $message . '
+                                        <br/>
+                                        Thanks <br/>
+                                        --- <br/>                                        Furasta.Org <br/>                                        <a style="text-decoration:none" href="http://furasta.org">http://furasta.org</a> <br/>
+                                        <a style="text-decoration:none" href="mailto:support@furasta.org">support@furasta.org</a> <br/>
+                                        <br/>
+                                        <table>
+                                                <tr>                                                        <th colspan="2">Need help working the CMS?</th>
+                                                        <th colspan="2">Want to report a bug?</th>                                                </tr>                                                <tr>
+                                                        <td><img src="http://files.furasta.org/images/email/email-footer-forum.jpg"></td>                                                        <td><a href="http://forum.furasta.org">http://forum.furasta.org</a><p>Visit the forum where you can ask questions about any aspect of the system. You can even add feature requests!</p></td>
+                                                        <td><img src="http://files.furasta.org/images/email/email-footer-bugs.jpg"></td>
+                                                        <td><a href="http://bugs.furasta.org">http://bugs.furasta.org</a><p>Using the Bug Tracker you can log a bug and it will be 
+completed depending on its priority.</p></td>
+                                                <tr>
+                                        </table>                                </div>                        </div>
+                </div>
+        </div>
+        <div id="bottom" style="width:92%;margin:0 auto;text-align:left">
+                <p style="float:left;color:#050;font-size:13px">&copy; <a href="http://furasta.org" style="text-decoration:none;color:#050;font-size:13px">Furasta.Org</a> | <a href="http://forum.furasta.org" style="text-decoration:none;color:#050;font-size:13px">Forum</a> | <a href="http://bugs.furasta.org" style="text-decoration:none;color:#050;font-size:13px">Bug Tracker</a></p>
+                <br style="clear:both"/>
+        </div>
+        </div>
+        ';
+}
