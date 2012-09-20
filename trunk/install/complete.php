@@ -19,7 +19,6 @@ if(@$_SESSION['complete']!=1)
 	header('location: stage3.php');
 
 require 'header.php';
-require HOME . '_inc/function/system.php'; // this should be removed and all required functionality moved to defaults.php
 require HOME . '_inc/function/defaults.php';
 require HOME . 'install/install-core.php';
 
@@ -28,7 +27,6 @@ require HOME . 'install/install-core.php';
  */
 $connect = mysql_connect( $_SESSION[ 'db' ][ 'host' ], $_SESSION[ 'db' ][ 'user' ], $_SESSION[ 'db' ][ 'pass' ] );
 $select  = mysql_select_db($_SESSION[ 'db' ][ 'name' ], $connect );
-
 
 /**
  * run install, variables below
