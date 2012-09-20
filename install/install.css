@@ -266,3 +266,9 @@ li.ui-tabs-selected a:hover{ background:#fff }
 #progress{ margin:20px 30px 0 0 }
 #progress .ui-widget-content{ } 
 #progress .ui-progressbar-value{ background:url(../_inc/img/progress.png) repeat-x #F6A828;height:25px }
+
+
+
+/* Installer Specific */
+#show-hide{ color:#fff }
+.hide-row{ display:none }
