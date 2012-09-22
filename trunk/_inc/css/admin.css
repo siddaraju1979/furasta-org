@@ -95,7 +95,7 @@ i, em{ font-style:italic }
 #header-Manual-Update{ background: url( ../img/icons.png ) no-repeat -30px -100px }
 #header-Add{ background: url( ../img/icons.png ) no-repeat -35px -53px }
 #delete-img{ background: url( ../img/icons.png ) no-repeat -24px -156px }
-.delete-small-img{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px;background-position:bottom }
+.delete-small-img{ background:url(%SITE_URL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px;background-position:bottom }
 /* menu styles */
 
 #header #menu ul{ list-style-type:none;margin-top:16px;margin-left:0px }
@@ -168,8 +168,8 @@ table#perm{ width:50%;text-align:left;margin:0 auto }
 
 .pages-table-left{ padding:6px 15px 6px 6px;width:25px }
 #pages tr td .expander{ background-position:left center;background-repeat:no-repeat;cursor:pointer;padding:6px 19px 4px 0!important;zoom:1 }
-#pages tr.collapsed td .expander{ background-image:url(%SITEURL%_inc/img/toggle-expand-dark.png) }
-#pages tr.expanded td .expander{ background-image:url(%SITEURL%_inc/img/toggle-collapse-dark.png) }
+#pages tr.collapsed td .expander{ background-image:url(%SITE_URL%_inc/img/toggle-expand-dark.png) }
+#pages tr.expanded td .expander{ background-image:url(%SITE_URL%_inc/img/toggle-collapse-dark.png) }
 #pages tr.selected, .treeTable tr.accept{ background-color:#3875d7;color:#fff }
 
 .holder{ background: #89a; height:4px }
@@ -235,10 +235,10 @@ p.th span.status{ float:right;margin-right:5px }
 .ui-dialog .ui-dialog-buttonpane button{ background:#333;float:right;margin:1.5px 3px 0 0;cursor:pointer;padding:3px 4px 2px;line-height:1.4em;width:auto;overflow:visible;border:1px solid #666 }
 .ui-dialog .ui-dialog-buttonpane button span{ color:#fff }
 .ui-draggable .ui-dialog-titlebar { cursor:move }
-.ui-widget-content .ui-icon-closethick{ background:url(%SITEURL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px; margin:5px;text-indent:-10000px }
+.ui-widget-content .ui-icon-closethick{ background:url(%SITE_URL%/_inc/img/icons.png) no-repeat -90px -184px;width:10px;height:10px; margin:5px;text-indent:-10000px }
 .ui-widget-overlay{  opacity: .4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter:alpha(opacity=40);background:#333;left:0;top:0;height:100%;width:100%;position:absolute }
 .ui-widget-content { border: 1px solid #cccccc; background: #f9f9f9; color: #222222; }
-.ui-widget-header { background:#333333 url(%SITEURL%_inc/img/th.png) repeat-x;font-weight:bold;color:#fff }
+.ui-widget-header { background:#333333 url(%SITE_URL%_inc/img/th.png) repeat-x;font-weight:bold;color:#fff }
 
 #fdialog table{ border-width:1px 1px 1px 0;border-color:#999;border-style:solid;padding:0;border-spacing:0 }
 #fdialog table td{ border-left:1px solid #999;padding:7px 9px }

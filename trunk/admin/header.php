@@ -75,8 +75,8 @@ if( !cache_is_good( $cache_file, '60*60*24*3', 'RSS' ) ){
 */
 $cache_file = md5( 'FURASTA_ADMIN_MENU_' . $_SESSION[ 'user' ][ 'id' ] );
 
-if( cache_exists( $cache_file, 'DB_USERS' ) )
-	$menu = json_decode( cache_get( $cache_file, 'DB_USERS' ) );
+if( cache_exists( $cache_file, 'USERS' ) )
+	$menu = json_decode( cache_get( $cache_file, 'USERS' ) );
 else{
 	$url = SITE_URL . 'admin/';
 
@@ -150,7 +150,7 @@ else{
 	$menu = display_menu( $menu_items );
 
         $menu_items_cache = json_encode( $menu );
-        cache( $cache_file, $menu_items_cache, 'DB_USERS' );
+        cache( $cache_file, $menu_items_cache, 'USERS' );
 }
 
 $Template->add('menu',$menu);
@@ -159,7 +159,12 @@ $javascript='
 window.furasta = {
 	site : {
 		url : "' . SITE_URL . '"
-	},
+        },
+        user : {
+                id      : "' . $User->id( ) . '",
+                name    : "' . $User->name( ) . '",
+                email   : "' . $User->email( ) . '",
+        },
 	lang : ' . json_encode( $Template->lang ) . ',
 	lang_errors : ' . json_encode( $Template->lang_errors ) . '
 };
