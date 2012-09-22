@@ -124,8 +124,8 @@ class OverviewItems{
 
                 $cache_file = 'FURASTA_OVERVIEW_ITEMS_STATUS_' . $_SESSION[ 'user' ][ 'id' ];
 
-                if( cache_exists( $cache_file, 'DB_USERS' ) ){
-                        $items_status = json_decode( cache_get( $cache_file, 'DB_USERS' ) );
+                if( cache_exists( $cache_file, 'USERS' ) ){
+                        $items_status = json_decode( cache_get( $cache_file, 'USERS' ) );
 
 			foreach( $items as $item => $value ){
 				foreach( $items_status as $key => $status ){
@@ -139,14 +139,14 @@ class OverviewItems{
 
 		$cache_file = 'FURASTA_OVERVIEW_ITEMS_' . $_SESSION[ 'user' ][ 'id' ];
 
-		if( cache_exists( $cache_file, 'DB_USERS' ) )
-			$order = json_decode( cache_get( $cache_file, 'DB_USERS' ), true );
+		if( cache_exists( $cache_file, 'USERS' ) )
+			$order = json_decode( cache_get( $cache_file, 'USERS' ), true );
 		else{
 		        $order = array(
 	                	'1' => array( 'website-overview', 'recently-trashed' ),
         		        '2' => array( 'recently-edited', 'furasta-devblog' )
 		        );
-			cache( $cache_file, json_encode( $order ), 'DB_USERS' );
+			cache( $cache_file, json_encode( $order ), 'USERS' );
 		}
 		
 		$ordered = array( );

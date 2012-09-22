@@ -24,6 +24,11 @@
  * @return bool
  */
 function cache($name,$content,$dir=''){
+        if( $dir == 'DB_USERS' or $dir == 'DB_PAGES' ){
+                debug_print_backtrace( );
+                die( );
+        }
+
         if($dir!=''){
 		if(substr($dir,-1)!='/')
 	                $dir=$dir.'/';
@@ -46,6 +51,12 @@ function cache($name,$content,$dir=''){
  * @return bool
  */
 function cache_get($name,$dir=''){
+
+        if( $dir == 'DB_USERS' or $dir == 'DB_PAGES' ){
+                debug_print_backtrace( );
+                die( );
+        }
+
         if($dir!=''&&substr($dir,-1)!='/')
                 $dir=$dir.'/';
 
@@ -93,7 +104,14 @@ function cache_is_good($name,$length,$dir=''){
  * @return bool
  */
 function cache_clear($dir=''){
-	if($dir!=''&&substr($dir,-1)!='/')
+
+        if( $dir == 'DB_USERS' or $dir == 'DB_PAGES' ){
+                debug_print_backtrace( );
+                die( );
+        }
+
+
+        if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
 	$dir=USERS_DIR.'cache/'.$dir;
@@ -132,7 +150,13 @@ function cache_clear($dir=''){
  */
 
 function cache_exists($file,$dir=''){
-	if($dir!=''&&substr($dir,-1)!='/')
+
+        if( $dir == 'DB_USERS' or $dir == 'DB_PAGES' ){
+                debug_print_backtrace( );
+                die( );
+        }
+
+        if($dir!=''&&substr($dir,-1)!='/')
 		$dir=$dir.'/';
 
 	return (file_exists(USERS_DIR.'cache/'.$dir.$file));

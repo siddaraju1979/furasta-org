@@ -13,27 +13,17 @@
 
 require 'header.php';
 
+$Template->loadJavascript( '_inc/js/FileManager.js' );
 $Template->loadJavascript( 'admin/files/files.js' );
 $Template->add( 'title', 'Files' );
-$FileManager = FileManager::getInstance( );
-$files = $FileManager->readDir( '/users/1/' );
 
 $content = '
 <h1>Files</h1>
 <div id="file-manager">
 	<div id="files">
 		<h3 id="filecrumbs"></h3>
+                <h3 id="create-directory">New Folder</h3>
                 <ul id="directory-list">
-                ';
-
-foreach( $files as $file => $sub ){
-        $img = ( is_dir( $FileManager->users_files . $file ) ) ? '_inc/img/folder.png' : '_inc/img/file.png';
-        $content .= '<li><img src="' . SITE_URL . $img . '"/>' . $file . '</li>';
-}
-
-$files = $FileManager->readDir( '/', 2 );
-
-$content .= '
 	        </ul>	
 	</div>
 </div>

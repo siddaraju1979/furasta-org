@@ -50,8 +50,8 @@ function frontend_error( $error, $title = 'Error' ){
 function frontend_menu(){
         $cache_file=md5( 'FURASTA_FUNCTION_FRONTEND_MENU' );
 
-        if(cache_is_good($cache_file,'120*60*12','DB_PAGES'))
-                $order=json_decode(cache_get($cache_file,'DB_PAGES'));
+        if(cache_is_good($cache_file,'120*60*12','PAGES'))
+                $order=json_decode(cache_get($cache_file,'PAGES'));
         else{
 		$pages=array();
 		$query=query('select id,name,parent,slug,home from '.DB_PAGES.' where display=1 order by position,name desc');
@@ -61,7 +61,7 @@ function frontend_menu(){
 
 		$order=frontend_list_pages(0,$pages,0,SITE_URL);
 
-                cache($cache_file,json_encode($order),'DB_PAGES');
+                cache($cache_file,json_encode($order),'PAGES');
         }
         return $order;
 }

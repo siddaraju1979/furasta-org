@@ -4,7 +4,7 @@
  * New Page, Furasta.Org
  *
  * A facility through which the user can create a new
- * page in the DB_PAGES table.
+ * page in the pages table.
  *
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
@@ -66,7 +66,7 @@ if( isset( $_POST[ 'new-save' ] ) && $valid ){
 		/**
 		 * clear pages cache and redirect to edit pages
 		 */	
-        	cache_clear( 'DB_PAGES' );
+        	cache_clear( 'PAGES' );
 
 		$id = mysql_insert_id( );
 

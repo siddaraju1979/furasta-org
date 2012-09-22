@@ -577,13 +577,12 @@ class FileManager{
                 $return = array( );
                 
                 foreach( $files as $file => $sub ){
-                        if( is_array( $file ) && $this->hasPerm( $file, $rw, $id ) ){
-                                $return[ $file ] = $this->filesHavePerm( $sub, $rw, $id );
-                        }
-                        else{
-                                if( $this->hasPerm( $file, $rw, $id ) )
-                                        $return[ $file ] = $sub;
-                        }
+                        if( $this->hasPerm( $file, $rw, $id ) ){
+                                $data = $this->getFile( $file );
+                                if( is_array( $file ) )
+                                        $data[ 'files' ] = $this->filesHavePerm( $sub, $rw, $id );
+                                array_push( $return, $data );
+                        }        
                 }
                 
                 return $return;
@@ -892,22 +891,7 @@ class FileManager{
 	 * 			see the hasPerm method. this way, readDir
 	 * 			can be used to recursively check permissions
          *
-         * example return for readDir( '/' ) :
-         *      
-         * array(
-         *      '/' => array(
-         *              '/file1' => 0,
-         *              '/file2' => 0,
-         *              '/users' => array(
-         *                      '/users/1' => array(
-         *                              '/users/1/file3' => 0,
-         *                              '/users/1/file4' => 0
-         *                      ),
-         *                      ...
-         *              }, 
-         * );
-         *
-         * // new proposed format below
+         * // return array in following format:
          * array(
          *      '/' => array(
          *              'type'  =>      'mimetype',
@@ -935,7 +919,7 @@ class FileManager{
 
 		// read files and dirs
 		$files = self::_rreadDir( $this->users_files . $path, $level );
-
+                 
                 /*
 		 * get file database data
 		 */
