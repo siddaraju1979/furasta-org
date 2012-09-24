@@ -17,8 +17,10 @@ var filecrumbs  = $( '#filecrumbs' );
 var filecrumb   = $( '.crumb' );
 var newfolder   = $( '#new-folder' );
 var dir_list    = $( '#directory-list' );
-var dir         = $( '.directory' );
+var dir         = $( '.dir' );
 var file        = $( '.file' );
+var item        = $( '.item' );
+var filemenu    = $( '.menu-left' );
 var default_dir;
 
 $( function( ){
@@ -62,6 +64,18 @@ $( function( ){
                 return false;
         });
 
+        /**
+         * item hover event
+         */
+        $( 'li', dir_list ).live({
+                mouseenter : function( ){
+                        $( '.delete-img', $( this ) ).addClass( 'delete-small-img' );
+                },
+                mouseleave : function( ){
+                        $( '.delete-img', $( this ) ).removeClass( 'delete-small-img' );
+                }
+        });
+
 });
 
 /**
@@ -99,8 +113,9 @@ function show_dir( path ){
  * @return string
  */
 function show_item( data ){
-        
-        content  = '<a class="link directory" href="' + data.path + '">';
+  
+        content = '<a class="delete link" href="' + data.path + '"><span class="delete-img">&nbsp;</span></a>';
+        content += '<a class="link ' + data.type + ' item" href="' + data.path + '">';
         content += '<img src="' + window.furasta.site.url;
 
         switch( data.type ){

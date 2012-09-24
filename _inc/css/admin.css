@@ -198,10 +198,6 @@ ul#pages li{ width:100%;padding:0 5px }
 ul#pages li.top_bar{ color:#fff }
 ul#pages li span{ padding:0 10px }
 
-/* Admin Area Files */
-#directory-list{ list-style-type:none }
-#directory-list li{ float:left;margin:10px }
-
 /* Admin Area Settings */
 
 #config-table{ border-width:1px 1px 1px 0;border-color:#999;border-style:solid;padding:0;width:80%;margin:25px 10%;border-spacing:0 }
@@ -224,7 +220,14 @@ p.th span.status{ float:right;margin-right:5px }
 #filecrumbs{ margin:20px }
 #directory{ margin:20px }
 #panel-top{ list-style-type:none;float:right;margin:20px }
-#panel-top li{ float:left }
+#panel-top li{ float:left;margin:0 5px }
+#panel-top li img{ width:25px;height:25px;float:left }
+#panel-top li span{ float:left;margin-left:3px;margin-top:2px }
+#directory-list{ list-style-type:none }
+#directory-list li{ float:left;margin:2px;text-align:center;padding:15px 12px;border:1px solid transparent }
+#directory-list li a.item{ float:left;color:#333 }
+#directory-list li:hover{ background:#eee;border:1px solid #999;border-radius:5px; }
+#directory-list li a.delete-img{ width:10px;height:10px }
 
 /* Prompt */
 
