@@ -22,6 +22,7 @@ if( !defined( 'AJAX_LOADED' ) && !defined( 'AJAX_VERIFIED' ) )
  * switch to desired function
  */
 $func = addslashes( $_POST[ 'func' ] );
+$FileManager = FileManager::getInstance( );
 switch( $func ){
         case 'readDir':
                 /**
@@ -32,7 +33,6 @@ switch( $func ){
                 /**
                  * read dir with file manager
                  */
-                $FileManager = FileManager::getInstance( );
                 $files = $FileManager->readDir( $path );
 
                 /**
@@ -42,6 +42,22 @@ switch( $func ){
                         echo json_encode( $files );
                 else
                         echo json_encode( $FileManager->error( ) );
+        break;
+        case 'addDir':
+
+                /**
+                 * get path from post data
+                 */
+                $path = addslashes( $_POST[ 'path' ] );
+
+                /**
+                 * add dir with file manager
+                 */
+                $success = $FileManager->addDir( $path );
+
+                if( !$success )
+                        echo json_encode( $FileManager->error( ) );
+
         break;
 }
 exit;

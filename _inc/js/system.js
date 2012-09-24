@@ -14,7 +14,7 @@ function fAlert(message){
 	dialogButtons[ trans( 'prompt_close' ) ] = function( ){ $( this ).dialog( 'close' ) };
         $('#dialog')
 		.html('<div id="dialog-content">'+message+'</div><div id="dialog-alert-logo">&nbsp;</div>')
-		.attr('title',trans( 'prompt_alert' ))
+		.attr('title','Alert')
 		.dialog({
 			modal: true,
 			buttons: dialogButtons,
@@ -24,7 +24,6 @@ function fAlert(message){
 		})
 		.dialog("open");
 }
-
 
 function fConfirm(message,callback,param){
 	var dialogButtons = {};
@@ -36,6 +35,26 @@ function fConfirm(message,callback,param){
         $('#dialog')
 		.html('<div id="dialog-content">'+message+'</div><div id="dialog-confirm-logo">&nbsp;</div>')
 		.attr('title',trans( 'prompt_confirm' ) )
+		.dialog({
+			modal: true,
+			buttons: dialogButtons,
+			hide:'fade',
+			show:'fade',
+			resizeable:false
+		})
+		.dialog("open");
+}
+
+function fPrompt(message,callback,param){
+	var dialogButtons = {};
+	dialogButtons[ trans( 'prompt_cancel' ) ] = function( ){ $( this ).dialog( 'close' ) };
+	dialogButtons[ 'Ok' ] = function( ){ 
+		callback( param );
+		$( this ).dialog( 'close' );
+	};
+        $('#dialog')
+		.html( message+'<p><input type="text" name="prompt-input"/></p>')
+		.attr('title', 'Prompt' )
 		.dialog({
 			modal: true,
 			buttons: dialogButtons,

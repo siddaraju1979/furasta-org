@@ -218,6 +218,14 @@ ul#pages li span{ padding:0 10px }
 p.th span.status{ float:right;margin-right:5px }
 .activated{ background:#ded }
 
+/* Admin Area Files */
+
+#directory-container{ margin:20px;border:1px solid #333 }
+#filecrumbs{ margin:20px }
+#directory{ margin:20px }
+#panel-top{ list-style-type:none;float:right;margin:20px }
+#panel-top li{ float:left }
+
 /* Prompt */
 
 #dialog-logo{ background:url(../img/logo.png) no-repeat;height:50px }

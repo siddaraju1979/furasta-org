@@ -77,7 +77,14 @@ var FileManager = {
                                 func : 'addDir',
                                 'path' : path
                         },
-                        fn
+                        function( data ){
+
+                                if( data != null && typeof( data ) == 'object' && typeof( data.desc ) == 'string' )
+                                        fAlert( data.desc );
+                                else
+                                        fn( data );
+
+                        }
                 );
 
         },

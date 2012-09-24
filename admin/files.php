@@ -20,11 +20,16 @@ $Template->add( 'title', 'Files' );
 $content = '
 <h1>Files</h1>
 <div id="file-manager">
-	<div id="files">
-		<h3 id="filecrumbs"></h3>
-                <h3 id="create-directory">New Folder</h3>
-                <ul id="directory-list">
-	        </ul>	
+        <div id="files">
+                <div id="directory-container">
+                        <div class="th"><p style="color:#fff">Directory Listing</p></div>
+                        <ul id="panel-top">
+                                <li><a class="link" id="new-folder">New Folder</a></li>
+                        </ul>
+                        <div id="filecrumbs"></div>
+                        <ul id="directory-list"></ul>      
+                        <br style="clear:both"/>  
+                </div>
 	</div>
 </div>
 <br style="clear:both"/>';

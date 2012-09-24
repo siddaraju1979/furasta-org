@@ -65,7 +65,7 @@ if( @$check == 1 ){
 			$User->setCookie( );
 		}
 
-                header( 'location: ' . SITE_URL . $_SERVER[ 'REQUEST_URI' ] );
+                header( 'location: ' . SITE_URL . 'admin/' );
 		exit;
 	}
 
