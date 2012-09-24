@@ -184,7 +184,7 @@ class FileManager{
 	 * @param array $data
 	 * @param bool $new
 	 * @access private
-	 * @return void
+	 * @return bool
 	 */
 	private function updateInfo( $data, $new = false ){
 
@@ -205,7 +205,7 @@ class FileManager{
 			if( !$success )
 				return $this->setError( 7, $query );
 
-			$data[ 'id' ] = $id;
+			$data[ 'id' ] = mysql_insert_id( );
 			$this->files{ $data[ 'path' ] } = $data;
 		}
 		else{ // update db and files array
@@ -220,7 +220,9 @@ class FileManager{
 
 			if( !$success )
 				return $this->setError( 7, $query );
-		}
+                }
+
+                return true;
 
 	} 
 
@@ -371,31 +373,37 @@ class FileManager{
 	 * checks can be performed on a specific user using
 	 * $id, defaults to current user
 	 *
-	 * @param string/int $file
+	 * @param string/int $path
 	 * @param string $rw
 	 * @param int $id
 	 * @access public
 	 * @return bool
 	 */
-	public function hasPerm( $file, $rw = 'r', $id = false ){
+	public function hasPerm( $path, $rw = 'r', $id = false ){
 		
 		/**
 		 * make sure path is valid
 		 */
-		if( !self::checkPath( $file ) )
+		if( !self::checkPath( $path ) )
 			return false;
                 
 		/**
 		 * get user and file info
 		 */
-		$file = $this->getFile( $file );
+		$file = $this->getFile( $path );
 		$User = User::getInstance( $id );
 
 		/**
-		 * file not found
-		 */
-		if( !$file )
-			return false;
+                 * file not in db, therefore is a check
+                 * to create file
+                 */
+                $new = false;
+                if( !$file ){
+                        $new = true;
+                        $file = $this->getFile( dirname( $path ) );
+                        if( !$file )
+                                return $this->setError( 6, array( 'file', $path ) );
+                }
 
 		/**
 		 * split file permissions string from db into
@@ -489,19 +497,25 @@ class FileManager{
 				return $this->setError( 1, $file[ 'name' ] );
 			break;
 			case 'w': // check if is writable by user
-
+                                
 				/**
 				 * must be logged in
 				 */
 				if( !$User )
 					return $this->setError( 9 );
-
+                                
 				/**
 				 * if is system file/folder (ie. owner=0) then
 				 * return false
-				 */
-				if( $file[ 'owner' ] == 0 )
+                                 */
+                                if( !$new && $file[ 'owner' ] == 0 )
 					return $this->setError( 8, $file );
+
+				/**
+				 * if super user, return true
+				 */
+				if( $User->isSuperUser( ) )
+					return true;
 
 				/**
 				 * if user does not have permission to manage
@@ -811,7 +825,7 @@ class FileManager{
 		 */
 		$User = User::getInstance( );
 		$data = array(
-			'name' => end( explode( '/', $path ) ),
+			'name' => basename( $path ),
 			'path' => $path,
 			'owner' => $User->id( ),
 			'type' => 'dir',
@@ -823,20 +837,20 @@ class FileManager{
 		/**
 		 * create directory
 		 */
-		$success = mkdir( $path ); 
+		$success = mkdir( $this->users_files . $path ); 
 
-		if( !$success )
+                if( !$success )
 			return $this->setError( 5, $path );
 
-
-		/**
+      		/**
 		 * add to database
 		 */
 		return $this->updateInfo( $data, true );
-	}
+
+        }
 
 	/**
-	 * reeoveDir
+	 * removeDir
 	 *
 	 * removes a directory, and all of it's contents if
 	 * non-empty. must have permission to remove all files in
@@ -1186,7 +1200,7 @@ class FileManager{
 	 * @return array
 	 */
 	public function error( ){
-		return $this->error( );
+		return $this->error;
 	}
 
 	/**

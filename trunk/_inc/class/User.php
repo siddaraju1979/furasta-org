@@ -1001,6 +1001,22 @@ class User{
 	 */
 	public function isSuperUser( ){
 		return $this->_superuser;
-	}
+        }
+
+        /**
+         * filePerm
+         *
+         * accessor method for the file perm
+         * variable
+         *
+         * @access public
+         * @return array
+         */
+        public function filePerm( ){
+
+                return $this->filePerm;
+
+        }
+
 }
 ?>

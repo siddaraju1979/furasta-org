@@ -15,7 +15,7 @@
  */
 var filecrumbs  = $( '#filecrumbs' );
 var filecrumb   = $( '.crumb' );
-var createdir   = $( '#create-directory' );
+var newfolder   = $( '#new-folder' );
 var dir_list    = $( '#directory-list' );
 var dir         = $( '.directory' );
 var file        = $( '.file' );
@@ -29,6 +29,14 @@ $( function( ){
          * list the root of the files dir by default
          */
         show_dir( default_dir );
+
+        /**
+         * new folder event
+         */
+        newfolder.click( function( ){
+                new_folder( );
+                return false;
+        });
 
         /**
          * filecrumb event
@@ -121,7 +129,9 @@ function show_item( data ){
  */
 function show_filecrumbs( path ){
 
-        content = '';
+        filecrumbs.attr( 'current', path );
+
+        content = '<a class="link crumb" href="/">files</a>';
         path    = path.split( '/' );
         cur     = '';
         for( i = 0; i < path.length - 1; ++i ){
@@ -131,5 +141,25 @@ function show_filecrumbs( path ){
         }
 
         filecrumbs.html( content );
+
+}
+
+/**
+ * new_folder
+ *
+ * prompts user for new folder name and
+ * sends request for folder to be created
+ *
+ * @return void
+ */
+function new_folder( ){
+
+        fPrompt( 'Please enter the name of the folder you would like to create.', function( param, val ){
+               dir = filecrumbs.attr( 'current' );
+               name = $( 'input[name="prompt-input"]' ).val( );
+               FileManager.addDir( dir + name, function(  ){
+                        show_dir( dir );              
+               });
+        }, null );
 
 }
