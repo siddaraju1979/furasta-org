@@ -74,7 +74,7 @@ function stats_admin_filter_menu( $menu_items, $url ){
 function stats_frontend_filter_metadata( $metadata ){
 	// add javascript to frontend which sends a request to the
 	// stats program
-	$metadata .= '<script type="text/javascript">$(function(){$.ajax({type:"post",url:window.furasta.site.url+"_inc/ajax.php?file=_plugins/Stats/frontend/process.php",data:{page:"' . $_SERVER[ 'REQUEST_URI' ] . '",referrer:"' . $_SERVER[ 'HTTP_REFERER' ] . '"}});});</script>';
+	$metadata .= '<script type="text/javascript">$(function(){$.ajax({type:"post",url:window.furasta.site.url+"ajax.php?file=_plugins/Stats/frontend/process.php",data:{page:"' . $_SERVER[ 'REQUEST_URI' ] . '",referrer:"' . $_SERVER[ 'HTTP_REFERER' ] . '"}});});</script>';
 
 	return $metadata;
 }

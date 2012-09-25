@@ -68,7 +68,7 @@ function add_subscriber( ){
 					}
 
 					$.ajax({
-						url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/new-sub.php',
+						url : window.furasta.site.url + 'ajax.php?file=_plugins/Mailing-List/new-sub.php',
 						data : Data,
 						type : 'POST',
 						success : function( id ){
@@ -97,7 +97,7 @@ function delete_subscriber( ){
 	var sub_id = $( this ).attr( 'id' );
 	fConfirm( trans( 'prompt_confirm_delete' ), function( ){
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/admin/delete-sub.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Mailing-List/admin/delete-sub.php',
 			type : 'POST',
 			data : {
 				id : sub_id
@@ -132,7 +132,7 @@ function send_emails( emails, email_subject ){
 	for( var i = 0; i < end; ++i ){
 		var email_address = emails[ i ];
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Mailing-List/admin/send-email.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Mailing-List/admin/send-email.php',
 			type : 'POST',
 			data : {
 				email : email_address,

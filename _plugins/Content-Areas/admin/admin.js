@@ -35,7 +35,7 @@ function update_template_areas( ){
 		$( '#content-template' ).html( '<p><i>Please select a content area</i></p>' );
 	}
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/content-areas.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/content-areas.php',
 		type : 'POST',
 		data : {
 			template : $( '#content-template-select' ).val( )
@@ -58,7 +58,7 @@ function update_content_area( ){
 		return;
 	}
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/get-area.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/get-area.php',
 		type : 'POST',
 		data : {
 			name : area_name
@@ -85,7 +85,7 @@ function save_area( ){
 		area_content[ 'all' ].push( { name : type, id : a_id } );
 	});
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/save-area.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/save-area.php',
 		type : 'POST',
 		data : {
 			name : area_name,
@@ -111,7 +111,7 @@ function sortable_stop_function( event, ui ){
 	var a_name = $( '#content-area-select' ).val( );
 	// get new id from widget itself
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
 		type : 'post',
 		data : {
 			name : widget_name,
@@ -152,7 +152,7 @@ function edit_widget( ){
 			buttons: dialogButtons
 		});
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
 		type : 'POST',
 		data : {
 			name : widget_name,
@@ -171,7 +171,7 @@ function delete_widget( ){
 	var area_name = $( '#content-area-select' ).val( );
 	fConfirm( trans( "content_areas_confirm_delete" ), function( ){
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/delete-widget.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/delete-widget.php',
 			type : 'POST',
 			data : {
 				name : area_name,
@@ -198,7 +198,7 @@ function save_widget( widget_id, widget_name, area_name ){
 	});
 
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Content-Areas/admin/widget-content.php',
 		type : 'POST',
 		data : {
 			name : widget_name,

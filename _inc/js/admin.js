@@ -32,7 +32,7 @@ $(document).ready(function(){
         }
 
 	$( "#errors-close" ).live( "click", function( ){
-		fetch( window.furasta.site.url + "_inc/ajax.php?file=admin/settings/update/system-alert.php" );
+		fetch( window.furasta.site.url + "ajax.php?file=admin/settings/update/system-alert.php" );
 		$( "#system-error" ).fadeOut( "fast", function( ){ $( this ).remove( ); } );
 	});
 });
@@ -95,7 +95,7 @@ function trans_error( id, params ){
 function loadPageType(type,id){
         var hash=Math.floor(Math.random()*1001);
         $.ajax({
-                url: window.furasta.site.url + '_inc/ajax.php?file=admin/pages/type.php&type='+type+'&id='+id+'&hash='+hash,
+                url: window.furasta.site.url + 'ajax.php?file=admin/pages/type.php&type='+type+'&id='+id+'&hash='+hash,
                 success: function(html){
                         $("#pages-type-content").html(html);
 
@@ -123,7 +123,7 @@ function displayOptions(){
 
 /*
 function passwordReminder(){
-        var html='<script type="text/javascript">$(document).ready(function(){ $("#jqi_state0_buttonSend").click(function(){ $("#loading-icon").html("<img src=\'/_inc/img/loading.gif\'/>");var email=$("#reminder-email").val();$.ajax({url:"/_inc/ajax.php?file=admin/settings/users/verify_email.php&email="+email,success: function(html){ if(html==1) $("#loading-icon").html("error"); else{ $("#loading-icon").html("success"); setTimeout(function(){ $("#jqibox").fadeOut("slow"); },300); } }}); return false; }); });</script><p style="margin-left:0;font-style:italic">Enter your email address below and a new password will be sent to you.</p><table><td class="small">Email:</td><td><input type="text" id="reminder-email" name="Email"/></td><td class="small" id="loading-icon"></td></tr></table><br/>';
+        var html='<script type="text/javascript">$(document).ready(function(){ $("#jqi_state0_buttonSend").click(function(){ $("#loading-icon").html("<img src=\'/_inc/img/loading.gif\'/>");var email=$("#reminder-email").val();$.ajax({url:"/ajax.php?file=admin/settings/users/verify_email.php&email="+email,success: function(html){ if(html==1) $("#loading-icon").html("error"); else{ $("#loading-icon").html("success"); setTimeout(function(){ $("#jqibox").fadeOut("slow"); },300); } }}); return false; }); });</script><p style="margin-left:0;font-style:italic">Enter your email address below and a new password will be sent to you.</p><table><td class="small">Email:</td><td><input type="text" id="reminder-email" name="Email"/></td><td class="small" id="loading-icon"></td></tr></table><br/>';
         $('#dialog').html(html);
         $('#dialog').attr('title','Password Reminder');
         $('#dialog').dialog({ modal: true,buttons:{ Cancel: function(){ $(this).dialog('close'); }, Send:function(){ $(this).dialog('close'); }},hide:'fade',show:'fade',resizeable:false });

@@ -30,7 +30,7 @@ $(document).ready(function(){
 
                         $.ajax({
 
-                                url     :       "' . SITEURL . '_inc/ajax.php?file=admin/users/reminder.php&no_config&email=" + email,
+                                url     :       window.furasta.site.url + "ajax.php?file=admin/users/reminder.php&no_config&email=" + email,
 
                                 timeout :       5000,
 

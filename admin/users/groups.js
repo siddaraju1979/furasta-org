@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 			});
 
-                        fetch(window.furasta.site.url + "_inc/ajax.php?file=admin/users/delete-group.php&id="+element.attr("id"));
+                        fetch(window.furasta.site.url + "ajax.php?file=admin/users/delete-group.php&id="+element.attr("id"));
 
                 },$(this));
 
@@ -59,7 +59,7 @@ $(document).ready(function(){
 
 				type: "POST",
 
-				url : window.furasta.site.url+"_inc/ajax.php?file=admin/users/new-group.php",
+				url : window.furasta.site.url+"ajax.php?file=admin/users/new-group.php",
 
 				data: "name=" + name + "&perms=" + perms_array,
 

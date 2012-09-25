@@ -19,7 +19,7 @@ $(document).ready(function(){
 
                 fConfirm("Are you sure you want to delete this template?",function(element){
 
-                        fetch( "/_inc/ajax.php?file=admin/settings/template/delete.php&name="+element.attr("id"), function( element, html ){
+                        fetch( "/ajax.php?file=admin/settings/template/delete.php&name="+element.attr("id"), function( element, html ){
 
                                 if( html == "perm" )
                                         fAlert( "You have insufficient privelages to delete this page." );

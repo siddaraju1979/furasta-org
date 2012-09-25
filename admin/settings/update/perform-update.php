@@ -43,7 +43,7 @@ function ajax_get(stage){
 	file[4]="run-scripts";
 
         $.ajax({
-                url:"/_inc/ajax.php?file=admin/settings/update/"+file[stage]+".php",
+                url:"/ajax.php?file=admin/settings/update/"+file[stage]+".php",
                 error:function(){
                         fAlert("There has been an unknown error during the update process. Please check your internet connection and refresh the page.");
                 },

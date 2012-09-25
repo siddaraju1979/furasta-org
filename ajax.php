@@ -13,10 +13,10 @@
  * =========== USAGE ===========
  * 
  * Instead of making an ajax request to your file,
- * make it to the _inc/ajax.php file and pass your
+ * make it to the ajax.php file and pass your
  * filename as a url parameter:
  *
- * _inc/ajax.php?file=path/to/file
+ * ajax.php?file=path/to/file
  *
  * THen you will have a fully set up furasta enviornment
  * in your file. It is recommended to use the AJAX_LOADED
@@ -42,7 +42,7 @@
  * enviornment with only the .settings.php file loaded
  * and a database connection setup:
  *
- * _inc/ajax.php?no_config&file=path/to/file
+ * ajax.php?no_config&file=path/to/file
  * 
  * In this case you can use AJAX_NO_CONFIG to check
  * that the minimal enviornment was loaded
@@ -84,7 +84,7 @@ else{
 	 * NB: define.php is run so plugins are loaded etc
 	 *     also must be logged in 
 	 */
-	include 'define.php';
+	include '_inc/define.php';
 
 	/**
 	 * if user is verified, define ajax verified

@@ -23,7 +23,7 @@ $(document).ready(function(){
 
 			});
 
-                        fetch(window.furasta.site.url + "/_inc/ajax.php?file=admin/pages/trash/delete.php&id="+element.attr("id"));
+                        fetch(window.furasta.site.url + "/ajax.php?file=admin/pages/trash/delete.php&id="+element.attr("id"));
 
                 },$(this));
 
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 			});
 
-                        fetch(window.furasta.site.url + "/_inc/ajax.php?file=admin/pages/trash/restore.php&id="+element.attr("id"));
+                        fetch(window.furasta.site.url + "/ajax.php?file=admin/pages/trash/restore.php&id="+element.attr("id"));
 
                 },$(this));
 

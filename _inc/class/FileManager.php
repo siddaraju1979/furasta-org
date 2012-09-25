@@ -389,7 +389,7 @@ class FileManager{
                 
 		/**
 		 * get user and file info
-		 */
+                 */
 		$file = $this->getFile( $path );
 		$User = User::getInstance( $id );
 
@@ -402,7 +402,7 @@ class FileManager{
                         $new = true;
                         $file = $this->getFile( dirname( $path ) );
                         if( !$file )
-                                return $this->setError( 6, array( 'file', $path ) );
+                                return $this->setError( 4, $path );
                 }
 
 		/**
@@ -637,7 +637,8 @@ class FileManager{
 			9	=>	'User must be logged in to perform this action',
 			10	=>	'The file name "%1" is invalid. Files must have one extension, file names with more that one extension or no extension are invalid,',
 			11	=>	'The file "%1" could not be found in the database.',
-			12	=>	'You do not have permission to manage files. Please contact the system administrator',
+                        12	=>	'You do not have permission to manage files. Please contact the system administrator',
+                        13      =>      'The path "%1" is a directory.'
 		);
 
 		$this->error{ 'id' } = $id;
@@ -663,7 +664,7 @@ class FileManager{
 
 		}
 
-                //die( print_r( $this->error{ 'desc' } ) );
+                //die( print_r( debug_backtrace( ) ) );
 
 		return false;
 
@@ -924,7 +925,7 @@ class FileManager{
 	 * @return array
 	 */
 	public function readDir( $path = '/', $rw = 'r', $level = 1, $strict = false ){
-
+                
 		/**
 		 * make sure path is valid
 		 */
@@ -1081,12 +1082,26 @@ class FileManager{
 	 */
 	public function readFile( $path ){
 
-		if( !$this->hasPerm( $path, 'r' ) )
+                /**
+                 * make sure its a file
+                 */
+                if( is_dir( $path ) )
+                        return $this->setError( 13, $path );
+
+                /**
+                 * check permissions
+                 */
+                if( !$this->hasPerm( $path, 'r' ) )
 			return $this->setError( 2, $path );
 
-		$contents = file_get_contents( $file );
+                /**
+                 * get file contents, else file system permission
+                 * error
+                 */
 
-		if( !$contents )
+		if( is_readable( $this->users_files . $path ) )
+                        $contents = file_get_contents( $this->users_files . $path );
+                else
 			return $this->setError( 5, $path );
 
 		return $contents;

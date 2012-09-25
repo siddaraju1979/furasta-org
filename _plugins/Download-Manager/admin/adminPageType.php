@@ -17,7 +17,7 @@ $( document ).ready( function() {
         <ul>
                 <li><a href="#tabs-1">Download Items</a></li>
                 <li><a href="#tabs-2">Page Content</a></li>
-		<li><a href="/_inc/ajax.php?file=_plugins/Download-Manager/admin/new-item.php&page_id='.$page_id.'">New Item</a></li>
+		<li><a href="/ajax.php?file=_plugins/Download-Manager/admin/new-item.php&page_id='.$page_id.'">New Item</a></li>
         </ul>
         <div id="tabs-1">
                 <div id="tabs-content">
