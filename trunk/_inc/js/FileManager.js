@@ -23,11 +23,13 @@ var FileManager = {
          * @param function fn
          * @return void
          */
-        fmExec : function( postdata, fn ){
+        fmExec : function( path, postdata, fn ){
+                
+                hash = Math.floor( Math.random( ) * 10000 );
 
                 $.ajax({
                         type    : 'post',
-                        url     : window.furasta.site.url + '_inc/ajax.php?file=_inc/ajax/fm.php',
+                        url     : window.furasta.site.url + 'files' + path + '?hash=' + hash,
                         data    : postdata,
                         dataType: 'json',
                         success : fn,
@@ -51,15 +53,27 @@ var FileManager = {
         readDir : function( path, fn ){
                 
                 this.fmExec(
+                        path,
                         {
-                                func : 'readDir',
-                                'path' : path
+                                func : 'readDir'
                         },
                         fn
                 );
 
         },
 
+
+        readFile : function( path, fn ){
+
+                this.fmExec(
+                        path,
+                        {
+                                func : 'readFile'
+                        },
+                        fn
+                );
+
+        },
 
         /**
          * addDir
@@ -73,9 +87,9 @@ var FileManager = {
         addDir : function( path, fn ){
 
                 this.fmExec(
+                        path,
                         {
                                 func : 'addDir',
-                                'path' : path
                         },
                         function( data ){
 

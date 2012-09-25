@@ -22,8 +22,8 @@ $content = '
 <div id="tabs">
 	<ul>
 		<li><a href="#today">Today</a></li>
-		<li><a href="' . SITE_URL . '_inc/ajax.php?file=_plugins/Stats/admin/month.php">This Month</a></li>
-		<li><a href="' . SITE_URL . '_inc/ajax.php?file=_plugins/Stats/admin/ever.php">Ever</a></li>
+		<li><a href="' . SITE_URL . 'ajax.php?file=_plugins/Stats/admin/month.php">This Month</a></li>
+		<li><a href="' . SITE_URL . 'ajax.php?file=_plugins/Stats/admin/ever.php">Ever</a></li>
 	</ul>
 	<div id="today">
 		<div id="today-total"></div>

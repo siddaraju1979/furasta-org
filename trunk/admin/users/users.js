@@ -23,7 +23,7 @@ $(document).ready(function(){
 
                         });
 
-                        fetch( window.furasta.site.url + "_inc/ajax.php?file=admin/users/delete-user.php&id="+element.attr("id"));
+                        fetch( window.furasta.site.url + "ajax.php?file=admin/users/delete-user.php&id="+element.attr("id"));
 
                 },$(this));
 
@@ -95,7 +95,7 @@ $(document).ready(function(){
 
 				type: "POST",
 
-				url : window.furasta.site.url + "_inc/ajax.php?file=admin/users/new-user.php",
+				url : window.furasta.site.url + "ajax.php?file=admin/users/new-user.php",
 
 				data: "name=" + name + "&email=" + email + "&password=" + password + "&repeat=" + repeat + "&groups=" + groups,
 
@@ -198,7 +198,7 @@ function loginas( ){
 	hash = $( this ).attr( 'hashstr' );
 	$( 'body' ).append( 
 		'<form id="loginhash" method="post" action="'
-			+ window.furasta.site.url + '_inc/ajax.php?file=admin/users/switch.php" style="display:none">'
+			+ window.furasta.site.url + 'ajax.php?file=admin/users/switch.php" style="display:none">'
 			+ '<input type="hidden" name="userid" value="' + id + '"/>'
 			+ '<input type="hidden" name="hash" value="' + hash + '"/>'
 			+ '<input type="hidden" name="loginhash" value="true"/>'

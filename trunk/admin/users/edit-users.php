@@ -55,7 +55,7 @@ $( document ).ready( function( ){
 
 		fConfirm( "To reset the password an email will be sent to ' . $user[ 'email' ] . ' with reset details. Press \'Yes\' to confirm.", function( ){
 
-			fetch( "' . SITE_URL . '_inc/ajax.php?file=admin/users/reminder.php&no_config&email=' . $user[ 'email' ] . '" );
+			fetch( "' . SITE_URL . 'ajax.php?file=admin/users/reminder.php&no_config&email=' . $user[ 'email' ] . '" );
 
 		} );
 

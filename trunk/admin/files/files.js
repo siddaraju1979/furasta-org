@@ -13,19 +13,24 @@
 /**
  * global vars
  */
-var filecrumbs  = $( '#filecrumbs' );
-var filecrumb   = $( '.crumb' );
-var newfolder   = $( '#new-folder' );
-var dir_list    = $( '#directory-list' );
-var dir         = $( '.dir' );
-var file        = $( '.file' );
-var item        = $( '.item' );
-var filemenu    = $( '.menu-left' );
+var filecrumbs;
+var filecrumb;
+var newfolder;
+var dir_list;
+var dir;
+var file;
+var item;
+var filemenu;
+var upload_file;
 var default_dir;
 
 $( function( ){
 
-        default_dir = '/users/' + window.furasta.user.id + '/';
+        /**
+         * init the gui for the file manager
+         * on the selected div
+         */
+        fmgui_init( $( '#file-manager' ) );
 
         /**
          * list the root of the files dir by default
@@ -35,7 +40,7 @@ $( function( ){
         /**
          * new folder event
          */
-        newfolder.click( function( ){
+        newfolder.live( 'click', function( ){
                 new_folder( );
                 return false;
         });
@@ -65,6 +70,14 @@ $( function( ){
         });
 
         /**
+         * upload file event
+         */
+        upload_file.live( 'click', function( ){
+                upload_file( );
+                return false;
+        });
+
+        /**
          * item hover event
          */
         $( 'li', dir_list ).live({
@@ -77,6 +90,50 @@ $( function( ){
         });
 
 });
+
+/**
+ * fmgui_init
+ *
+ * initialises the gui interface, creates base html
+ * and initaialises various vars
+ *
+ * @param selector element
+ * @return void
+ */
+function fmgui_init( element ){
+
+        // set default directory
+        default_dir = '/users/' + window.furasta.user.id + '/';
+
+        // initial html
+        element.html( 
+                  '<div id="files">'
+                + '     <div id="directory-container">'
+                + '             <div class="th"><h3 style="color:#fff;margin-top:5px;margin-left:5px">Directory Listing</h3></div>'
+                + '             <ul id="panel-top">'
+                + '                     <li><a class="link" id="file-upload"><img src="' + window.furasta.site.url + '_inc/img/file.png"/><span>Upload File</span></a></li>'
+                + '                     <li><a class="link" id="new-folder"><img src="' + window.furasta.site.url + '_inc/img/folder.png"/><span>New Folder</span></a></li>'
+                + '                     <li><a class="link" id="dir-settings"><span id="menu-configuration-img"></span><span>Folder Settings</span></a></li>'
+                + '             </ul>'
+                + '             <div id="filecrumbs"></div>'
+                + '             <ul id="directory-list"></ul> '     
+                + '             <br style="clear:both"/>'
+                + '     </div>'
+                + '</div>'
+        );
+
+        // initiate globals
+        filecrumbs  = $( '#filecrumbs' );
+        filecrumb   = $( '.crumb' );
+        newfolder   = $( '#new-folder' );
+        dir_list    = $( '#directory-list' );
+        dir         = $( '.dir' );
+        file        = $( '.file' );
+        item        = $( '.item' );
+        filemenu    = $( '.menu-left' );
+        upload_file = $( '#file-upload' );
+
+}
 
 /**
  * show_dir
@@ -100,6 +157,47 @@ function show_dir( path ){
                         }
                 }
         );
+
+}
+
+/**
+ * show_file
+ *
+ * displays the content of the file in the appropriate format
+ *
+ * @param string path
+ * @return void
+ */
+function show_file( path ){
+         
+        // fetch file contents with ajax
+        FileManager.readFile( path, function( content ){
+
+                $( '#dialog' ).html( content );
+
+        });
+
+        // create dialog for resulting request
+        $('#dialog')
+		.html( '<p>Loading..</p><img src="' + window.furasta.site.url + '_inc/img/loading.gif"/></p>' )
+		.attr( 'title', path )
+		.dialog( {
+			modal   : true,
+			buttons : {
+                                'Cancel' : function( ){
+                                        $( this ).dialog( 'close' );
+                                },
+                                'Save' : function( ){
+                                        $( this ).dialog( 'close' );
+                                }   
+                        },
+			hide    : 'fade',
+                        width   : 400,
+                        height  : 400,
+			show    : 'fade',
+			resizeable : false
+		})
+		.dialog( 'open' );
 
 }
 

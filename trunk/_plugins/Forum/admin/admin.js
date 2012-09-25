@@ -29,7 +29,7 @@ function add_forum_dialog( ){
 		$( '#form-error' ).html( '' );
 
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Forum/admin/new-forum.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Forum/admin/new-forum.php',
 			type : 'post',
 			data : {
 				forum_name : name,
@@ -69,7 +69,7 @@ function delete_forum( ){
 	var forum_id = $this.attr( 'id' );
 	fConfirm( trans( 'prompt_confirm_delete' ), function( ){
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Forum/admin/delete-forum.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Forum/admin/delete-forum.php',
 			data : {
 				id : forum_id
 			},

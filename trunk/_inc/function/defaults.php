@@ -24,7 +24,7 @@ function defaults_htaccess_rules( $site_url ){
         return array(
 		'admin'         => 'RewriteRule ^admin[/]*$ ' . $site_url . 'admin/index.php [L]',
 		'sitemap'       => 'RewriteRule ^sitemap.xml ' . $site_url . '_inc/sitemap.php [L]',
-		'files'         => 'RewriteRule ^files/(.*)$ ' . $site_url . '_inc/files.php?name=$1 [QSA,L]',
+		'files'         => 'RewriteRule ^files/([^./]{3}[^.].*)$ ' . $site_url . 'files.php?path=$1 [QSA,L]',
 		'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . $site_url . 'index.php?page=$1 [QSA,L]',
 	);
 }

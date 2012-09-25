@@ -17,7 +17,7 @@ function delete_post( ){
 	fConfirm( trans( 'prompt_confirm_delete' ), function( ){
 		var post_id = $this.attr( 'id' );
 		$.ajax({
-			url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Blog/admin/delete-post.php',
+			url : window.furasta.site.url + 'ajax.php?file=_plugins/Blog/admin/delete-post.php',
 			type : 'post',
 			data : {
 				id : post_id

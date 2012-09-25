@@ -16,7 +16,7 @@ $(function(){
 function chart_bar( id ){
 	$( '#' + id ).html( '<p>Loading.. <img src="' + window.furasta.site.url + '_inc/img/loading.gif"/></p>' );
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Stats/admin/data.php&query=' + id,
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Stats/admin/data.php&query=' + id,
 		dataType : 'json',
 		success : function( data ){
 			var browser_chart = new Highcharts.Chart({
@@ -64,7 +64,7 @@ function chart_bar( id ){
 function chart_line_total( id ){
 	$( '#' + id ).html( '<p>Loading.. <img src="' + window.furasta.site.url + '_inc/img/loading.gif"/></p>' );
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=_plugins/Stats/admin/data.php&query=' + id,
+		url : window.furasta.site.url + 'ajax.php?file=_plugins/Stats/admin/data.php&query=' + id,
 		dataType : 'json',
 		success : function( data ){
 			var chart = new Highcharts.Chart({

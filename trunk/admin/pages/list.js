@@ -232,7 +232,7 @@ function sortableUpdate( ){
 		};
 	});
 	$.ajax({
-		url : window.furasta.site.url + '_inc/ajax.php?file=admin/pages/reorder.php',
+		url : window.furasta.site.url + 'ajax.php?file=admin/pages/reorder.php',
 		data : order,
 		type : 'post'
 	});
@@ -354,7 +354,7 @@ function delete_page( ){
 
 	fConfirm( trans( 'prompt_confirm_delete' ), function( element ){
 
-		fetch( "/_inc/ajax.php?file=admin/pages/delete.php&id="+element.attr("id"), function( element, html ){
+		fetch( "/ajax.php?file=admin/pages/delete.php&id="+element.attr("id"), function( element, html ){
 			if( html == "perm" )
 				fAlert( trans( 'prompt_insufficient_privellages' ) );
 			else{

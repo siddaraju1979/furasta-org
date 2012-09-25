@@ -68,7 +68,7 @@ $content='
 <div id="tabs">
 	<ul>
 		<li><a href="#tabs-1">Auto</a></li>
-		<li><a href="/_inc/ajax.php?file=admin/settings/update/manual.php">Manual</a></li>
+		<li><a href="/ajax.php?file=admin/settings/update/manual.php">Manual</a></li>
 	</ul>
 	<div id="tabs-1">
 		<div id="tabs-content">

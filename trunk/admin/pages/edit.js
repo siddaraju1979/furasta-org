@@ -164,7 +164,7 @@ $(document).ready(function(){
 		        var hash=Math.floor(Math.random()*1001);
 
                         $( "#page-permissions-content" ).load(
-				window.furasta.site.url + "_inc/ajax.php?file=admin/pages/permissions.php&id=" + id + '&hash=' + hash, function( ){
+				window.furasta.site.url + "ajax.php?file=admin/pages/permissions.php&id=" + id + '&hash=' + hash, function( ){
 
                                 	$( this ).addClass( "loaded" );
 

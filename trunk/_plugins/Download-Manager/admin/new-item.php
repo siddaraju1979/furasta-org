@@ -21,7 +21,7 @@ $(document).ready(function(){
 });
 </script>
 
-<form method="post" action="/_inc/ajax.php?file=_plugins/Download-Manager/admin/upload.php&page_id='.$page_id.'" enctype="multipart/form-data">
+<form method="post" action="/ajax.php?file=_plugins/Download-Manager/admin/upload.php&page_id='.$page_id.'" enctype="multipart/form-data">
 <table id="config-table" class="row-color">
         <col width="50%"/>
         <col width="50%"/>

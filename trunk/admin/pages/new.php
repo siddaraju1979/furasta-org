@@ -262,7 +262,7 @@ $(document).ready(function(){
 		 */
 		if( !$( "#page-permissions-content" ).hasClass( "loaded" ) ){
 
-			$( "#page-permissions-content" ).load( "' . SITE_URL . '_inc/ajax.php?file=admin/pages/permissions.php", function( ){
+			$( "#page-permissions-content" ).load( "' . SITE_URL . 'ajax.php?file=admin/pages/permissions.php", function( ){
 
 				$( this ).addClass( "loaded" );
 

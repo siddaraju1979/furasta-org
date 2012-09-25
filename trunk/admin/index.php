@@ -49,7 +49,7 @@ $(document).ready(function(){
 
                         order=order.substring(0,order.length-1);
 
-                        fetch(window.furasta.site.url+"/_inc/ajax.php?file=admin/overview/item_order.php&order="+order);
+                        fetch(window.furasta.site.url+"/ajax.php?file=admin/overview/item_order.php&order="+order);
                 }
 
         });
@@ -78,7 +78,7 @@ $(document).ready(function(){
 
                         sib.slideDown("fast");
 
-                        fetch(window.furasta.site.url+"/_inc/ajax.php?file=admin/overview/item_status.php&id="+id+"&status=open");
+                        fetch(window.furasta.site.url+"/ajax.php?file=admin/overview/item_status.php&id="+id+"&status=open");
 
 			// load content of overview item
                         var hash = Math.floor( Math.random( ) * 1001 );
@@ -86,7 +86,7 @@ $(document).ready(function(){
                         var item = sib.parent( ).attr( "id" );
 
 			fetch( 
-				window.furasta,site.url+"/_inc/ajax.php?file=admin/overview/items.php&overview_item="+ item + "&hash=" + hash,
+				window.furasta,site.url+"/ajax.php?file=admin/overview/items.php&overview_item="+ item + "&hash=" + hash,
 				function( sib, html ){
 					$( sib ).html( html );
 					rowColor( );
@@ -108,7 +108,7 @@ $(document).ready(function(){
 
                         sib.slideUp("fast");
 
-                        fetch( window.furasta.site.url+"/_inc/ajax.php?file=admin/overview/item_status.php&id="+id+"&status=closed" );
+                        fetch( window.furasta.site.url+"/ajax.php?file=admin/overview/item_status.php&id="+id+"&status=closed" );
 
                 }
 
@@ -130,7 +130,7 @@ $(document).ready(function(){
 			var item = $( this ).parent( ).attr( "id" );
 
 			fetch(
-				window.furasta.site.url+"/_inc/ajax.php?file=admin/overview/items.php&overview_item="+ item + "&hash=" + hash,
+				window.furasta.site.url+"/ajax.php?file=admin/overview/items.php&overview_item="+ item + "&hash=" + hash,
 				function( thiscol, html ){
 					$( thiscol ).html( html );
 					rowColor( );
