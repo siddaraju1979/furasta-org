@@ -17,8 +17,6 @@
  * load default libs
  */
 require '_inc/define.php';
-require HOME . '_inc/function/files.php';
-
 
 /**
  * get path and create instance of
@@ -68,27 +66,40 @@ switch( $func ){
                 if( !$success )
                         echo json_encode( $FileManager->error( ) );
         break;
-        default: // assume this is a user access, so print errors not in json
-                 
-                $contents = $FileManager->readFile( $path );
+        default: // assume this is not an ajax request and print errors in html
 
-                // change to switch by file type, display appropriatly
-                
-                echo $contents;
-                        
-}
+                /**
+                 * get type, make sure is correct
+                 */
+                $type = $FileManager->getType( $path );
+                if( !$type )
+                        return false;
 
-/**
- * determine how to load file
- *
-if( @getimagesize( $path ) ){ // image
-	$width = ( empty( $_GET[ 'width' ] ) ) ? false : $_GET[ 'width' ];
-	$height = ( empty( $_GET[ 'height' ] ) ) ? false : $_GET[ 'height' ];
-	display_image( $path, $width, $height );
+                switch( $type ){
+                        // image
+                        case IMAGE:
+                                /**
+                                 * get width and height from get
+                                 */
+                                $width = empty( $_GET[ 'width' ] ) ? false : $_GET[ 'width' ];
+                                $height = empty( $_GET[ 'height' ] ) ? false : $_GET[ 'height' ];
+
+                                $FileManager->displayImage( $path, $width, $height );
+                        break;
+                        // text
+                        case TEXT:
+                                $contents = $FileManager->readFile( $path );
+
+                                // change to switch by file type, display appropriatly
+                                
+                                echo $contents;
+                        break;
+                        // default - download file
+                        default:
+                                $FileManager->downloadFile( $path );
+                }
+
 }
-else // download file
-	download_file( $path );
- */
 
 exit;
 

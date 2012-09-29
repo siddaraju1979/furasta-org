@@ -26,32 +26,6 @@
 function display_image( $path, $width = false, $height = false ){
 	$type = mime_content_type( $path );
 
-	// create WBMP
-	switch( $type ){
-		case 'image/png':
-			$image = imagecreatefrompng( $path );
-		break;
-		case 'image/jpeg':
-			$image = imagecreatefromjpeg( $path );
-		break;
-		case 'image/gif':
-			$image = imagecreatefromgif( $path );
-		break;
-		default:
-			return false;
-	}
-
-	if( $width != false && $height != false ) // crop WBMP
-		$image = crop_image( $image, $width, $height, true, $path );
-	else if( $width != false ) // resize WBMP
-		$image = resize_image( $image, $width, false, true, $path );
-
-	// display WBMP as png
-	header( 'Content-Type: image/png' );
-	imagepng( $image );
-	imagedestroy( $image );
-
-	return true;
 }
 
 
@@ -174,28 +148,6 @@ function resize_dimensions( $width, $height, $old_width, $old_height ){
     } 
 
     return $return; 
-}
-
-/**
- * download_file
- *
- * sends a given file to the user
- *
- * @param string $file
- * @param string $name optional
- * @return void
- */
-function download_file( $file, $name = false ){
-
-	$type = mime_content_type( $file );	
-	if( !$name )
-		$name = basename( $file );
-
-	header( 'Content-type: ' . $type );
-	header( 'Content-Disposition: attachment; filename="' . $name . '" ');
-
-	echo file_get_contents( $file );
-
 }
 
 ?>

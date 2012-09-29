@@ -11,9 +11,31 @@
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
  * @package    file_management
- * @todo	make sure paths are used correctly everywhere - USERS_DIR . 'files/' . $path
  */
 
+/**
+ * File Type Constants
+ *
+ * a list of constants used by the file manager class when working with
+ * mime types
+ * 
+ * @package	file_management
+ * @author	Conor Mac Aoidh <conormacaoidh@gmail.com> 
+ * @license	http://furasta.org/licence.txt The BSD License
+ * @todo        build a more comprehensive list of types
+ */
+define( 'UNKNOWN',      'mimegroup_unknown' );
+define( 'BITMAP',       'mimegroup_bitmap' );
+define( 'IMAGE',        'mimegroup_image' );
+define( 'DRAWING',      'mimegroup_drawing' );
+define( 'AUDIO',        'mimegroup_audio' );
+define( 'VIDEO',        'mimegroup_video' );
+define( 'MULTIMEDIA',   'mimegroup_multimedia' );
+define( 'OFFICE',       'mimegroup_office' );
+define( 'TEXT',         'mimegroup_text' );
+define( 'EXECUTABLE',   'mimegroup_executable' );
+define( 'ARCHIVE',      'mimegroup_archive' );
+        
 /**
  * FileManager
  *
@@ -138,8 +160,7 @@ class FileManager{
 		 * path contains "..", therefore it's invalid
                  */
 		if( strpos( '..', $path ) !== false )
-			return $this->setError( 4, $path ); 
-
+                        return false;
 
 		return true;
 
@@ -356,6 +377,97 @@ class FileManager{
 
         }
 
+        /**
+         * getType
+         *
+         * categorizes the file based on its mime
+         * type and returns a constant to identify
+         * that category. see the top of this file
+         * for list of constants
+         *
+         * @param string $path
+         * @return string
+         */
+        public function getType( $path ){
+
+                /**
+                 * check permissions
+                 */
+                if( !$this->hasPerm( $path, 'v' ) )
+                        return false;
+
+                /**
+                 * get file in db
+                 */
+                $file = $this->getFile( $path );
+                if( !$file )
+                        return false;
+
+                /**
+                 * switch by filetype and return
+                 * constants to identify type group
+                 */
+                switch( $file[ 'type' ] ){
+                        // text
+                        case 'text/plain':
+                        case 'text/html':
+                        case 'text/css':
+                        case 'text-xphp':
+                        case 'application/javascript':
+                                return TEXT;
+                        break;
+                        // office
+                        case 'application/msword':
+                        case 'application/pdf':
+                        case 'application/rtx':
+                        case 'application/xls':
+                        case 'application/vnd.ms-powerpoint':
+                                return OFFICE;
+                        break;
+                        // audio
+                        case 'audio/mp3':
+                        case 'audio/mpeg3':
+                        case 'audio/x-aiff':
+                        case 'audio/x-wav':
+                                return AUDIO;
+                        break;
+                        // video
+                        case 'video/mpeg':
+                        case 'video/quicktime':
+                        case 'video/x-msvideo':
+                                return VIDEO;
+                        break;
+                        // flash
+                        case 'application/shockwave-flash':
+                                return FLASH;
+                        break;
+                        // image
+                        case 'image/bmp':
+                        case 'image/png':
+                        case 'image/jpeg':
+                        case 'image/gif':
+                        case 'image/jpg':
+                                return IMAGE;
+                        break;
+                        // archive
+                        case 'application/zip':
+                        case 'application/x-tar':
+                        case 'application/x-compressed':
+                        case 'application/x-gzip':
+                                return ARCHIVE;
+                        break;
+                        // executable
+                        case 'application/octet-stream':
+                        case 'application/x-sh':
+                                return EXECUTABLE;
+                        break;        
+                        // unknown
+                        default:
+                                return UNKNOWN;
+
+                }
+        }
+
 	/**
 	 * hasPerm
 	 *
@@ -385,7 +497,7 @@ class FileManager{
 		 * make sure path is valid
 		 */
 		if( !self::checkPath( $path ) )
-			return false;
+			return $this->setError( 4, $path ); 
                 
 		/**
 		 * get user and file info
@@ -640,6 +752,7 @@ class FileManager{
                         12	=>	'You do not have permission to manage files. Please contact the system administrator',
                         13      =>      'The path "%1" is a directory.',
                         14      =>      'There was an error uploading the file "%1". Please try again.',
+                        15      =>      'The image at "%1" cannot be displayed as it is in an unsupported format.',
 		);
 
 		$this->error{ 'id' } = $id;
@@ -1178,7 +1291,7 @@ class FileManager{
                  */
                 $fullpath = $path . $file[ 'name' ];
 		if( !$this->hasPerm( $fullpath, 'w' ) )
-			$this->setError( 1, $path );
+			return $this->setError( 1, $path );
 
                 /**
                  * throw error if upload error occured
@@ -1215,6 +1328,94 @@ class FileManager{
 
 	}
 
+        /**
+         * downloadFile
+         *
+         * force downloads a file and then
+         * exits
+         *
+         * @param string $path
+         * @return void
+         */
+        public function downloadFile( $path ){
+
+                /**
+                 * check permissions
+                 */
+                if( !$this->hasPerm( $path, 'v' ) )
+                        return false;                
+
+                /**
+                 * get file details in db or throw
+                 * error
+                 */
+                $file = $this->getFile( $path );
+                if( !$file )
+                        return false;
+
+                header( 'Content-type: ' . $file[ 'type' ] );
+                header( 'Content-Disposition: attachment; filename="' . $file[ 'name' ] . '"' );
+
+                echo file_get_contents( $this->users_files . $path );
+
+                exit;
+
+        }
+
+        /**
+         * displayImage
+         *
+         * displays a file as an image and then exits
+         *
+         * @param string $path
+         * @param int/bool $width
+         * @param int/bool $height
+         * @return void
+         */
+        public function displayImage( $path, $width = false, $height = false ){
+
+                /**
+                 * permission check
+                 */
+                if( !$this->hasPerm( $path, 'v' ) )
+                        return false;
+
+                // temporary - might move this functionality entirely
+                // into the file manager
+                require_once HOME . '_inc/function/files.php';
+
+                // create WBMP
+                $file = $this->getFile( $path );
+                switch( $file[ 'type' ] ){
+                        case 'image/png':
+                                $image = imagecreatefrompng( $this->users_files . $path );
+                        break;
+                        case 'image/jpeg':
+                        case 'image/jpg':
+                        case 'image/JPG':
+                        case 'image/JPEG':
+                                $image = imagecreatefromjpeg( $this->users_files . $path );
+                        break;
+                        case 'image/gif':
+                                $image = imagecreatefromgif( $this->users_files . $path );
+                        break;
+                        default:
+                                return $this->setError( 15, $path );
+                }
+
+                if( $width != false && $height != false ) // crop WBMP
+                        $image = crop_image( $image, $width, $height, true, $this->users_files . $path );
+                else if( $width != false ) // resize WBMP
+                        $image = resize_image( $image, $width, false, true, $this->users_files . $path );
+
+                // display WBMP as png
+                header( 'Content-Type: image/png' );
+                imagepng( $image );
+                imagedestroy( $image );
+
+                exit;
+
+        }
 
 	/**
 	 * zip
