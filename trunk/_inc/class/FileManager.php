@@ -638,7 +638,8 @@ class FileManager{
 			10	=>	'The file name "%1" is invalid. Files must have one extension, file names with more that one extension or no extension are invalid,',
 			11	=>	'The file "%1" could not be found in the database.',
                         12	=>	'You do not have permission to manage files. Please contact the system administrator',
-                        13      =>      'The path "%1" is a directory.'
+                        13      =>      'The path "%1" is a directory.',
+                        14      =>      'There was an error uploading the file "%1". Please try again.',
 		);
 
 		$this->error{ 'id' } = $id;
@@ -985,7 +986,7 @@ class FileManager{
 		/**
 		 * add file
 		 */
-		$success = file_put_contents( $link, $contents );
+		$success = file_put_contents( $this->users_files . $path, $contents );
 
 		if( !$success ) 
 			return $this->setError( 5, $path );
@@ -1152,8 +1153,66 @@ class FileManager{
 		// @todo update database
 	}
 
-	public function moveUploadedFile( $file, $path ){
-		// @todo
+        /**
+         * uploadFile
+         *
+         * adds a file to the file manager which has
+         * just been uploaded and resides in the temp
+         * folder
+         *
+         * $file        -       a member of the php $_FILES array
+         * $path        -       the directory the file should be
+         *                      uploaded to
+         *
+         *
+         * @param array $file
+         * @param string $path
+         * @param array $perm optional
+         * @param bool $public optional
+         * @return bool
+         */
+	public function uploadFile( $file, $path, $perm = array( ), $public = false ){
+
+		/**
+		 * permission failure
+                 */
+                $fullpath = $path . $file[ 'name' ];
+		if( !$this->hasPerm( $fullpath, 'w' ) )
+			$this->setError( 1, $path );
+
+                /**
+                 * throw error if upload error occured
+                 */
+                if( $file[ 'error' ] != UPLOAD_ERR_OK )
+                        return $this->error( 14, $file[ 'name' ] );
+
+                /**
+                 * move uploaded file
+                 */
+                $success = move_uploaded_file( $file[ 'tmp_name' ], $this->users_files . $fullpath );
+
+		if( !$success ) 
+			return $this->setError( 5, $path );
+
+		/**
+		 * build data
+		 */
+                $User = User::getInstance( );
+		$data = array(
+			'name' => $file[ 'name' ],
+			'path' => $fullpath,
+			'owner' => $User->id( ),
+			'type' => $file[ 'type' ],
+			'perm' => ( empty( $perm ) ) ? '' : implode( ',', $perm ),
+			'public' => $public ? 1 : 0,
+			'hash' => md5( mt_rand( ) )
+                );
+
+		/**
+		 * add file to database
+		 */
+		return $this->updateInfo( $data, true );
+
 	}
 
 
@@ -1195,8 +1254,6 @@ class FileManager{
 
 		if( !$files ) // readDir failed
 			return false;
-
-
 
 	}
 

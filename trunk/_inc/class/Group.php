@@ -122,7 +122,7 @@ class Group{
 	 * @static
 	 * @return instance
 	 */
-	public function getInstance( $id ){
+	public static function getInstance( $id ){
 
 		// if there isn't an instance, create one
 		if( !isset( self::$instances{ $id } ) )		
@@ -143,9 +143,9 @@ class Group{
 	private function __construct( $group ){
 
 		if( !is_array( $group ) )
-			$group = row( 'select * from ' . DB_GROUPS . ' where id=' . $id );
+			$group = row( 'select * from ' . DB_GROUPS . ' where id=' . $group );
 
-		$this->id = $id;
+		$this->id = $group[ 'id' ];
 		$this->name = $group[ 'name' ];
 		$this->perm = explode( ',', $group[ 'perm' ] );	
 		$this->file_perm = split_perm( $group[ 'file_perm' ] );

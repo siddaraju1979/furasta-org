@@ -40,34 +40,16 @@ if( isset( $_POST[ 'Edit-User' ] ) && $valid == true ){
         $email = addslashes( $_POST[ 'Email' ] );
         $group = addslashes( $_POST[ 'Group' ] );
         query( 'update ' . DB_USERS . ' set name="' . $name . '",email="' . $email . '", user_group="' . $group . '" where id=' . $id );
-	cache_clear( 'DB_USERS' );
+	cache_clear( 'USERS' );
 }
 
 
-$user = row( 'select name,user_group,email,password from ' . DB_USERS . ' where id=' . addslashes( $id ) . ' limit 1', true );
+$user = User::getInstance( $id );
 
-$javascript='
-$( document ).ready( function( ){
-
-	$( "#tabs" ).tabs( );
-
-	$( "#change-password" ).click( function( ){
-
-		fConfirm( "To reset the password an email will be sent to ' . $user[ 'email' ] . ' with reset details. Press \'Yes\' to confirm.", function( ){
-
-			fetch( "' . SITE_URL . 'ajax.php?file=admin/users/reminder.php&no_config&email=' . $user[ 'email' ] . '" );
-
-		} );
-
-	});
-
-});
-';
-
-$Template->loadJavascript( 'FURASTA_ADMIN_DB_USERS_EDIT', $javascript );
+$Template->loadJavascript( 'admin/users/edit-user.js' );
 
 $content='
-<span style="float:right" id="change-password"><span id="header-Login" class="header-img"></span><h1 class="image-left link">Change Password</h1></span>
+<span style="float:right" id="change-password"><span id="header-Login" class="header-img"></span><h1 class="image-left link">Reset Password</h1></span>
 <span id="header-Users" class="header-img"></span><h1 class="image-left">Edit User</h1>
 
 <br/>
@@ -75,29 +57,42 @@ $content='
 		<div id="tabs">
 			<ul>
 				<li><a href="#Options">General</a></li>
-				<li><a href="#Data">Data</a></li>
 			</ul>
 			<div id="#Options">
-				<table class="row-color" id="config-table">
-					<col width="50%"/>
-					<col width="50%"/>
+                                <table class="row-color">
+					<tr>
 						<td>Name:</td>
-						<td><input type="text" name="Name" value="'.$user['name'].'"/></td>
+						<td><input type="text" class="input" name="Name" value="'.$user->name( ).'"/></td>
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td><input type="text" name="Email" value="'.$user['email'].'"/></td>
+						<td><input type="text" class="input" name="Email" value="'.$user->email( ).'"/></td>
 					</tr>
 					<tr>
 						<td>Group:</td>
-						<td><select name="Group" id="group">';
+						<td>';
 
-if( $user[ 'user_group' ] == '_superuser' )
-	$content .= '<option value="_superuser" selected="selected">_superuser</option>';
+			/**
+			 * iterate through perms array and print checkboxes 
+			 *
+			$i = 0;
+			foreach( $perms as $value => $name ){
+
+			        $content .= '<td><input type="checkbox" class="checkbox" name="group" value="' . $value . '"/> ' . $name . '</td>';
+
+			        if( ( $i + 1 ) % 3 == 0 && ( $i + 1 ) < count( $perms ) )
+			                $content .= '</tr><tr>';
+
+				$i++;
+                        }*/
+
+if( $user->isSuperUser( ) )
+	$content .= '<checkbox value="_superuser" selected="selected" disabled="disabled">_superuser</option>';
 else{
 	$groups=rows( 'select id,name from ' . DB_GROUPS );
-	foreach($groups as $group){
-		if($group['id']==$user['user_group'])
+        $user_groups = $user->groups( ); 
+        foreach($groups as $group){
+		if( in_array( $group[ 'id' ], $user_groups ) )
 			$content.='<option selected="selected" value="'.$group['id'].'">'.$group['name'].'</option>';
 		else
 			$content.='<option value="'.$group['id'].'">'.$group['name'].'</option>';
@@ -105,14 +100,12 @@ else{
 }
 
 $content.='
-						</select></td>
+						</td>
 					</tr>
 				</table>
 			</div>
-			<div id="#Data">
-				<p>test</p>
-			</div>
 </div>
+                        <br/>
 <input type="submit" name="Edit-User" id="User" class="submit right" value="Save" style="margin-right:10%"/>
 </form>
 <br style="clear:both"/>

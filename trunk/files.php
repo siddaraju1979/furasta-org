@@ -53,6 +53,21 @@ switch( $func ){
                         echo json_encode( $FileManager->error( ) );
 
         break;
+        case 'uploadFile':
+                /**
+                 * get file from postdata
+                 */
+                $name = $_POST[ 'upload-file' ];
+                $file = $_FILES[ $name ];
+
+                /**
+                 * pass to file manager
+                 */
+                $success = $FileManager->uploadFile( $file, $path );
+
+                if( !$success )
+                        echo json_encode( $FileManager->error( ) );
+        break;
         default: // assume this is a user access, so print errors not in json
                  
                 $contents = $FileManager->readFile( $path );

@@ -22,10 +22,11 @@
  */
 function defaults_htaccess_rules( $site_url ){
         return array(
-		'admin'         => 'RewriteRule ^admin[/]*$ ' . $site_url . 'admin/index.php [L]',
-		'sitemap'       => 'RewriteRule ^sitemap.xml ' . $site_url . '_inc/sitemap.php [L]',
-		'files'         => 'RewriteRule ^files/([^./]{3}[^.].*)$ ' . $site_url . 'files.php?path=$1 [QSA,L]',
-		'pages'         => 'RewriteRule ^([^./]{3}[^.]*)$ ' . $site_url . 'index.php?page=$1 [QSA,L]',
+		'admin'         => "RewriteRule\t^admin[/]*$\t\tadmin/index.php\t[L]",
+		'sitemap'       => "RewriteRule\t^sitemap.xml\t\t_inc/sitemap.php\t[L]",
+                'files1'        => "RewriteRule\t^files[/]$\t\tfiles.php?path=\t[QSA,L]",
+                'files'         => "RewriteRule\t^files/([^./]{3}[^.].*)$\tfiles.php?path=$1\t[QSA,L]",
+		'pages'         => "RewriteRule\t^([^./]{3}[^.]*)$\t\tindex.php?page=$1\t[QSA,L]",
 	);
 }
 
