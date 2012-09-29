@@ -14,6 +14,7 @@
 require 'header.php';
 
 $Template->loadJavascript( '_inc/js/FileManager.js' );
+$Template->loadJavascript( '_inc/js/FileManagerGUI.js' );
 $Template->loadJavascript( 'admin/files/files.js' );
 $Template->add( 'title', 'Files' );
 

@@ -63,6 +63,15 @@ var FileManager = {
         },
 
 
+        /**
+         * readFile
+         *
+         * gets the contents of a file
+         *
+         * @param string path
+         * @param function fn
+         * @return void
+         */
         readFile : function( path, fn ){
 
                 this.fmExec(
@@ -100,6 +109,43 @@ var FileManager = {
 
                         }
                 );
+
+        },
+
+        /**
+         * uploadFile
+         *
+         * uploads a file using the file manager
+         *
+         * @param selector form
+         * @return void
+         */
+        uploadFile : function( path, form, fn ){
+
+                // change this to upload file method in FileManager object 
+                $( 'body' ).append( '<iframe name="postiframe" id="postiframe" style="display: none" />' );
+ 
+                form.attr( 'action', window.furasta.site.url + 'files' + path );
+                form.attr( 'method', 'post' );
+                form.attr( 'enctype', 'multipart/form-data' );
+                form.attr( 'encoding', 'multipart/form-data' );
+                form.attr( 'target', 'postiframe' );
+                file = $( 'input[type=file]', form ).attr( 'name' );
+                form.append(
+                                '<input type="hidden" name="upload-file" value="' + file + '"/>'
+                                + '<input type="hidden" name="func" value="uploadFile"/>'
+                );
+                form.submit( );
+
+                /**
+                 * submit iframe
+                 */
+                $( '#postiframe' ).load( function( ){
+                        result = $( '#postiframe' )[ 0 ].contentWindow.document.body.innerHTML;
+                        if( result == '' )
+                                return fn( );
+                        $( "#dialog" ).prepend( '<p>' + iframeContents + '</p>' );
+                });
 
         },
 

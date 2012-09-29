@@ -32,7 +32,7 @@ switch( $page ){
 	break;
 	case 'edit-users':
                 $Template->add('title','Edit User');
-		require HOME . 'admin/users/edit-users.php';
+		require HOME . 'admin/users/edit-user.php';
 	break;
 	default:
                 $Template->add( 'title', 'Users' );
