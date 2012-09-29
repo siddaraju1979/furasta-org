@@ -35,6 +35,7 @@ window.tinymceConfigs = {
 		external_link_list_url : "lists/link_list.js",
 		external_image_list_url : "lists/image_list.js",
 		media_external_list_url : "lists/media_list.js",
+                file_browser_callback : function( ){ alert( 'test' ) },
 		mode : "none"
 	},
 	'Simple' : {
@@ -47,6 +48,31 @@ window.tinymceConfigs = {
 		theme_advanced_buttons3 : "",
 	}
 };
+
+/**
+ * tinymce_fmgui
+ *
+ * creates an instance of the file manager gui
+ * integrated with tiny mce
+ *
+ * @return void
+ */
+function tinymce_fmGUI( field_name, url, type, win ){
+
+        tinyMCE.activeEditor.windowManager.open({
+                width : 420,
+                height : 400,
+                close_previous : 'no',
+                title : 'File Manager',      
+        },
+        {
+                window : win,
+                input : field_name       
+        });
+
+        return false;
+
+}
 
 /**
  * adds a jquery event to element removals

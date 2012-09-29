@@ -234,7 +234,7 @@ var FileManagerGUI = {
                         case 'image/png':
                         case 'image/gif':
                         case 'image/jpg':
-                                content += 'files' + data.path;
+                                content += 'files' + data.path + '?width=48&height=48';
                         break;
                 }
 
