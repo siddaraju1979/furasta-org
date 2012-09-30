@@ -24,18 +24,28 @@
  * @license	http://furasta.org/licence.txt The BSD License
  * @todo        build a more comprehensive list of types
  */
-define( 'UNKNOWN',      'mimegroup_unknown' );
-define( 'BITMAP',       'mimegroup_bitmap' );
-define( 'IMAGE',        'mimegroup_image' );
-define( 'DRAWING',      'mimegroup_drawing' );
-define( 'AUDIO',        'mimegroup_audio' );
-define( 'VIDEO',        'mimegroup_video' );
-define( 'MULTIMEDIA',   'mimegroup_multimedia' );
-define( 'OFFICE',       'mimegroup_office' );
-define( 'TEXT',         'mimegroup_text' );
-define( 'EXECUTABLE',   'mimegroup_executable' );
-define( 'ARCHIVE',      'mimegroup_archive' );
-        
+define( 'UNKNOWN',      'mg_unknown' );
+define( 'BITMAP',       'mg_bitmap' );
+define( 'IMAGE',        'mg_image' );
+define( 'DRAWING',      'mg_drawing' );
+define( 'AUDIO',        'mg_audio' );
+define( 'VIDEO',        'mg_video' );
+define( 'MULTIMEDIA',   'mg_multimedia' );
+define( 'OFFICE',       'mg_office' );
+define( 'TEXT',         'mg_text' );
+define( 'EXECUTABLE',   'mg_executable' );
+define( 'ARCHIVE',      'mg_archive' );
+
+/*
+ * new spec
+
+ addInfo( $path/$files )
+ updateInfo( $path/$files )
+ deleteInfo( $path/$files )
+ getInfo( $path/$files )
+ 
+ */
+
 /**
  * FileManager
  *
@@ -227,15 +237,18 @@ class FileManager{
 				return $this->setError( 7, $query );
 
 			$data[ 'id' ] = mysql_insert_id( );
-			$this->files{ $data[ 'path' ] } = $data;
+
 		}
 		else{ // update db and files array
-			$query = 'update ' . DB_FILES . ' set ';
-			foreach( $data as $name => $value ){
-				$query .= $name . '="' . $value . '",';
-				$this->files{ $data[ 'path' ] }{ $name } = $value;
-			}
-			$query = substr( $query, 0, 1 ) . ' where path="' . $data[ 'path' ] . '"';
+                        $query = 'update ' . DB_FILES . ' set '
+                                . 'name="' . $data[ 'name' ] . '",'
+                                . 'path="' . $data[ 'path' ] . '",'
+                                . 'owner=' . $data[ 'owner' ] . ','
+                                . 'perm="' . $data[ 'perm' ] . '",'
+                                . 'type="' . $data[ 'type' ] . '",'
+                                . 'public="' . $data[ 'public' ] . '",'
+                                . 'hash="' . $data[ 'hash' ] . '"'
+			        . 'where path="' . $data[ 'path' ] . '"';
 
 			$success = query( $query );
 
@@ -243,26 +256,33 @@ class FileManager{
 				return $this->setError( 7, $query );
                 }
 
+                $this->files{ $data[ 'path' ] } = $this->filesExtraParams( $data );
+
                 return true;
 
 	} 
 
 	/**
-	 * deletInfo
+	 * deleteInfo
 	 *
 	 * removes a file by the given path from the
 	 * database and the files array
-	 *
-	 * @param string $path
+         *
+         * $path        -       can be a string - 1 path or
+         *                      and array of files
+         *
+	 * @param string/array $path
 	 * @access private
 	 * @return void
 	 */
 	private function deleteInfo( $path ){
 
+                
+
 		/**
 		 * delete from db
 		 */		
-		query( 'delete from ' . DB_FILES . ' where path=' . addslashes( $path ) );
+		query( 'delete from ' . DB_FILES . ' where path="' . addslashes( $path ) . '"' );
 
 		/**
 		 * remove from files array
@@ -271,6 +291,25 @@ class FileManager{
 			unset( $this->files{ $path } );
 
 	}
+
+        /**
+         * filesExtraParams
+         *
+         * adds additional parameters to the file data
+         * which is calculated at runtime rather than
+         * stored in the db
+         *
+         * @param array $fdata
+         * @access private
+         * @return void
+         */
+        private function filesExtraParams( $fdata ){
+
+                $fdata[ 'mimegroup' ] = self::getType( $fdata[ 'type' ] );
+
+                return $fdata;
+
+        }
 
 	/**
 	 * getFile
@@ -292,7 +331,7 @@ class FileManager{
 			$file = row( 'select * from ' . DB_FILES . ' where path="' . addslashes( $path ) . '"' );
 			if( !$file ) // file is not in db
 				return $this->setError( 11, $path );
-			$this->files{ $path } = $file;
+			$this->files{ $path } = $this->filesExtraParams( $file );
 		}
 		
 		return $this->files{ $path };
@@ -340,7 +379,7 @@ class FileManager{
                         return $this->setError( 11, $names[ 0 ] );
         
                 for( $i = 0; $i < count( $files ); ++$i ){
-                        $this->files{ $files[ $i ][ 'path' ] } = $files[ $i ];
+                        $this->files{ $files[ $i ][ 'path' ] } = $this->filesExtraParams( $files[ $i ] );
                 }
 
                 return true;
@@ -385,29 +424,17 @@ class FileManager{
          * that category. see the top of this file
          * for list of constants
          *
-         * @param string $path
+         * @param string $type
+         * @static
          * @return string
          */
-        public function getType( $path ){
-
-                /**
-                 * check permissions
-                 */
-                if( !$this->hasPerm( $path, 'v' ) )
-                        return false;
-
-                /**
-                 * get file in db
-                 */
-                $file = $this->getFile( $path );
-                if( !$file )
-                        return false;
+        public static function getType( $type ){
 
                 /**
                  * switch by filetype and return
                  * constants to identify type group
                  */
-                switch( $file[ 'type' ] ){
+                switch( $type ){
                         // text
                         case 'text/plain':
                         case 'text/html':
@@ -466,6 +493,7 @@ class FileManager{
                                 return UNKNOWN;
 
                 }
+
         }
 
 	/**
@@ -964,6 +992,40 @@ class FileManager{
 
         }
 
+        /**
+         * removeFile
+         *
+         * removes a file from the file manager. checks
+         * write permission before deletion
+         *
+         * @param string $path
+         * @access public
+         * @return void
+         */
+        public function removeFile( $path ){
+
+                /**
+                 * check permission
+                 */
+                if( !$this->hasPerm( $path, 'w' ) )
+                        return false;
+
+                /**
+                 * delete from files array, db
+                 */
+                $this->deleteInfo( $path );
+
+                /**
+                 * delete from filesystem
+                 */
+                $success = unlink( $this->users_files . $path );
+                if( !$success )
+                        return $this->setError( 5, $path );
+
+                return false;
+
+        }
+
 	/**
 	 * removeDir
 	 *
@@ -971,7 +1033,7 @@ class FileManager{
 	 * non-empty. must have permission to remove all files in
 	 * directory
 	 *
-	 * @params string $path
+	 * @param string $path
 	 * @access public
 	 * @return void
 	 */
@@ -981,24 +1043,21 @@ class FileManager{
 
 		/**
 		 * get all files and check permissions
-		 */
-		if( !$this->readDir( $path, 'w', true, true ) )
+                 */
+                $files = $this->readDir( $path, 'w', true, true );
+		if( !$files )
 			return false;
 
 		/**
-		 * create anonymous function to remove
-		 * directory
-		 */
-//		$fn = function( $file, $dest ){
-//			return rename( $file, USERS_DIR . '/' . $dest );
-//		}
-		
-		/**
-		 * call 
-		 */
-		$success = $this->_rexecDir( $path );
+		 * recursive remove dir 
+                 */
+                self::_rremoveDir( $this->users_files . $path );
 
-		// 	
+                /**
+                 * delete info for all files
+                 */
+                return $this->deleteInfo( $files );
+	
 	}
 
 	/**
@@ -1024,6 +1083,7 @@ class FileManager{
          * array(
          *      '/' => array(
          *              'type'  =>      'mimetype',
+         *              'mimegroup' =>  'mg_unknown',   // mimegroup, see constants at top of file
          *              'files' =>      array( ... ),   // if is dir and $level is greater than 1 then file list is included
          *              ..
          *              ..                              // other database properties
@@ -1048,7 +1108,17 @@ class FileManager{
 
 		// read files and dirs
 		$files = self::_rreadDir( $this->users_files . $path, $level );
-                 
+
+                /**
+                 * if no files, check directory permissions and
+                 * return empty array
+                 */
+                if( empty( $files ) ){
+                        if( !$this->hasPerm( $path, $rw ) )
+                                return false;
+                        return array( );
+                }
+
                 /*
 		 * get file database data
 		 */

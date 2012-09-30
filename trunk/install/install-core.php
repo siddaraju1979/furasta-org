@@ -274,7 +274,17 @@ function install_db( ){
          * @todo this should be changed, i don't like how these values are hard coded
          */
         mysql_query( 'drop table if exists ' . $constants[ 'DB_FILES' ] );
-        mysql_query( 'create table ' .  $constants[ 'DB_FILES' ]  . ' ( id int auto_increment primary key, name text, path text, owner int, perm text, type text, public int, hash text )' );
+        mysql_query( 'create table ' .  $constants[ 'DB_FILES' ]  . ' ( '
+                . 'id int auto_increment primary key,'
+                . 'name text,'
+                . 'path text,'
+                . 'owner int,'
+                . 'perm text,'
+                . 'type text,'
+                . 'public int,'
+                . 'hash text'
+        . ')' );
+
         // file manager add initial directory structure
         mysql_query( 'insert into ' .  $constants[ 'DB_FILES' ]  . ' values( "", "users", "users", "0", "", "dir", 0, "' . md5( mt_rand( ) ) . '" )') ; 
         $fm_users_id = mysql_insert_id( );

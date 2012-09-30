@@ -28,6 +28,7 @@ $FileManager = FileManager::getInstance( );
 
 /**
  * switch between file manager functions
+ * @todo add remaining file manager functions here
  */
 switch( $func ){
         case 'readDir':
@@ -66,16 +67,34 @@ switch( $func ){
                 if( !$success )
                         echo json_encode( $FileManager->error( ) );
         break;
+        case 'removeFile':
+
+                $success = $FileManager->removeFile( $path );
+
+                if( !$success )
+                        echo json_encode( $FileManager->error( ) );
+        
+        break;
+        case 'removeDir':
+
+                $success = $FileManager->removeDir( $path );
+
+                if( !$success )
+                        echo json_encode( $FileManager->error( ) );
+
+        break;
         default: // assume this is not an ajax request and print errors in html
 
                 /**
                  * get type, make sure is correct
                  */
-                $type = $FileManager->getType( $path );
-                if( !$type )
-                        return false;
+                $file = $FileManager->getFile( $path );
+                if( !$file ){
+                        $error = $FileManager->error( );
+                        error( $error[ 'desc' ], 'Files Error' );
+                }
 
-                switch( $type ){
+                switch( $file[ 'mimegroup' ] ){
                         // image
                         case IMAGE:
                                 /**
@@ -88,11 +107,7 @@ switch( $func ){
                         break;
                         // text
                         case TEXT:
-                                $contents = $FileManager->readFile( $path );
-
-                                // change to switch by file type, display appropriatly
-                                
-                                echo $contents;
+                                echo $FileManager->readFile( $path );                                
                         break;
                         // default - download file
                         default:
