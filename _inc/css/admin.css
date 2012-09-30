@@ -227,7 +227,7 @@ p.th span.status{ float:right;margin-right:5px }
 #directory-list li{ float:left;margin:2px;text-align:center;padding:15px 12px;border:1px solid transparent }
 #directory-list li a.item{ float:left;color:#333 }
 #directory-list li:hover{ background:#eee;border:1px solid #999;border-radius:5px; }
-#directory-list li a.delete-img{ width:10px;height:10px }
+#directory-list li a.x-img{ float:right;display:none;margin-left:5px }
 
 /* Prompt */
 

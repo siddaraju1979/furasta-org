@@ -7,10 +7,21 @@
  * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
  * @license    http://furasta.org/licence.txt The BSD License
  * @version    1.0
+ */
+
+/**
+ * FileManager
+ * 
+ * This object is used for accessing file manager
+ * functions via AJAX
+ *
+ * @author     Conor Mac Aoidh <conormacaoidh@gmail.com>
+ * @license    http://furasta.org/licence.txt The BSD License
+ * @version    1.0
+ * @package    admin_files 
  * @todo update to cache results, instead of requesting via
  * ajax every time
  */
-
 var FileManager = {
 
         /**
@@ -115,14 +126,15 @@ var FileManager = {
         /**
          * uploadFile
          *
-         * uploads a file using the file manager
+         * uploads a file using the file manager. uses
+         * iframes to upload a file without a page
+         * reload
          *
          * @param selector form
          * @return void
          */
         uploadFile : function( path, form, fn ){
 
-                // change this to upload file method in FileManager object 
                 $( 'body' ).append( '<iframe name="postiframe" id="postiframe" style="display: none" />' );
  
                 form.attr( 'action', window.furasta.site.url + 'files' + path );
@@ -146,6 +158,64 @@ var FileManager = {
                                 return fn( );
                         $( "#dialog" ).prepend( '<p>' + iframeContents + '</p>' );
                 });
+
+        },
+
+        /**
+         * removeFile
+         *
+         * makes an ajax request to the file
+         * manager to have a file removed
+         *
+         * @param string path
+         * @param function fn
+         * @return void
+         */
+        removeFile : function( path, fn ){
+
+                this.fmExec(
+                        path,
+                        {
+                                func : 'removeFile',
+                        },
+                        function( data ){
+
+                                if( data != null && typeof( data ) == 'object' && typeof( data.desc ) == 'string' )
+                                        fAlert( data.desc );
+                                else
+                                        fn( data );
+
+                        }
+                );
+
+        },
+
+        /**
+         * removeDir
+         *
+         * makes an ajax request to the file
+         * manager to have a directory removed
+         *
+         * @param string path
+         * @param function fn
+         * @return void
+         */
+        removeDir : function( path, fn ){
+
+                this.fmExec(
+                        path,
+                        {
+                                func : 'removeDir',
+                        },
+                        function( data ){
+
+                                if( data != null && typeof( data ) == 'object' && typeof( data.desc ) == 'string' )
+                                        fAlert( data.desc );
+                                else
+                                        fn( data );
+
+                        }
+                );
 
         },
 

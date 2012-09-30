@@ -33,6 +33,7 @@ var FileManagerGUI = {
         item            : null,
         filemenu        : null,
         upload_file     : null,
+        delete_item     : null,
 
         // vars
         path            : null,
@@ -75,6 +76,7 @@ var FileManagerGUI = {
                 this.item        = $( '.item' );
                 this.filemenu    = $( '.menu-left' );
                 this.upload_file = $( '#file-upload' );
+                this.delete_item = $( '#directory-list .x-img' );
 
                 /**
                  * list the root of the files dir by default
@@ -98,18 +100,17 @@ var FileManagerGUI = {
                 });
 
                 /**
-                 * change directory when clicked
-                 */
-                this.dir.live( 'click', function( ){
-                        FileManagerGUI.showDir( $( this ).attr( 'href' ) );
-                        return false;
-                });
-
-                /**
                  * show file contents
                  */
-                this.file.live( 'click', function( ){
-                        FileManagerGUI.showFile( $( this ).attr( 'href' ) );
+                this.item.live( 'click', function( ){
+
+                        if( $( this ).hasClass( 'dir' ) )
+                                FileManagerGUI.showDir( $( this ).attr( 'href' ) );
+                        else{
+                                window.open( window.furasta.site.url + 'files' + $( this ).attr( 'href' ) );
+                                //FileManagerGUI.showFile( $( this ).attr( 'href' ) );
+                        }
+
                         return false;
                 });
 
@@ -122,14 +123,22 @@ var FileManagerGUI = {
                 });
 
                 /**
+                 * delete item event
+                 */
+                this.delete_item.live( 'click', function( ){
+                        FileManagerGUI.deleteItem( $( this ) );
+                        return false;
+                });
+
+                /**
                  * item hover event
                  */
                 $( 'li', this.dir_list ).live({
                         mouseenter : function( ){
-                                $( '.delete-img', $( this ) ).addClass( 'delete-small-img' );
+                                $( '.x-img', $( this ) ).css( 'display', 'block' );
                         },
                         mouseleave : function( ){
-                                $( '.delete-img', $( this ) ).removeClass( 'delete-small-img' );
+                                $( '.x-img', $( this ) ).css( 'display', 'none' );
                         }
                 });
 
@@ -218,24 +227,23 @@ var FileManagerGUI = {
          */
         showItem : function( data ){
           
-                content = '<a class="delete link" href="' + data.path + '"><span class="delete-img">&nbsp;</span></a>';
-                content += '<a class="link ' + data.type + ' item" href="' + data.path + '">';
+                content = '<a class="x-img link" href="' + data.path + '">&nbsp;</a>';
+                content += '<a class="link ' + data.type + ' ' + data.mimegroup + ' item" href="' + data.path + '">';
                 content += '<img width="48px" height="48px" src="' + window.furasta.site.url;
 
-                switch( data.type ){
-                        case 'dir':
-                                content += '_inc/img/folder.png';
-                        break;
-                        case 'file':
-                                content += '_inc/img/file.png';
-                        break;
-                        // image
-                        case 'image/jpeg':
-                        case 'image/png':
-                        case 'image/gif':
-                        case 'image/jpg':
-                                content += 'files' + data.path + '?width=48&height=48';
-                        break;
+                if( data.type == 'dir' )
+                        content += '_inc/img/folder.png';
+                else{
+                        switch( data.mimegroup ){
+                                case 'mg_text':
+                                        content += '_inc/img/file.png';
+                                break;
+                                case 'mg_image':
+                                        content += 'files' + data.path + '?width=48&height=48';
+                                break;
+                                default:
+                                        content += '_inc/img/unknown.jpg';
+                        }
                 }
 
                 content += '"/><br/>' + data.name + '</a>';
@@ -281,7 +289,7 @@ var FileManagerGUI = {
         newFolder : function( ){
 
                 fPrompt( 'Please enter the name of the folder you would like to create.', function( param, val ){
-                       dir = this.filecrumbs.attr( 'current' );
+                       dir = FileManagerGUI.filecrumbs.attr( 'current' );
                        name = $( 'input[name="prompt-input"]' ).val( );
                        FileManager.addDir( dir + name, function(  ){
                                 FileManagerGUI.showDir( dir );              
@@ -341,6 +349,46 @@ var FileManagerGUI = {
                                 resizeable : false
                         })
                         .dialog( 'open' );
+
+        },
+
+        /**
+         * deleteItem
+         *
+         * prompts a user if they wish to delete an item
+         * from the file manager. also performs reccursive
+         * removal of directories.
+         *
+         * @param object item
+         * @return void
+         */
+        deleteItem : function( item ){
+
+                path = item.attr( 'href' );
+                
+                if( $( 'a.item', item.parent( ) ).hasClass( 'dir' ) ){ // delete directory
+
+                        fConfirm(  '<p>Are you sure you want to delete this folder?</p>'
+                                 + '<p><b>All items in the folder will be removed. This action is not reversible.</b></p>', function( ){
+
+                                FileManager.removeDir( path, function( ){
+                                        FileManagerGUI.showDir( FileManagerGUI.path );      
+                                });
+
+                        });
+
+                }
+                else{ // delete file
+
+                        fConfirm( '<p>Are you sure you want to delete this file? This action is not reversible.</p>', function( ){
+
+                                FileManager.removeFile( path, function( ){
+                                        FileManagerGUI.showDir( FileManagerGUI.path );      
+                                });
+
+                        });
+
+                }
 
         },
 
