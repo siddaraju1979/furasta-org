@@ -1,0 +1,3 @@
+Furasta.Org ia a free, Open Source Content Management System (CMS) and it is available for anyone to download for free.
+
+Furasta is a Gaeilge word meaning 'easy'. At the moment Furasta.Org is a relatively small management system but it has great hopes to expand. It is easy to use, reliable, free and has the potential to expand and develop enormously. Updates will be frequent and users will be made aware of updates when they are available. Furasta.Org aspires to create a user friendly, stress free enviornment for businesses and website owners.
